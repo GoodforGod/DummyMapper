@@ -21,7 +21,7 @@ spotless {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.7.28'
+    implementation "org.slf4j:slf4j-api:$log4jVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
     testImplementation "org.junit.platform:junit-platform-launcher:$jupiterLauncher"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
@@ -68,13 +68,13 @@ publishing {
             artifact javadocJar
 
             pom {
-                name = 'DummyMaker'
-                url = 'https://github.com/GoodforGod/dummymaker'
-                description = 'Library can generate POJOs filled random data for your workloads and also export data in CSV/JSON/XML/SQL formats.'
+                name = 'DummyMapper'
+                url = 'https://github.com/GoodforGod/dummymapper'
+                description = 'Idea JSON mapper plugin.'
 
                 license {
-                    name = 'MIT License'
-                    url = 'https://github.com/GoodforGod/dummymaker/blob/master/LICENSE'
+                    name = 'Apache License 2.0'
+                    url = 'https://github.com/GoodforGod/dummymapper/blob/master/LICENSE'
                     distribution = 'repo'
                 }
 
@@ -86,9 +86,9 @@ publishing {
                 }
 
                 scm {
-                    connection = 'scm:git:git://github.com/GoodforGod/dummymaker.git'
-                    developerConnection = 'scm:git:ssh://GoodforGod/dummymaker.git'
-                    url = 'https://github.com/GoodforGod/dummymaker/tree/master'
+                    connection = 'scm:git:git://github.com/GoodforGod/dummymapper.git'
+                    developerConnection = 'scm:git:ssh://GoodforGod/dummymapper.git'
+                    url = 'https://github.com/GoodforGod/dummymapper/tree/master'
                 }
             }
         }
