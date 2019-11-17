@@ -3,14 +3,30 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 
+    id 'org.jetbrains.intellij' version '0.4.13'
     id 'com.diffplug.gradle.spotless' version '3.26.0'
 }
 
+repositories {
+    mavenCentral()
+}
+
 group = groupId
-version artifactVersion
+version = artifactVersion
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+intellij {
+    version '2019.2.4'
+}
+
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+      """
+}
 
 spotless {
     java {
@@ -22,10 +38,7 @@ spotless {
 
 dependencies {
     implementation "org.slf4j:slf4j-api:$log4jVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
-    testImplementation "org.junit.platform:junit-platform-launcher:$jupiterLauncher"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$jupiterVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }
 
 test {
