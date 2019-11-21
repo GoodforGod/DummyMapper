@@ -19,10 +19,11 @@
     </extensions>
 
     <actions>
-
-        <action id="DummyMapper.DummyJson" class="io.goodforgod.dummymapper.DummyJsonSingle" text="Json_Single"
-                description="Creates single JSON dummy">
-            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+        <action id="DummyMapper.DummyJson"
+                class="io.goodforgod.dummymapper.DummyJsonSingle"
+                text="Single JSON"
+                description="Get JSON object">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>
 </idea-plugin>

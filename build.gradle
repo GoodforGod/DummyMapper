@@ -18,6 +18,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 intellij {
+    plugins 'java'
     version '2019.2.4'
 }
 
@@ -48,88 +49,10 @@ test {
     }
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.enabled = true
         html.enabled = true
         html.destination file("${buildDir}/jacocoHtml")
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom {
-                name = 'DummyMapper'
-                url = 'https://github.com/GoodforGod/dummymapper'
-                description = 'Idea JSON mapper plugin.'
-
-                license {
-                    name = 'Apache License 2.0'
-                    url = 'https://github.com/GoodforGod/dummymapper/blob/master/LICENSE'
-                    distribution = 'repo'
-                }
-
-                developer {
-                    id = 'GoodforGod'
-                    name = 'Anton Kurako'
-                    email = 'goodforgod.dev@gmail.com'
-                    url = 'https://github.com/GoodforGod'
-                }
-
-                scm {
-                    connection = 'scm:git:git://github.com/GoodforGod/dummymapper.git'
-                    developerConnection = 'scm:git:ssh://GoodforGod/dummymapper.git'
-                    url = 'https://github.com/GoodforGod/dummymapper/tree/master'
-                }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username System.getenv("OSS_USERNAME")
-                password System.getenv("OSS_PASSWORD")
-            }
-        }
-    }
-}
-
-if (project.hasProperty("signing.keyId")) {
-    apply plugin: 'signing'
-    signing {
-        sign publishing.publications.mavenJava
-    }
-}
-
-jar {
-    into("META-INF/maven/$project.group/$project.name") {
-        from { generatePomFileForMavenJavaPublication }
-        rename ".*", "pom.xml"
     }
 }
