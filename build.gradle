@@ -41,6 +41,7 @@ spotless {
 dependencies {
     implementation "org.slf4j:slf4j-api:$log4jVersion"
     implementation 'com.github.goodforgod:dummymaker:2.0.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }
 

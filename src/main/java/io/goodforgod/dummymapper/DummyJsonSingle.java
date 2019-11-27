@@ -7,6 +7,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,13 +29,12 @@ public class DummyJsonSingle extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
         final PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        PsiFieldVisitor visitor = new PsiFieldVisitor();
-        psiFile.accept(visitor);
-        Map<String, Object> map = visitor.getMap();
         final Project project = e.getProject();
         final PsiElement elementAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
         try {
             final PsiDirectory directory = elementAt.getContainingFile().getContainingDirectory();
+            PsiJavaFileScanner javaFileScanner = new PsiJavaFileScanner();
+            Map<String, Object> scan = javaFileScanner.scan((PsiJavaFile) psiFile);
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");
             final String targetName = elementAt.getContainingFile().getVirtualFile().getName();
             final String target = elementAt.getContainingFile().getVirtualFile().getUrl();
@@ -45,6 +46,18 @@ public class DummyJsonSingle extends AnAction {
         } catch (Exception ex) {
             return;
         }
+    }
+
+    private void scanParent(PsiFile psiFile) {
+        PsiClassType type = ((PsiJavaFile) psiFile).getClasses()[0].getSuperTypes()[0];
+        GlobalSearchScope scope = type.getResolveScope();
+        Project p = scope.getProject();
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(p,
+                type.getClassName() + ".class",
+                GlobalSearchScope.allScope(p));
+
+        PsiJavaFileScanner psiJavaFileScanner = new PsiJavaFileScanner();
+        psiJavaFileScanner.scan((PsiJavaFile) filesByName[0]);
     }
 
     private Map<String, Object> getClassMap(PsiFile file) {
