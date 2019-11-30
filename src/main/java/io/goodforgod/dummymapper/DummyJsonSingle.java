@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * ! NO DESCRIPTION !
  *
@@ -39,10 +38,10 @@ public class DummyJsonSingle extends AnAction {
             final String targetName = elementAt.getContainingFile().getVirtualFile().getName();
             final String target = elementAt.getContainingFile().getVirtualFile().getUrl();
             final URL url = new URL(dirPath);
-            final URLClassLoader loader = new URLClassLoader(new URL[]{url});
+            final URLClassLoader loader = new URLClassLoader(new URL[] { url });
             Class<?> aClass = loader.loadClass(targetName);
             aClass.toString();
-            //TODO dynamically find, compile, load class (and his parents)
+            // TODO dynamically find, compile, load class (and his parents)
         } catch (Exception ex) {
             return;
         }
@@ -65,7 +64,7 @@ public class DummyJsonSingle extends AnAction {
         final Map<String, Object> map = new HashMap<>();
         for (PsiClass psiClass : classes) {
             for (PsiField field : psiClass.getAllFields()) {
-                if(isFieldSimple(field)) {
+                if (isFieldSimple(field)) {
                     map.put(field.getName(), field.getType().getCanonicalText());
                 } else {
                     final VirtualFile subTypeFile = field.getType().getResolveScope().getProject().getProjectFile();

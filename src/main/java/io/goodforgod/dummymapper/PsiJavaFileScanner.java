@@ -1,25 +1,15 @@
 package io.goodforgod.dummymapper;
 
-import com.intellij.lang.jvm.JvmModifier;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.LibraryUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.lang.jvm.types.JvmType;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiShortNamesCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static io.goodforgod.dummymapper.ClassUtils.*;
 
 /**
  * ! NO DESCRIPTION !
@@ -29,49 +19,62 @@ import java.util.stream.Stream;
  */
 public class PsiJavaFileScanner {
 
-    private static final Map<String, Class> SIMPLE_FIELDS = getSimpleFields();
-
     private final Map<String, Map> scanned = new HashMap<>();
 
-    @SuppressWarnings("unchecked")
-    public @NotNull
-    Map<String, Object> scan(@Nullable PsiJavaFile file) {
+    public Map<String, Object> scan(@Nullable PsiJavaFile file) {
+        return scanJavaFile(file);
+    }
+
+    private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile file) {
         if (file == null)
             return Collections.emptyMap();
 
-        final Map<String, Object> structure = new HashMap<>();
-        scanned.put(getFullName(file), structure);
-        PsiClassType superType = ((PsiClassType)file.getClasses()[0].getSuperClassType());
-        Project project = superType.getResolveScope().getProject();
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(project,
-                superType.getCanonicalText() + ".class",
-                GlobalSearchScope.allScope(project));
-
-        VirtualFile[] libraryRoots = LibraryUtil.getLibraryRoots(file.getProject());
-        // IS WORKING
-        PsiClass superClass = file.getClasses()[0].getSuperClass();
-        // IS WORKING
-        PsiClass[] classesByName = PsiShortNamesCache.getInstance(project).getClassesByName(superType.rawType().getPresentableText(), GlobalSearchScope.allScope(project));
-
         if (file.getClasses().length > 0) {
             final PsiClass target = file.getClasses()[0];
-            final PsiField[] fields = target.getAllFields();
-            for (PsiField field : fields) {
-                if (isFieldEnum(field)) {
-                    ((List) structure.computeIfAbsent(field.getType().getPresentableText(), k -> new ArrayList<String>()))
-                            .add(field.getName());
-                } else if (isFieldSimple(field) && isFieldValid(field)) {
-                    structure.put(field.getName(), SIMPLE_FIELDS.get(field.getType().getCanonicalText()));
+            final PsiClass superTarget = target.getSuperClass();
+            if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
+                final Map<String, PsiType> types = getSuperTypes(target);
+                final Map<String, Object> superScan = scanJavaClass(superTarget, types);
+                final Map<String, Object> targetScan = scanJavaClass(target, Collections.emptyMap());
+                superScan.putAll(targetScan);
+                return superScan;
+            } else {
+                return scanJavaClass(target, Collections.emptyMap());
+            }
+
+        }
+
+        return Collections.emptyMap();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> scanJavaClass(PsiClass target, Map<String, PsiType> parentTypes) {
+        final Map<String, Object> structure = new LinkedHashMap<>();
+        final PsiField[] fields = target.getFields();
+        scanned.put(getFullName(target), structure);
+
+        for (PsiField field : fields) {
+            if (isTypeEnum(field.getType())) {
+                ((List) structure.computeIfAbsent(field.getType().getPresentableText(), k -> new ArrayList<String>()))
+                        .add(field.getName());
+            } else if (isFieldValid(field)) {
+                if (isTypeSimple(field.getType())) {
+                    structure.put(field.getName(), getTypeByName(field.getType().getCanonicalText()));
+                } else if (parentTypes.containsKey(field.getType().getPresentableText())) {
+                    final PsiType type = parentTypes.get(field.getType().getPresentableText());
+                    if (type != null && isTypeSimple(type)) {
+                        structure.put(field.getName(), getTypeByName(type.getCanonicalText()));
+                    }
                 } else {
-                    getTypeResolvedJavaFile(field.getType()).ifPresent(f -> {
+                    getResolvedJavaFile(field.getType()).ifPresent(f -> {
                         final Map map = scanned.get(getFullName(f));
                         if (map == null) {
-                            final Map<String, Object> scanned = scan(f);
-                            final Object values = scanned.get(field.getType().getPresentableText());
+                            final Map<String, Object> scannedComplexField = scanJavaFile(f);
+                            final Object values = scannedComplexField.get(field.getType().getPresentableText());
                             if (values instanceof Collection) {
                                 structure.put(field.getName(), values);
                             } else {
-                                structure.put(field.getName(), scanned);
+                                structure.put(field.getName(), scannedComplexField);
                             }
                         } else {
                             structure.put(field.getName(), map);
@@ -84,76 +87,39 @@ public class PsiJavaFileScanner {
         return structure;
     }
 
-    private static Optional<PsiJavaFile> getTypeResolvedJavaFile(@NotNull PsiType type) {
+    private static Map<String, PsiType> getSuperTypes(PsiClass psiClass) {
+        return Optional.ofNullable(psiClass.getSuperClassType())
+                .filter(t -> psiClass.getSuperClass() != null)
+                .map(t -> {
+                    final Map<String, PsiType> types = new LinkedHashMap<>();
+                    final Iterator<JvmType> iterator = t.typeArguments().iterator();
+                    for (PsiTypeParameter parameter : psiClass.getSuperClass().getTypeParameters()) {
+                        final JvmType a = iterator.next();
+                        if (a instanceof PsiType) {
+                            types.put(parameter.getName(), (PsiType) a);
+                        }
+                    }
+                    return types;
+                })
+                .orElseGet(LinkedHashMap::new);
+    }
+
+    private static Optional<PsiJavaFile> getResolvedJavaFile(@NotNull PsiType type) {
         return Optional.ofNullable(type.getResolveScope())
                 .map(GlobalSearchScope::getProject)
                 .flatMap(p -> Arrays.stream(FilenameIndex.getFilesByName(p,
-                        type.getCanonicalText() + ".class",
+                        type.getPresentableText() + ".java",
                         GlobalSearchScope.allScope(p)))
                         .findFirst()
                         .filter(f -> f instanceof PsiJavaFile)
                         .map(f -> ((PsiJavaFile) f)));
     }
 
-    private static @NotNull
-    String getFullName(@NotNull PsiJavaFile file) {
+    private static String getFullName(@NotNull PsiJavaFile file) {
         return file.getPackageName() + "." + file.getName();
     }
 
-    private static boolean isFieldEnum(@NotNull PsiField field) {
-        final PsiType[] superTypes = field.getType().getSuperTypes();
-        return superTypes.length > 0 && "java.lang.Enum".equals(superTypes[0].getCanonicalText());
-    }
-
-    private static boolean isFieldSimple(@NotNull PsiField field) {
-        return SIMPLE_FIELDS.containsKey(field.getType().getCanonicalText());
-    }
-
-    private static boolean isFieldValid(@NotNull PsiField field) {
-        return !field.hasModifier(JvmModifier.STATIC)
-                && !field.hasModifier(JvmModifier.VOLATILE)
-                && !field.hasModifier(JvmModifier.NATIVE)
-                && !field.hasModifier(JvmModifier.STATIC)
-                && !field.hasModifier(JvmModifier.SYNCHRONIZED)
-                && !field.hasModifier(JvmModifier.TRANSITIVE);
-    }
-
-    private static Map<String, Class> getSimpleFields() {
-        final List<Class<?>> simpleClasses = Stream.of(
-                UUID.class,
-                String.class,
-                Integer.class,
-                Byte.class,
-                Short.class,
-                Integer.class,
-                Long.class,
-                Float.class,
-                Double.class,
-                Boolean.class,
-                Character.class,
-                byte.class,
-                int.class,
-                long.class,
-                float.class,
-                double.class,
-                boolean.class,
-                char.class,
-                Object.class,
-                BigInteger.class,
-                BigDecimal.class,
-                Timestamp.class,
-                Date.class,
-                LocalDate.class,
-                LocalTime.class,
-                LocalDateTime.class)
-                .collect(Collectors.toList());
-
-        final Map<String, Class> map = new HashMap<>();
-        simpleClasses.forEach(c -> {
-            map.put(c.getName(), c);
-            map.put(c.getSimpleName(), c);
-        });
-
-        return map;
+    private static String getFullName(@NotNull PsiClass psiClass) {
+        return psiClass.getQualifiedName() + ".java";
     }
 }

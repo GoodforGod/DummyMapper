@@ -76,8 +76,7 @@ public class PsiFieldVisitor extends PsiRecursiveElementVisitor {
                 "char",
                 "Object",
                 "BigInteger",
-                "BigNumber"
-        );
+                "BigNumber");
 
         HashSet<String> set = new HashSet<>(strings);
         return set.contains(canonicalText);
