@@ -1,13 +1,18 @@
 package io.goodforgod.dummymapper;
 
 import com.intellij.lang.jvm.types.JvmType;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.goodforgod.dummymapper.ClassUtils.*;
 
@@ -19,6 +24,7 @@ import static io.goodforgod.dummymapper.ClassUtils.*;
  */
 public class PsiJavaFileScanner {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, Map> scanned = new HashMap<>();
 
     public Map<String, Object> scan(@Nullable PsiJavaFile file) {
@@ -26,28 +32,29 @@ public class PsiJavaFileScanner {
     }
 
     private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile file) {
-        if (file == null)
+        if (file == null || file.getClasses().length < 1) {
+            logger.info("File is invalid");
             return Collections.emptyMap();
-
-        if (file.getClasses().length > 0) {
-            final PsiClass target = file.getClasses()[0];
-            final PsiClass superTarget = target.getSuperClass();
-            if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
-                final Map<String, PsiType> types = getSuperTypes(target);
-                final Map<String, Object> superScan = scanJavaClass(superTarget, types);
-                final Map<String, Object> targetScan = scanJavaClass(target, Collections.emptyMap());
-                superScan.putAll(targetScan);
-                return superScan;
-            } else {
-                return scanJavaClass(target, Collections.emptyMap());
-            }
-
         }
 
-        return Collections.emptyMap();
+        final PsiClass target = file.getClasses()[0];
+        if (isTypeSimple(getFullName(target)) || isTypeEnum(getFullName(target))) {
+            logger.info("Class is simple or enum");
+            return Collections.emptyMap();
+        }
+
+        final PsiClass superTarget = target.getSuperClass();
+        if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
+            final Map<String, PsiType> types = getSuperTypes(target);
+            final Map<String, Object> superScan = scanJavaClass(superTarget, types);
+            final Map<String, Object> targetScan = scanJavaClass(target, Collections.emptyMap());
+            superScan.putAll(targetScan);
+            return superScan;
+        } else {
+            return scanJavaClass(target, Collections.emptyMap());
+        }
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, Object> scanJavaClass(PsiClass target, Map<String, PsiType> parentTypes) {
         final Map<String, Object> structure = new LinkedHashMap<>();
         final PsiField[] fields = target.getFields();
@@ -55,8 +62,17 @@ public class PsiJavaFileScanner {
 
         for (PsiField field : fields) {
             if (isTypeEnum(field.getType())) {
-                ((List) structure.computeIfAbsent(field.getType().getPresentableText(), k -> new ArrayList<String>()))
-                        .add(field.getName());
+                final List<String> enumValues = getResolvedJavaFile(field.getType())
+                        .map(PsiClassOwner::getClasses)
+                        .filter(c -> c.length > 0)
+                        .map(c -> Arrays.stream(c[0].getFields()))
+                        .orElse(Stream.empty())
+                        .sequential()
+                        .filter(f -> f instanceof PsiEnumConstant)
+                        .map(NavigationItem::getName)
+                        .collect(Collectors.toList());
+
+                structure.put(field.getName(), enumValues);
             } else if (isFieldValid(field)) {
                 if (isTypeSimple(field.getType())) {
                     structure.put(field.getName(), getTypeByName(field.getType().getCanonicalText()));

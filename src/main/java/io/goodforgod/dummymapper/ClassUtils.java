@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper;
 import com.intellij.lang.jvm.JvmModifier;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiImmediateClassType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,11 @@ public class ClassUtils {
 
     public static boolean isTypeEnum(@NotNull PsiType type) {
         final PsiType[] superTypes = type.getSuperTypes();
-        return superTypes.length > 0 && "java.lang.Enum".equals(superTypes[0].getCanonicalText());
+        return superTypes.length > 0 && "java.lang.Enum".equals(((PsiImmediateClassType) superTypes[0]).rawType().getCanonicalText());
+    }
+
+    public static boolean isTypeEnum(@Nullable String type) {
+        return "java.lang.Enum".equals(type);
     }
 
     public static boolean isTypeSimple(@NotNull PsiType type) {
