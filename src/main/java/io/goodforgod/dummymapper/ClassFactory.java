@@ -34,29 +34,50 @@ public class ClassFactory {
 
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (entry.getValue() instanceof SimpleMarker) {
-                    ownClass.addField(CtField.make(String.format("") entry.getKey(), ));
+                    final CtField field = getSimpleField(entry.getKey(), (SimpleMarker) entry.getValue(), ownClass);
+                    ownClass.addField(field);
                 } else if (entry.getValue() instanceof EnumMarker) {
 
                 } else if (entry.getValue() instanceof Map) {
                     final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
-                    final CtClass fieldClass = classMap.computeIfAbsent(fieldClassName, (k) -> buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null));
-                    if (fieldClass != null)
-                        ownClass.addField(CtField.make(entry.getKey(), fieldClass));
+                    CtClass fieldClass = classMap.get(fieldClassName);
+                    if(fieldClass == null) {
+                        fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null);
+                        classMap.put(fieldClassName, fieldClass);
+                    }
+
+                    if (fieldClass != null) {
+//                        ownClass.addField(new CtField(fieldClass, entry.getKey(), fieldClass));
+                    }
                 }
             }
 
             return Optional.ofNullable(ownClass);
-        } catch (CannotCompileException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
 
-    public static String getClassName(Map<?, ?> map) {
+    private static CtField getSimpleField(String fieldName, SimpleMarker marker, CtClass owner) {
+        try {
+            final String src = String.format("private %s %s;", marker.getType().getName(), fieldName);
+            return CtField.make(src, owner);
+        } catch (CannotCompileException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private static String getClassName(Map<?, ?> map) {
         return map.values().stream()
                 .filter(v -> v instanceof SimpleMarker)
-                .map(v -> ((SimpleMarker) v).getSource().substring(((SimpleMarker) v).getSource().lastIndexOf('.')))
+                .map(v -> getClassNameFromPackage(((SimpleMarker) v).getSource()))
                 .findFirst()
                 .orElse("");
+    }
+
+    private static String getClassNameFromPackage(String source) {
+        final int lastIndexOf = source.lastIndexOf('.', source.length() - 6);
+        return source.substring(lastIndexOf + 1, source.length() - 5);
     }
 }

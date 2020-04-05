@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * ! NO DESCRIPTION !
@@ -36,8 +37,9 @@ public class DummyJsonSingle extends AnAction {
             final PsiJavaFileScanner javaFileScanner = new PsiJavaFileScanner();
             final Map<String, Object> scan = javaFileScanner.scan((PsiJavaFile) psiFile);
 
-            final ClassPool pool = ClassPool.getDefault();
-            final CtClass ownClass = pool.makeClass(psiFile.getName());
+            final Optional<CtClass> build = ClassFactory.build(scan);
+
+            final Class aClass = ClassPool.getDefault().toClass(build.get(), DummyJsonSingle.class.getClassLoader(), null);
 
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");
             final String targetName = elementAt.getContainingFile().getVirtualFile().getName();

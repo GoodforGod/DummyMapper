@@ -43,6 +43,7 @@ dependencies {
 
     implementation 'com.github.goodforgod:dummymaker:2.0.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+    implementation 'org.javassist:javassist:3.27.0-GA'
 
     testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }
