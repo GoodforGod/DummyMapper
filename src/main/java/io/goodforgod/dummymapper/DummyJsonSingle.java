@@ -9,6 +9,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import javassist.ClassPool;
+import javassist.CtClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,22 +24,25 @@ import java.util.Map;
  */
 public class DummyJsonSingle extends AnAction {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     public void actionPerformed(AnActionEvent event) {
         final Editor editor = event.getData(CommonDataKeys.EDITOR);
         final PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
-        final Project project = event.getProject();
-        final PsiElement elementAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
         try {
+            final Project project = event.getProject();
+            final PsiElement elementAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
             final PsiDirectory directory = elementAt.getContainingFile().getContainingDirectory();
-            PsiJavaFileScanner javaFileScanner = new PsiJavaFileScanner();
-            Map<String, Object> scan = javaFileScanner.scan((PsiJavaFile) psiFile);
+
+            final PsiJavaFileScanner javaFileScanner = new PsiJavaFileScanner();
+            final Map<String, Object> scan = javaFileScanner.scan((PsiJavaFile) psiFile);
+
+            final ClassPool pool = ClassPool.getDefault();
+            final CtClass ownClass = pool.makeClass(psiFile.getName());
+
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");
             final String targetName = elementAt.getContainingFile().getVirtualFile().getName();
         } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper;
+package io.goodforgod.dummymapper.util;
 
 import com.intellij.lang.jvm.JvmModifier;
 import com.intellij.psi.PsiField;
@@ -31,7 +31,9 @@ public class ClassUtils {
 
     public static boolean isTypeEnum(@NotNull PsiType type) {
         final PsiType[] superTypes = type.getSuperTypes();
-        return superTypes.length > 0 && "java.lang.Enum".equals(((PsiImmediateClassType) superTypes[0]).rawType().getCanonicalText());
+        return superTypes.length > 0
+                && superTypes[0] instanceof PsiImmediateClassType
+                && "java.lang.Enum".equals(((PsiImmediateClassType) superTypes[0]).rawType().getCanonicalText());
     }
 
     public static boolean isTypeEnum(@Nullable String type) {
