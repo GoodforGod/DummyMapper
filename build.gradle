@@ -39,11 +39,12 @@ spotless {
 }
 
 dependencies {
-    implementation "org.slf4j:slf4j-api:$log4jVersion"
+    compile "org.slf4j:slf4j-api:$log4jVersion"
+    compile "org.slf4j:slf4j-simple:$log4jVersion"
 
-    implementation 'com.github.goodforgod:dummymaker:2.0.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-    implementation 'org.javassist:javassist:3.27.0-GA'
+    compile 'com.github.goodforgod:dummymaker:2.0.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+    compile 'org.javassist:javassist:3.27.0-GA'
 
     testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }

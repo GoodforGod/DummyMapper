@@ -9,6 +9,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import io.dummymaker.factory.impl.GenFactory;
+import io.dummymaker.model.GenRule;
+import io.dummymaker.model.GenRules;
 import javassist.ClassPool;
 import javassist.CtClass;
 import org.slf4j.Logger;
@@ -37,9 +40,10 @@ public class DummyJsonSingle extends AnAction {
             final PsiJavaFileScanner javaFileScanner = new PsiJavaFileScanner();
             final Map<String, Object> scan = javaFileScanner.scan((PsiJavaFile) psiFile);
 
-            final Optional<CtClass> build = ClassFactory.build(scan);
+            final Optional<Class> build = ClassFactory.build(scan);
 
-            final Class aClass = ClassPool.getDefault().toClass(build.get(), DummyJsonSingle.class.getClassLoader(), null);
+            final GenFactory factory = new GenFactory(GenRules.of(GenRule.auto(build.get())));
+            final Object o = factory.build(build.get());
 
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");
             final String targetName = elementAt.getContainingFile().getVirtualFile().getName();

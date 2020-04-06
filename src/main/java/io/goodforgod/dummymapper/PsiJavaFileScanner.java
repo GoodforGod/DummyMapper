@@ -27,12 +27,13 @@ public class PsiJavaFileScanner {
     private final Map<String, Map> scanned = new HashMap<>();
 
     public Map<String, Object> scan(@Nullable PsiJavaFile file) {
-        return scanJavaFile(file);
+        return scanJavaFile(file, file);
     }
 
-    private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile file) {
+    private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile root,
+                                             @Nullable PsiJavaFile file ) {
         try {
-            if (file == null || file.getClasses().length < 1) {
+            if (file == null || file.getClasses().length < 1 ||  root == null) {
                 return Collections.emptyMap();
             }
 
@@ -44,12 +45,12 @@ public class PsiJavaFileScanner {
             final PsiClass superTarget = target.getSuperClass();
             if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
                 final Map<String, PsiType> types = getSuperTypes(target);
-                final Map<String, Object> superScan = scanJavaClass(superTarget, types);
-                final Map<String, Object> targetScan = scanJavaClass(target, Collections.emptyMap());
+                final Map<String, Object> superScan = scanJavaClass(root, superTarget, types);
+                final Map<String, Object> targetScan = scanJavaClass(root, target, Collections.emptyMap());
                 superScan.putAll(targetScan);
                 return superScan;
             } else {
-                return scanJavaClass(target, Collections.emptyMap());
+                return scanJavaClass(root, target, Collections.emptyMap());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +58,7 @@ public class PsiJavaFileScanner {
         }
     }
 
-    private Map<String, Object> scanJavaClass(PsiClass target, Map<String, PsiType> parentTypes) {
+    private Map<String, Object> scanJavaClass(@NotNull PsiJavaFile root, PsiClass target, Map<String, PsiType> parentTypes) {
         final Map<String, Object> structure = new LinkedHashMap<>();
         final PsiField[] fields = target.getFields();
 
@@ -86,12 +87,13 @@ public class PsiJavaFileScanner {
                     }
                 } else {
                     getResolvedJavaFile(field.getType()).ifPresent(f -> {
-                        final Map map = scanned.get(getFullName(f));
+                        final String fieldJavaFullName = getFullName(f);
+                        final Map map = scanned.get(fieldJavaFullName);
                         if (map == null) {
-                            final Map<String, Object> scannedComplexField = scanJavaFile(f);
+                            final Map<String, Object> scannedComplexField = scanJavaFile(root, f);
                             final Object values = scannedComplexField.get(field.getType().getPresentableText());
                             if (values instanceof Collection) {
-                                structure.put(field.getName(), new EnumMarker(getFullName(f), (Collection) values));
+                                structure.put(field.getName(), new EnumMarker(fieldJavaFullName, (Collection) values));
                             } else {
                                 structure.put(field.getName(), scannedComplexField);
                             }
