@@ -42,7 +42,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:$log4jVersion"
     compile "org.slf4j:slf4j-simple:$log4jVersion"
 
-    compile 'com.github.goodforgod:dummymaker:2.0.1'
+    compile 'com.github.goodforgod:dummymaker:2.0.2-SNAPSHOT'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     compile 'org.javassist:javassist:3.27.0-GA'
 

@@ -2,7 +2,10 @@ package io.goodforgod.dummymapper;
 
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,30 +24,20 @@ public class ClassFactory {
     public static Optional<Class> build(Map<String, Object> map) {
         final String className = getClassName(map);
         try {
-            return Optional.ofNullable(pool.getCtClass(className))
-                    .map(c -> {
-                        try {
-                            return Class.forName(c.getName());
-                        } catch (ClassNotFoundException e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    });
-        } catch (NotFoundException e) {
+            return Optional.of(Class.forName(className));
+        } catch (ClassNotFoundException e) {
             final Map<String, CtClass> frostMap = new HashMap<>();
-            return buildInternal(map, frostMap)
-                    .flatMap(c -> {
-                        try {
-                            final Optional<Class> aClass = Optional.ofNullable(ClassPool.getDefault().toClass(c, ClassFactory.class.getClassLoader(), null));
-                            aClass.ifPresent(a -> frostMap.forEach((k, v) -> v.defrost()));
-                            return aClass;
-                        } catch (CannotCompileException ex) {
-                            ex.printStackTrace();
-                            return Optional.empty();
-                        }
-                    });
+            return buildInternal(map, frostMap).flatMap(c -> {
+                try {
+                    final Optional<Class> aClass = Optional.of(ClassPool.getDefault().toClass(c, ClassFactory.class.getClassLoader(), null));
+                    aClass.ifPresent(a -> frostMap.forEach((k, v) -> v.defrost()));
+                    return aClass;
+                } catch (CannotCompileException ex) {
+                    ex.printStackTrace();
+                    return Optional.empty();
+                }
+            });
         }
-
-
     }
 
     @SuppressWarnings("unchecked")
@@ -80,14 +73,6 @@ public class ClassFactory {
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
-        }
-    }
-
-    private static CtClass getCtClass(String className, ClassPool pool) {
-        try {
-            return pool.getCtClass(className);
-        } catch (NotFoundException e) {
-            return pool.makeClass(className);
         }
     }
 
