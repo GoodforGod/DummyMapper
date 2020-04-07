@@ -48,24 +48,20 @@ public class ClassFactory {
             classMap.put(className, ownClass);
 
             for (Map.Entry<String, Object> entry : map.entrySet()) {
+                final String fieldName = entry.getKey();
                 if (entry.getValue() instanceof SimpleMarker) {
-                    final CtField field = getSimpleField(entry.getKey(), (SimpleMarker) entry.getValue(), ownClass);
+                    final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
                 } else if (entry.getValue() instanceof EnumMarker) {
 
                 } else if (entry.getValue() instanceof Map) {
                     final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
                     CtClass fieldClass = classMap.get(fieldClassName);
-                    if (fieldClass == null) {
+                    if (fieldClass == null)
                         fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null);
-                        if (fieldClass != null) {
-                            classMap.put(fieldClassName, fieldClass);
-                        }
-                    }
 
-                    if (fieldClass != null) {
-//                        ownClass.addField(new CtField(fieldClass, entry.getKey(), fieldClass));
-                    }
+                    if (fieldClass != null)
+                        ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
                 }
             }
 
@@ -79,6 +75,15 @@ public class ClassFactory {
     private static CtField getSimpleField(String fieldName, SimpleMarker marker, CtClass owner) {
         try {
             final String src = String.format("private %s %s;", marker.getType().getName(), fieldName);
+            return CtField.make(src, owner);
+        } catch (CannotCompileException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private static CtField getClassField(String fieldName, CtClass fieldClass, CtClass owner) {
+        try {
+            final String src = String.format("private %s %s;", fieldClass.getName(), fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
             throw new IllegalArgumentException(e);
