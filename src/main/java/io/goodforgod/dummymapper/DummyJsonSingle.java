@@ -42,7 +42,7 @@ public class DummyJsonSingle extends AnAction {
 
             final Optional<Class> build = ClassFactory.build(scan);
 
-            final GenFactory factory = new GenFactory(GenRules.of(GenRule.auto(build.get())));
+            final GenFactory factory = new GenFactory(GenRules.of(GenRule.auto(build.get(), 5)));
             final Object o = factory.build(build.get());
 
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");

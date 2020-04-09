@@ -2,10 +2,7 @@ package io.goodforgod.dummymapper;
 
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
+import javassist.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +26,8 @@ public class ClassFactory {
             final Map<String, CtClass> frostMap = new HashMap<>();
             return buildInternal(map, frostMap).flatMap(c -> {
                 try {
-                    final Optional<Class> aClass = Optional.of(ClassPool.getDefault().toClass(c, ClassFactory.class.getClassLoader(), null));
-                    aClass.ifPresent(a -> frostMap.forEach((k, v) -> v.defrost()));
-                    return aClass;
-                } catch (CannotCompileException ex) {
+                    return Optional.of(Class.forName(c.getName()));
+                } catch (Exception ex) {
                     ex.printStackTrace();
                     return Optional.empty();
                 }
@@ -42,33 +37,41 @@ public class ClassFactory {
 
     @SuppressWarnings("unchecked")
     private static Optional<CtClass> buildInternal(Map<String, Object> map, Map<String, CtClass> classMap) {
+        final String className = getClassName(map);
         try {
-            final String className = getClassName(map);
-            final CtClass ownClass = pool.makeClass(className);
-            classMap.put(className, ownClass);
+            return Optional.of(pool.getCtClass(className));
+        } catch (NotFoundException ex) {
+            try {
+                final CtClass ownClass = pool.makeClass(className);
+                classMap.put(className, ownClass);
 
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                final String fieldName = entry.getKey();
-                if (entry.getValue() instanceof SimpleMarker) {
-                    final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
-                    ownClass.addField(field);
-                } else if (entry.getValue() instanceof EnumMarker) {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    final String fieldName = entry.getKey();
+                    if (entry.getValue() instanceof SimpleMarker) {
+                        final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
+                        ownClass.addField(field);
+                    } else if (entry.getValue() instanceof EnumMarker) {
 
-                } else if (entry.getValue() instanceof Map) {
-                    final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
-                    CtClass fieldClass = classMap.get(fieldClassName);
-                    if (fieldClass == null)
-                        fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null);
+                    } else if (entry.getValue() instanceof Map) {
+                        final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
+                        CtClass fieldClass = classMap.get(fieldClassName);
+                        if (fieldClass == null)
+                            fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null);
 
-                    if (fieldClass != null)
-                        ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
+                        if (fieldClass != null)
+                            ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
+                    }
                 }
-            }
 
-            return Optional.ofNullable(ownClass);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
+                return Optional.of(ClassPool.getDefault().toClass(ownClass, ClassFactory.class.getClassLoader(), null))
+                        .map(c -> {
+                            ownClass.defrost();
+                            return ownClass;
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Optional.empty();
+            }
         }
     }
 
