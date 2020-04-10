@@ -10,8 +10,8 @@ public class SimpleMarker extends FieldMarker {
 
     private Class<?> type;
 
-    public SimpleMarker(String source, Class<?> type) {
-        super(source);
+    public SimpleMarker(String root, String source, Class<?> type) {
+        super(root, source);
         this.type = type;
     }
 

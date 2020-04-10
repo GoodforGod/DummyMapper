@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class EnumMarker extends FieldMarker {
 
-    public final Collection values;
+    public final List<String> values;
 
-    public EnumMarker(String source, Collection values) {
-        super(source);
+    public EnumMarker(String root, String source, List<String> values) {
+        super(root, source);
         this.values = values;
     }
 
-    public Collection getValues() {
+    public List<String> getValues() {
         return values;
     }
 }

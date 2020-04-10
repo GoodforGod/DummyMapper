@@ -4,9 +4,7 @@ import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
 import javassist.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Description in progress
@@ -26,7 +24,7 @@ public class ClassFactory {
             final Map<String, CtClass> frostMap = new HashMap<>();
             return buildInternal(map, frostMap).flatMap(c -> {
                 try {
-                    return Optional.of(Class.forName(c.getName()));
+                    return Optional.of(Class.forName(className));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     return Optional.empty();
@@ -51,7 +49,8 @@ public class ClassFactory {
                         final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
                         ownClass.addField(field);
                     } else if (entry.getValue() instanceof EnumMarker) {
-
+                        final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
+                        ownClass.addField(field);
                     } else if (entry.getValue() instanceof Map) {
                         final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
                         CtClass fieldClass = classMap.get(fieldClassName);
@@ -84,6 +83,15 @@ public class ClassFactory {
         }
     }
 
+    private static CtField getEnumField(String fieldName, EnumMarker marker, CtClass owner) {
+        try {
+            final String src = String.format("private java.lang.String %s;", fieldName);
+            return CtField.make(src, owner);
+        } catch (CannotCompileException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     private static CtField getClassField(String fieldName, CtClass fieldClass, CtClass owner) {
         try {
             final String src = String.format("private %s %s;", fieldClass.getName(), fieldName);
@@ -96,7 +104,7 @@ public class ClassFactory {
     private static String getClassName(Map<?, ?> map) {
         return map.values().stream()
                 .filter(v -> v instanceof SimpleMarker)
-                .map(v -> getClassNameFromPackage(((SimpleMarker) v).getSource()))
+                .map(v -> getClassNameFromPackage(((SimpleMarker) v).getRoot()))
                 .findFirst()
                 .orElse("");
     }

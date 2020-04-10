@@ -10,15 +10,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
+import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
+import io.goodforgod.dummymapper.model.EnumMarker;
 import javassist.ClassPool;
 import javassist.CtClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * ! NO DESCRIPTION !
@@ -42,7 +46,19 @@ public class DummyJsonSingle extends AnAction {
 
             final Optional<Class> build = ClassFactory.build(scan);
 
-            final GenFactory factory = new GenFactory(GenRules.of(GenRule.auto(build.get(), 5)));
+            final GenRule rule = GenRule.auto(build.get(), 5);
+            scan.forEach((k, v) -> {
+                if(v instanceof EnumMarker) {
+                    final IGenerator generator = () -> {
+                        final List<String> values = ((EnumMarker) v).getValues();
+                        return values.get(ThreadLocalRandom.current().nextInt(values.size()));
+                    };
+
+                    rule.add(generator.getClass(), k);
+                }
+            });
+
+            final GenFactory factory = new GenFactory(GenRules.of(rule));
             final Object o = factory.build(build.get());
 
             final String dirPath = directory.toString().replace("PsiDirectory:", "file:/");

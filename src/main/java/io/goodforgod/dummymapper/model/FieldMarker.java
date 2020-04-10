@@ -8,13 +8,19 @@ package io.goodforgod.dummymapper.model;
  */
 public abstract class FieldMarker {
 
-    public final String source;
+    private final String root;
+    private final String source;
 
-    public FieldMarker(String source) {
+    public FieldMarker(String root, String source) {
+        this.root = root;
         this.source = source;
     }
 
     public String getSource() {
         return source;
+    }
+
+    public String getRoot() {
+        return root;
     }
 }

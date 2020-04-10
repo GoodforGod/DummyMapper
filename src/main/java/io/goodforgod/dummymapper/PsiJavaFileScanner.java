@@ -63,6 +63,7 @@ public class PsiJavaFileScanner {
         final PsiField[] fields = target.getFields();
 
         final String source = getFullName(target);
+        final String rootName = getFullName(root);
         scanned.put(source, structure);
 
         for (PsiField field : fields) {
@@ -76,24 +77,24 @@ public class PsiJavaFileScanner {
                         .map(NavigationItem::getName)
                         .collect(Collectors.toList());
 
-                structure.put(field.getName(), new EnumMarker(source, enumValues));
+                structure.put(field.getName(), new EnumMarker(rootName, source, enumValues));
             } else if (isFieldValid(field)) {
                 if (isTypeSimple(field.getType())) {
-                    structure.put(field.getName(), new SimpleMarker(source, getTypeByName(field.getType().getCanonicalText())));
+                    structure.put(field.getName(), new SimpleMarker(rootName, source, getTypeByName(field.getType().getCanonicalText())));
                 } else if (parentTypes.containsKey(field.getType().getPresentableText())) {
                     final PsiType type = parentTypes.get(field.getType().getPresentableText());
                     if (type != null && isTypeSimple(type)) {
-                        structure.put(field.getName(), new SimpleMarker(source, getTypeByName(type.getCanonicalText())));
+                        structure.put(field.getName(), new SimpleMarker(rootName, source, getTypeByName(type.getCanonicalText())));
                     }
                 } else {
                     getResolvedJavaFile(field.getType()).ifPresent(f -> {
                         final String fieldJavaFullName = getFullName(f);
                         final Map map = scanned.get(fieldJavaFullName);
                         if (map == null) {
-                            final Map<String, Object> scannedComplexField = scanJavaFile(root, f);
+                            final Map<String, Object> scannedComplexField = scanJavaFile(f, f);
                             final Object values = scannedComplexField.get(field.getType().getPresentableText());
                             if (values instanceof Collection) {
-                                structure.put(field.getName(), new EnumMarker(fieldJavaFullName, (Collection) values));
+                                structure.put(field.getName(), new EnumMarker(rootName, fieldJavaFullName, (List) values));
                             } else {
                                 structure.put(field.getName(), scannedComplexField);
                             }
