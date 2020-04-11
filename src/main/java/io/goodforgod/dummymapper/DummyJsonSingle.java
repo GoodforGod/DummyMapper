@@ -54,7 +54,7 @@ public class DummyJsonSingle extends AnAction {
                         return values.get(ThreadLocalRandom.current().nextInt(values.size()));
                     };
 
-                    rule.add(generator.getClass(), k);
+                    rule.add(generator, k);
                 }
             });
 
