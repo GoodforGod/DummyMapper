@@ -76,7 +76,7 @@ public class ClassFactory {
 
     private static CtField getSimpleField(String fieldName, SimpleMarker marker, CtClass owner) {
         try {
-            final String src = String.format("private %s %s;", marker.getType().getName(), fieldName);
+            final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
             throw new IllegalArgumentException(e);
@@ -85,7 +85,7 @@ public class ClassFactory {
 
     private static CtField getEnumField(String fieldName, EnumMarker marker, CtClass owner) {
         try {
-            final String src = String.format("private java.lang.String %s;", fieldName);
+            final String src = String.format("public java.lang.String %s;", fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
             throw new IllegalArgumentException(e);
@@ -94,7 +94,7 @@ public class ClassFactory {
 
     private static CtField getClassField(String fieldName, CtClass fieldClass, CtClass owner) {
         try {
-            final String src = String.format("private %s %s;", fieldClass.getName(), fieldName);
+            final String src = String.format("public %s %s;", fieldClass.getName(), fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
             throw new IllegalArgumentException(e);

@@ -33,14 +33,12 @@ public class PsiJavaFileScanner {
     private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile root,
                                              @Nullable PsiJavaFile file ) {
         try {
-            if (file == null || file.getClasses().length < 1 ||  root == null) {
+            if (file == null || file.getClasses().length < 1 ||  root == null)
                 return Collections.emptyMap();
-            }
 
             final PsiClass target = file.getClasses()[0];
-            if (isTypeSimple(getFullName(target)) || isTypeEnum(getFullName(target))) {
+            if (isTypeSimple(getFullName(target)) || isTypeEnum(getFullName(target)))
                 return Collections.emptyMap();
-            }
 
             final PsiClass superTarget = target.getSuperClass();
             if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
