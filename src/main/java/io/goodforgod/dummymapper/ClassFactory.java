@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper;
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
 import javassist.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -16,7 +17,10 @@ public class ClassFactory {
 
     private static final ClassPool pool = ClassPool.getDefault();
 
-    public static Optional<Class> build(Map<String, Object> map) {
+    public static Optional<Class> build(@NotNull Map<String, Object> map) {
+        if(map.isEmpty())
+            return Optional.empty();
+
         final String className = getClassName(map);
         try {
             return Optional.of(Class.forName(className));
@@ -34,7 +38,8 @@ public class ClassFactory {
     }
 
     @SuppressWarnings("unchecked")
-    private static Optional<CtClass> buildInternal(Map<String, Object> map, Map<String, CtClass> classMap) {
+    private static Optional<CtClass> buildInternal(@NotNull Map<String, Object> map,
+                                                   @NotNull Map<String, CtClass> classMap) {
         final String className = getClassName(map);
         try {
             return Optional.of(pool.getCtClass(className));
@@ -101,7 +106,7 @@ public class ClassFactory {
         }
     }
 
-    private static String getClassName(Map<?, ?> map) {
+    private static String getClassName(@NotNull Map<?, ?> map) {
         return map.values().stream()
                 .filter(v -> v instanceof SimpleMarker)
                 .map(v -> getClassNameFromPackage(((SimpleMarker) v).getRoot()))

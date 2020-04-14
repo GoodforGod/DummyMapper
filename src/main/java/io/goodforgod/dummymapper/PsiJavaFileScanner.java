@@ -31,25 +31,16 @@ public class PsiJavaFileScanner {
     }
 
     private Map<String, Object> scanJavaFile(@Nullable PsiJavaFile root,
-                                             @Nullable PsiJavaFile file ) {
+                                             @Nullable PsiJavaFile file) {
         try {
-            if (file == null || file.getClasses().length < 1 ||  root == null)
+            if (file == null || root == null || file.getClasses().length < 1)
                 return Collections.emptyMap();
 
             final PsiClass target = file.getClasses()[0];
             if (isTypeSimple(getFullName(target)) || isTypeEnum(getFullName(target)))
                 return Collections.emptyMap();
 
-            final PsiClass superTarget = target.getSuperClass();
-            if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
-                final Map<String, PsiType> types = getSuperTypes(target);
-                final Map<String, Object> superScan = scanJavaClass(root, superTarget, types);
-                final Map<String, Object> targetScan = scanJavaClass(root, target, Collections.emptyMap());
-                superScan.putAll(targetScan);
-                return superScan;
-            } else {
-                return scanJavaClass(root, target, Collections.emptyMap());
-            }
+            return scanJavaClass(root, target, Collections.emptyMap());
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyMap();
@@ -58,8 +49,25 @@ public class PsiJavaFileScanner {
 
     private Map<String, Object> scanJavaClass(@NotNull PsiJavaFile root, PsiClass target, Map<String, PsiType> parentTypes) {
         final Map<String, Object> structure = new LinkedHashMap<>();
-        final PsiField[] fields = target.getFields();
 
+        final PsiClass superTarget = target.getSuperClass();
+        if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
+            final Map<String, PsiType> types = getSuperTypes(target);
+            final Map<String, PsiType> unknownParentTypes = types.entrySet().stream()
+                    .filter(e -> !isTypeSimple(e.getValue().getPresentableText()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            unknownParentTypes.forEach((k, v) -> {
+                final PsiType type = parentTypes.get(v.getPresentableText());
+                if(type != null)
+                    types.put(k, type);
+            });
+
+            final Map<String, Object> superScan = scanJavaClass(root, superTarget, types);
+            structure.putAll(superScan);
+        }
+
+        final PsiField[] fields = target.getFields();
         final String source = getFullName(target);
         final String rootName = getFullName(root);
         scanned.put(source, structure);
