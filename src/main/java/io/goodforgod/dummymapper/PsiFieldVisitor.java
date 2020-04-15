@@ -5,7 +5,16 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ! NO DESCRIPTION !
@@ -18,27 +27,36 @@ public class PsiFieldVisitor extends PsiRecursiveElementVisitor {
     private static final Set<String> SIMPLE_FIELDS;
 
     static {
-        SIMPLE_FIELDS = new HashSet<>(Arrays.asList(
-                "String",
-                "Integer",
-                "Byte",
-                "Short",
-                "Integer",
-                "Long",
-                "Float",
-                "Double",
-                "Boolean",
-                "Character",
-                "byte",
-                "int",
-                "long",
-                "float",
-                "double",
-                "boolean",
-                "char",
-                "Object",
-                "BigInteger",
-                "BigNumber"));
+        SIMPLE_FIELDS = Stream.of(
+                Boolean.class,
+                String.class,
+                Character.class,
+                Float.class,
+                Double.class,
+                Byte.class,
+                Short.class,
+                Integer.class,
+                Long.class,
+                byte.class,
+                short.class,
+                int.class,
+                long.class,
+                float.class,
+                double.class,
+                boolean.class,
+                char.class,
+                Object.class,
+                BigInteger.class,
+                BigDecimal.class,
+                LocalTime.class,
+                LocalDate.class,
+                LocalDateTime.class,
+                Date.class,
+                java.sql.Date.class,
+                Time.class,
+                Timestamp.class
+        ).map(Class::getSimpleName)
+        .collect(Collectors.toSet());
     }
 
     private final Map<String, Object> map = new HashMap<>();
@@ -59,16 +77,13 @@ public class PsiFieldVisitor extends PsiRecursiveElementVisitor {
             if (isFieldSimple(field)) {
                 map.put(field.getName(), field.getType().getCanonicalText());
             } else if(field.getType().getResolveScope() != null) {
-                Project project = field.getType().getResolveScope().getProject();
+                final Project project = field.getType().getResolveScope().getProject();
                 if (project != null) {
-                    PsiFile[] filesByName = FilenameIndex.getFilesByName(project,
+                    final PsiFile[] filesByName = FilenameIndex.getFilesByName(project,
                             field.getType().getCanonicalText() + ".class",
                             GlobalSearchScope.allScope(project));
 
-                    PsiFieldVisitor psiFieldVisitor1 = new PsiFieldVisitor();
-                    PsiField[] fields = ((PsiJavaFile) filesByName[0]).getClasses()[0].getAllFields();
-
-                    PsiFieldVisitor psiFieldVisitor = new PsiFieldVisitor();
+                    final PsiFieldVisitor psiFieldVisitor = new PsiFieldVisitor();
                     filesByName[0].accept(psiFieldVisitor);
                     map.put(field.getName(), psiFieldVisitor.getMap());
                 }

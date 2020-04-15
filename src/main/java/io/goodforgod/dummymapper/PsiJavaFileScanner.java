@@ -47,12 +47,14 @@ public class PsiJavaFileScanner {
         }
     }
 
-    private Map<String, Object> scanJavaClass(@NotNull PsiJavaFile root, PsiClass target, Map<String, PsiType> parentTypes) {
+    private Map<String, Object> scanJavaClass(@NotNull PsiJavaFile root,
+                                              @NotNull PsiClass target,
+                                              @NotNull Map<String, PsiType> parentTypes) {
         final Map<String, Object> structure = new LinkedHashMap<>();
 
         final PsiClass superTarget = target.getSuperClass();
         if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) {
-            final Map<String, PsiType> types = getSuperTypes(target);
+            final Map<String, PsiType> types = getTypeErasures(target);
             final Map<String, PsiType> unknownParentTypes = types.entrySet().stream()
                     .filter(e -> !isTypeSimple(e.getValue().getPresentableText()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -115,7 +117,11 @@ public class PsiJavaFileScanner {
         return structure;
     }
 
-    private static Map<String, PsiType> getSuperTypes(PsiClass psiClass) {
+    /**
+     * @param psiClass of targeted class
+     * @return map of super type erasure name and targeted class erasure psiType
+     */
+    private static Map<String, PsiType> getTypeErasures(@Nullable PsiClass psiClass) {
         if (psiClass.getSuperClass() == null || psiClass.getSuperClassType() == null)
             return Collections.emptyMap();
 
