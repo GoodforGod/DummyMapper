@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * ! NO DESCRIPTION !
+ * Class utils for class scanner
  *
  * @author GoodforGod
  * @since 1.12.2019
@@ -27,7 +28,47 @@ public class ClassUtils {
 
     private ClassUtils() {}
 
-    private static final Map<String, Class> SIMPLE_FIELD_TYPES = getSimpleFieldTypes();
+    private static final Map<String, Class> SIMPLE_FIELD_TYPES;
+
+    static {
+        SIMPLE_FIELD_TYPES = new HashMap<>(70);
+        final List<Class<?>> simpleClasses = Stream.of(
+                Enum.class,
+                Object.class,
+                Boolean.class,
+                String.class,
+                Character.class,
+                Float.class,
+                Double.class,
+                Byte.class,
+                Short.class,
+                Integer.class,
+                Long.class,
+                byte.class,
+                short.class,
+                int.class,
+                long.class,
+                float.class,
+                double.class,
+                boolean.class,
+                char.class,
+                BigInteger.class,
+                BigDecimal.class,
+                LocalTime.class,
+                LocalDate.class,
+                LocalDateTime.class,
+                Date.class,
+                java.sql.Date.class,
+                Time.class,
+                Timestamp.class,
+                UUID.class)
+                .collect(Collectors.toList());
+
+        simpleClasses.forEach(c -> {
+            SIMPLE_FIELD_TYPES.put(c.getName(), c);
+            SIMPLE_FIELD_TYPES.put(c.getSimpleName(), c);
+        });
+    }
 
     public static boolean isTypeEnum(@NotNull PsiType type) {
         final PsiType[] superTypes = type.getSuperTypes();
@@ -59,45 +100,5 @@ public class ClassUtils {
 
     public static Class getTypeByName(String name) {
         return SIMPLE_FIELD_TYPES.get(name);
-    }
-
-    private static Map<String, Class> getSimpleFieldTypes() {
-        final List<Class<?>> simpleClasses = Stream.of(
-                Enum.class,
-                Object.class,
-                String.class,
-                Integer.class,
-                Byte.class,
-                Short.class,
-                Integer.class,
-                Long.class,
-                Float.class,
-                Double.class,
-                Boolean.class,
-                Character.class,
-                byte.class,
-                int.class,
-                long.class,
-                float.class,
-                double.class,
-                boolean.class,
-                char.class,
-                UUID.class,
-                BigInteger.class,
-                BigDecimal.class,
-                Timestamp.class,
-                Date.class,
-                LocalDate.class,
-                LocalTime.class,
-                LocalDateTime.class)
-                .collect(Collectors.toList());
-
-        final Map<String, Class> map = new HashMap<>();
-        simpleClasses.forEach(c -> {
-            map.put(c.getName(), c);
-            map.put(c.getSimpleName(), c);
-        });
-
-        return map;
     }
 }

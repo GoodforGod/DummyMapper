@@ -8,8 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Description in progress
+ * Class factory that creates Java Class from recreated java class map
  *
+ * @see JavaFileScanner
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
@@ -18,7 +19,7 @@ public class ClassFactory {
     private static final ClassPool pool = ClassPool.getDefault();
 
     public static Optional<Class> build(@NotNull Map<String, Object> map) {
-        if(map.isEmpty())
+        if (map.isEmpty())
             return Optional.empty();
 
         final String className = getClassName(map);

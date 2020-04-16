@@ -17,12 +17,12 @@ import java.util.stream.Stream;
 import static io.goodforgod.dummymapper.util.ClassUtils.*;
 
 /**
- * ! NO DESCRIPTION !
+ * Scans java file and recreates its structure as map
  *
  * @author GoodforGod
  * @since 27.11.2019
  */
-public class PsiJavaFileScanner {
+public class JavaFileScanner {
 
     private final Map<String, Map> scanned = new HashMap<>();
 
@@ -61,7 +61,7 @@ public class PsiJavaFileScanner {
 
             unknownParentTypes.forEach((k, v) -> {
                 final PsiType type = parentTypes.get(v.getPresentableText());
-                if(type != null)
+                if (type != null)
                     types.put(k, type);
             });
 
@@ -88,11 +88,13 @@ public class PsiJavaFileScanner {
                 structure.put(field.getName(), new EnumMarker(rootName, source, enumValues));
             } else if (isFieldValid(field)) {
                 if (isTypeSimple(field.getType())) {
-                    structure.put(field.getName(), new SimpleMarker(rootName, source, getTypeByName(field.getType().getCanonicalText())));
+                    structure.put(field.getName(),
+                            new SimpleMarker(rootName, source, getTypeByName(field.getType().getCanonicalText())));
                 } else if (parentTypes.containsKey(field.getType().getPresentableText())) {
                     final PsiType type = parentTypes.get(field.getType().getPresentableText());
                     if (type != null && isTypeSimple(type)) {
-                        structure.put(field.getName(), new SimpleMarker(rootName, source, getTypeByName(type.getCanonicalText())));
+                        structure.put(field.getName(),
+                                new SimpleMarker(rootName, source, getTypeByName(type.getCanonicalText())));
                     }
                 } else {
                     getResolvedJavaFile(field.getType()).ifPresent(f -> {
