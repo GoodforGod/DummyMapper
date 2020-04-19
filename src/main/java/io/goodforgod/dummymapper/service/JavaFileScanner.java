@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper;
+package io.goodforgod.dummymapper.service;
 
 import com.intellij.lang.jvm.types.JvmType;
 import com.intellij.navigation.NavigationItem;

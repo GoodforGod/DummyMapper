@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper;
+package io.goodforgod.dummymapper.service;
 
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
