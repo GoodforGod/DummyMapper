@@ -1,82 +1,97 @@
 package io.goodforgod.dummymapper.service;
 
+import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
 import javassist.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class factory that creates Java Class from recreated java class map
  *
- * @see JavaFileScanner
  * @author Anton Kurako (GoodforGod)
+ * @see JavaFileScanner
  * @since 5.4.2020
  */
 public class ClassFactory {
 
-    private static final ClassPool pool = ClassPool.getDefault();
+    private static final ClassPool CLASS_POOL = ClassPool.getDefault();
+    private static final Map<String, Integer> CLASS_NAME_SUFFIX_COUNTER = new HashMap<>();
 
-    public static Optional<Class> build(@NotNull Map<String, Object> map) {
+    public static Class build(@NotNull Map<String, Object> map) {
         if (map.isEmpty())
-            return Optional.empty();
+            throw new IllegalArgumentException("Scanned map for Class construction is empty!");
 
-        final String className = getClassName(map);
         try {
-            return Optional.of(Class.forName(className));
-        } catch (ClassNotFoundException e) {
             final Map<String, CtClass> frostMap = new HashMap<>();
-            return buildInternal(map, frostMap).flatMap(c -> {
-                try {
-                    return Optional.of(Class.forName(className));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    return Optional.empty();
-                }
-            });
+            final CtClass ctClass = buildInternal(map, frostMap);
+            for (String key : CLASS_NAME_SUFFIX_COUNTER.keySet()) {
+                final Integer counter = CLASS_NAME_SUFFIX_COUNTER.get(key);
+                CLASS_NAME_SUFFIX_COUNTER.put(key, counter + 1);
+            }
+
+            return ctClass.toClass();
+        } catch (Exception e) {
+            if (e.getCause() == null)
+                throw new ClassBuildException(e.getMessage());
+            throw new ClassBuildException(e.getMessage(), e.getCause());
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static Optional<CtClass> buildInternal(@NotNull Map<String, Object> map,
-                                                   @NotNull Map<String, CtClass> classMap) {
-        final String className = getClassName(map);
+    private static CtClass buildInternal(@NotNull Map<String, Object> map,
+                                         @NotNull Map<String, CtClass> classMap) {
         try {
-            return Optional.of(pool.getCtClass(className));
-        } catch (NotFoundException ex) {
-            try {
-                final CtClass ownClass = pool.makeClass(className);
-                classMap.put(className, ownClass);
+            final String className = getClassName(map);
+            final CtClass ownClass = getOrCreateCtClass(className);
+            classMap.put(className, ownClass);
 
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    final String fieldName = entry.getKey();
-                    if (entry.getValue() instanceof SimpleMarker) {
-                        final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
-                        ownClass.addField(field);
-                    } else if (entry.getValue() instanceof EnumMarker) {
-                        final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
-                        ownClass.addField(field);
-                    } else if (entry.getValue() instanceof Map) {
-                        final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
-                        CtClass fieldClass = classMap.get(fieldClassName);
-                        if (fieldClass == null)
-                            fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap).orElse(null);
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                final String fieldName = entry.getKey();
+                if (entry.getValue() instanceof SimpleMarker) {
+                    final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
+                    ownClass.addField(field);
+                } else if (entry.getValue() instanceof EnumMarker) {
+                    final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
+                    ownClass.addField(field);
+                } else if (entry.getValue() instanceof Map) {
+                    final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
+                    CtClass fieldClass = classMap.get(fieldClassName);
+                    if (fieldClass == null)
+                        fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap);
 
-                        if (fieldClass != null)
-                            ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
-                    }
+                    ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
                 }
-
-                return Optional.of(ClassPool.getDefault().toClass(ownClass, ClassFactory.class.getClassLoader(), null))
-                        .map(c -> {
-                            ownClass.defrost();
-                            return ownClass;
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Optional.empty();
             }
+
+            try {
+                Class.forName(className);
+                return ownClass;
+            } catch (Exception e) {
+                ownClass.toClass(ClassFactory.class.getClassLoader(), null);
+                return ownClass;
+            }
+        } catch (Exception e) {
+            if (e.getCause() == null)
+                throw new ClassBuildException(e.getMessage());
+            throw new ClassBuildException(e.getMessage(), e.getCause());
+        }
+    }
+
+    private static CtClass getOrCreateCtClass(@NotNull String className) {
+        try {
+            // Clean previously used class
+            final CtClass ctClass = CLASS_POOL.get(className);
+            ctClass.defrost();
+            for (CtField field : ctClass.getFields())
+                ctClass.removeField(field);
+
+            return ctClass;
+        } catch (NotFoundException ex) {
+            return CLASS_POOL.makeClass(className);
         }
     }
 
@@ -111,8 +126,9 @@ public class ClassFactory {
         return map.values().stream()
                 .filter(v -> v instanceof SimpleMarker)
                 .map(v -> getClassNameFromPackage(((SimpleMarker) v).getRoot()))
+                .map(name -> name + "_" + CLASS_NAME_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0))
                 .findFirst()
-                .orElse("");
+                .orElseThrow(() -> new IllegalArgumentException("Can not find Name while class construction!"));
     }
 
     private static String getClassNameFromPackage(String source) {

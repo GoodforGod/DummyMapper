@@ -19,8 +19,8 @@
     </extensions>
 
     <actions>
-        <action id="DummyMapper.DummyJson"
-                class="io.goodforgod.dummymapper.DummyJsonSingle"
+        <action id="DummyMapper.SingleJson"
+                class="io.goodforgod.dummymapper.JsonSingleEntry"
                 text="Single JSON"
                 description="Get JSON object">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
