@@ -85,6 +85,16 @@ public class ClassUtils {
         return isTypeSimple(type.getCanonicalText());
     }
 
+    //TODO add collection type scan
+    public static boolean isTypeCollection(@NotNull PsiType type) {
+        return false;
+    }
+
+    //TODO add map type scan
+    public static boolean isTypeMap(@NotNull PsiType type) {
+        return false;
+    }
+
     public static boolean isTypeSimple(@Nullable String type) {
         return type != null && SIMPLE_FIELD_TYPES.containsKey(type);
     }

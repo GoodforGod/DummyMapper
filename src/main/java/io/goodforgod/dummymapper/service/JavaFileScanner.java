@@ -87,7 +87,11 @@ public class JavaFileScanner {
 
                 structure.put(field.getName(), new EnumMarker(rootName, source, enumValues));
             } else if (isFieldValid(field)) {
-                if (isTypeSimple(field.getType())) {
+                if(isTypeCollection(field.getType())) {
+                    //TODO add logic
+                } else if(isTypeMap(field.getType())) {
+                    //TODO add logic
+                } else if (isTypeSimple(field.getType())) {
                     structure.put(field.getName(),
                             new SimpleMarker(rootName, source, getTypeByName(field.getType().getCanonicalText())));
                 } else if (parentTypes.containsKey(field.getType().getPresentableText())) {
