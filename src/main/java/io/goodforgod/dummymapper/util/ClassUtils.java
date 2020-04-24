@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper.util;
 import com.intellij.lang.jvm.JvmModifier;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
@@ -26,14 +27,15 @@ import java.util.stream.Stream;
  */
 public class ClassUtils {
 
-    private ClassUtils() {}
+    private ClassUtils() {
+    }
 
-    private static final Map<String, Class> SIMPLE_FIELD_TYPES;
+    private static final Map<String, Class<?>> SIMPLE_FIELD_TYPES = new HashMap<>(70);
+    private static final Map<String, Class<?>> COLLECTION_FIELD_TYPES = new HashMap<>(30);
+    private static final Map<String, Class<?>> MAP_FIELD_TYPES = new HashMap<>(10);
 
     static {
-        SIMPLE_FIELD_TYPES = new HashMap<>(70);
-        final List<Class<?>> simpleClasses = Stream.of(
-                Enum.class,
+        Stream.of(Enum.class,
                 Object.class,
                 Boolean.class,
                 String.class,
@@ -61,12 +63,37 @@ public class ClassUtils {
                 java.sql.Date.class,
                 Time.class,
                 Timestamp.class,
-                UUID.class)
-                .collect(Collectors.toList());
-
-        simpleClasses.forEach(c -> {
+                UUID.class).forEach(c -> {
             SIMPLE_FIELD_TYPES.put(c.getName(), c);
             SIMPLE_FIELD_TYPES.put(c.getSimpleName(), c);
+        });
+
+        Stream.of(Iterable.class,
+                Collection.class,
+                List.class,
+                Set.class,
+                ArrayList.class,
+                LinkedList.class,
+                CopyOnWriteArrayList.class,
+                SortedSet.class,
+                NavigableSet.class,
+                TreeSet.class,
+                HashSet.class,
+                LinkedHashSet.class).forEach(c -> {
+            COLLECTION_FIELD_TYPES.put(c.getName(), c);
+            COLLECTION_FIELD_TYPES.put(c.getSimpleName(), c);
+        });
+
+        Stream.of(Map.class,
+                WeakHashMap.class,
+                HashMap.class,
+                SortedMap.class,
+                Hashtable.class,
+                NavigableMap.class,
+                TreeMap.class,
+                LinkedHashMap.class).forEach(c -> {
+            MAP_FIELD_TYPES.put(c.getName(), c);
+            MAP_FIELD_TYPES.put(c.getSimpleName(), c);
         });
     }
 
@@ -82,21 +109,33 @@ public class ClassUtils {
     }
 
     public static boolean isTypeSimple(@NotNull PsiType type) {
-        return isTypeSimple(type.getCanonicalText());
+        return getSimpleTypeByName(type) != null;
     }
 
-    //TODO add collection type scan
     public static boolean isTypeCollection(@NotNull PsiType type) {
-        return false;
+        return getCollectionType(type) != null;
     }
 
-    //TODO add map type scan
+    public static @Nullable Class<?> getCollectionType(@NotNull PsiType type) {
+        if (!(type instanceof PsiClassReferenceType))
+            return null;
+
+        return COLLECTION_FIELD_TYPES.get(((PsiClassReferenceType) type).rawType().getCanonicalText());
+    }
+
     public static boolean isTypeMap(@NotNull PsiType type) {
-        return false;
+        return getMapType(type) != null;
+    }
+
+    public static @Nullable Class<?> getMapType(@NotNull PsiType type) {
+        if (!(type instanceof PsiClassReferenceType))
+            return null;
+
+        return MAP_FIELD_TYPES.get(((PsiClassReferenceType) type).rawType().getCanonicalText());
     }
 
     public static boolean isTypeSimple(@Nullable String type) {
-        return type != null && SIMPLE_FIELD_TYPES.containsKey(type);
+        return getSimpleTypeByName(type) != null;
     }
 
     public static boolean isFieldValid(@NotNull PsiField field) {
@@ -108,7 +147,11 @@ public class ClassUtils {
                 && !field.hasModifier(JvmModifier.TRANSITIVE);
     }
 
-    public static Class getTypeByName(String name) {
+    public static @Nullable Class<?> getSimpleTypeByName(@NotNull PsiType type) {
+        return getSimpleTypeByName(type.getCanonicalText());
+    }
+
+    public static Class<?> getSimpleTypeByName(String name) {
         return SIMPLE_FIELD_TYPES.get(name);
     }
 }

@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public class IdeaUtils {
 
-    private IdeaUtils() { }
+    private IdeaUtils() {}
 
     public static Optional<PsiJavaFile> getFileFromAction(AnActionEvent event) {
         final PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);

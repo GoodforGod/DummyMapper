@@ -27,7 +27,7 @@ public class GenFactoryBuilder {
      * @see ClassFactory
      */
     public static GenFactory build(@NotNull Class target,
-                            @NotNull Map<String, Object> scanned) {
+                                   @NotNull Map<String, Object> scanned) {
         final GenRule rule = GenRule.auto(target, GenAuto.MAX);
         scanned.forEach((k, v) -> {
             if (v instanceof EnumMarker) {

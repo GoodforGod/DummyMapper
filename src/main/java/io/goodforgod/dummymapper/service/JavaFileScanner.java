@@ -3,9 +3,12 @@ package io.goodforgod.dummymapper.service;
 import com.intellij.lang.jvm.types.JvmType;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.goodforgod.dummymapper.model.ComplexCollectionMarker;
 import io.goodforgod.dummymapper.model.EnumMarker;
+import io.goodforgod.dummymapper.model.SimpleCollectionMarker;
 import io.goodforgod.dummymapper.model.SimpleMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,8 +78,9 @@ public class JavaFileScanner {
         scanned.put(source, structure);
 
         for (PsiField field : fields) {
-            if (isTypeEnum(field.getType())) {
-                final List<String> enumValues = getResolvedJavaFile(field.getType())
+            final PsiType type = field.getType();
+            if (isTypeEnum(type)) {
+                final List<String> enumValues = getResolvedJavaFile(type)
                         .map(PsiClassOwner::getClasses)
                         .filter(c -> c.length > 0)
                         .map(c -> Arrays.stream(c[0].getFields()))
@@ -87,26 +91,48 @@ public class JavaFileScanner {
 
                 structure.put(field.getName(), new EnumMarker(rootName, source, enumValues));
             } else if (isFieldValid(field)) {
-                if(isTypeCollection(field.getType())) {
-                    //TODO add logic
-                } else if(isTypeMap(field.getType())) {
-                    //TODO add logic
-                } else if (isTypeSimple(field.getType())) {
+                if (isTypeCollection(type) && type instanceof PsiClassReferenceType) {
+                    final Class<?> simple = Optional.of(((PsiClassReferenceType) type).getParameters())
+                            .filter(p -> p.length == 1)
+                            .map(p -> getSimpleTypeByName(p[0]))
+                            .filter(Objects::nonNull)
+                            .orElse(null);
+
+                    if (simple != null) {
+                        structure.put(field.getName(), new SimpleCollectionMarker(rootName, source, getCollectionType(type), simple));
+                    } else {
+                        final String complex = Optional.of(((PsiClassReferenceType) type).getParameters())
+                                .filter(p -> p.length == 1)
+                                .map(p -> p[0])
+                                .map(PsiType::getCanonicalText)
+                                .orElse(String.class.getCanonicalName());
+
+                        structure.put(field.getName(), new ComplexCollectionMarker(rootName, source, getCollectionType(type), complex));
+                    }
+                } else if (isTypeMap(type) && type instanceof PsiClassReferenceType) {
+                    final PsiType[] types = ((PsiClassReferenceType) type).getParameters();
+                    if (types.length > 0) {
+                        final String s = type.toString();
+                        System.out.println(s);
+                    } else {
+
+                    }
+                } else if (isTypeSimple(type)) {
                     structure.put(field.getName(),
-                            new SimpleMarker(rootName, source, getTypeByName(field.getType().getCanonicalText())));
-                } else if (parentTypes.containsKey(field.getType().getPresentableText())) {
-                    final PsiType type = parentTypes.get(field.getType().getPresentableText());
-                    if (type != null && isTypeSimple(type)) {
+                            new SimpleMarker(rootName, source, getSimpleTypeByName(type.getCanonicalText())));
+                } else if (parentTypes.containsKey(type.getPresentableText())) {
+                    final PsiType parentType = parentTypes.get(type.getPresentableText());
+                    if (parentType != null && isTypeSimple(parentType)) {
                         structure.put(field.getName(),
-                                new SimpleMarker(rootName, source, getTypeByName(type.getCanonicalText())));
+                                new SimpleMarker(rootName, source, getSimpleTypeByName(parentType.getCanonicalText())));
                     }
                 } else {
-                    getResolvedJavaFile(field.getType()).ifPresent(f -> {
+                    getResolvedJavaFile(type).ifPresent(f -> {
                         final String fieldJavaFullName = getFullName(f);
                         final Map map = scanned.get(fieldJavaFullName);
                         if (map == null) {
                             final Map<String, Object> scannedComplexField = scanJavaFile(f, f);
-                            final Object values = scannedComplexField.get(field.getType().getPresentableText());
+                            final Object values = scannedComplexField.get(type.getPresentableText());
                             if (values instanceof Collection) {
                                 structure.put(field.getName(), new EnumMarker(rootName, fieldJavaFullName, (List) values));
                             } else {

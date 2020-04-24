@@ -1,5 +1,7 @@
 package io.goodforgod.dummymapper.model;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Description in progress
  *
@@ -16,11 +18,11 @@ public abstract class FieldMarker {
         this.source = source;
     }
 
-    public String getSource() {
+    public @NotNull String getSource() {
         return source;
     }
 
-    public String getRoot() {
+    public @NotNull String getRoot() {
         return root;
     }
 }

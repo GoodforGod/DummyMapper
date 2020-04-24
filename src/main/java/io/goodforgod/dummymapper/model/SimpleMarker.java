@@ -1,5 +1,7 @@
 package io.goodforgod.dummymapper.model;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Description in progress
  *
@@ -15,7 +17,7 @@ public class SimpleMarker extends FieldMarker {
         this.type = type;
     }
 
-    public Class<?> getType() {
+    public @NotNull Class<?> getType() {
         return type;
     }
 }

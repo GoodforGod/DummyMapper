@@ -1,5 +1,9 @@
 package io.goodforgod.dummymapper.model;
 
+import io.dummymaker.util.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,7 +21,7 @@ public class EnumMarker extends FieldMarker {
         this.values = values;
     }
 
-    public List<String> getValues() {
-        return values;
+    public @NotNull List<String> getValues() {
+        return CollectionUtils.isEmpty(values) ? Collections.emptyList() : values;
     }
 }
