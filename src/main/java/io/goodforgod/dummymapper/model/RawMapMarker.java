@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 23.4.2020
  */
-public class ComplexMapMarker extends MapMarker {
+public class RawMapMarker extends MapMarker {
 
     private final String keyErasure;
     private final String valueErasure;
 
-    public ComplexMapMarker(String root, String source, Class<?> type, String keyErasure, String valueErasure) {
+    public RawMapMarker(String root, String source, Class<?> type, String keyErasure, String valueErasure) {
         super(root, source, type);
         this.keyErasure = keyErasure;
         this.valueErasure = valueErasure;

@@ -2,7 +2,7 @@ package io.goodforgod.dummymapper.service;
 
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.model.EnumMarker;
-import io.goodforgod.dummymapper.model.SimpleMarker;
+import io.goodforgod.dummymapper.model.TypedMarker;
 import javassist.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,8 +51,8 @@ public class ClassFactory {
 
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 final String fieldName = entry.getKey();
-                if (entry.getValue() instanceof SimpleMarker) {
-                    final CtField field = getSimpleField(fieldName, (SimpleMarker) entry.getValue(), ownClass);
+                if (entry.getValue() instanceof TypedMarker) {
+                    final CtField field = getSimpleField(fieldName, (TypedMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
                 } else if (entry.getValue() instanceof EnumMarker) {
                     final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
@@ -95,7 +95,7 @@ public class ClassFactory {
         }
     }
 
-    private static CtField getSimpleField(String fieldName, SimpleMarker marker, CtClass owner) {
+    private static CtField getSimpleField(String fieldName, TypedMarker marker, CtClass owner) {
         try {
             final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
             return CtField.make(src, owner);
@@ -124,8 +124,8 @@ public class ClassFactory {
 
     private static String getClassName(@NotNull Map<?, ?> map) {
         return map.values().stream()
-                .filter(v -> v instanceof SimpleMarker)
-                .map(v -> getClassNameFromPackage(((SimpleMarker) v).getRoot()))
+                .filter(v -> v instanceof TypedMarker)
+                .map(v -> getClassNameFromPackage(((TypedMarker) v).getRoot()))
                 .map(name -> name + "_" + CLASS_NAME_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Can not find Name while class construction!"));

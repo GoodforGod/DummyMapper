@@ -3,6 +3,8 @@ package io.goodforgod.dummymapper.model;
 import io.dummymaker.util.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,12 +18,12 @@ public class EnumMarker extends FieldMarker {
 
     public final List<String> values;
 
-    public EnumMarker(String root, String source, List<String> values) {
+    public EnumMarker(String root, String source, Collection<String> values) {
         super(root, source);
-        this.values = values;
+        this.values = CollectionUtils.isEmpty(values) ? Collections.emptyList() : new ArrayList<>(values);
     }
 
     public @NotNull List<String> getValues() {
-        return CollectionUtils.isEmpty(values) ? Collections.emptyList() : values;
+        return values;
     }
 }

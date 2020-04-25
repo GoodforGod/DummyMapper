@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
-public class SimpleMarker extends FieldMarker {
+public class TypedMarker extends FieldMarker {
 
     private Class<?> type;
 
-    public SimpleMarker(String root, String source, Class<?> type) {
+    public TypedMarker(String root, String source, Class<?> type) {
         super(root, source);
         this.type = type;
     }

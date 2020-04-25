@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 23.4.2020
  */
-public class SimpleMapMarker extends MapMarker {
+public class TypedMapMarker extends MapMarker {
 
     private final Class<?> keyErasure;
     private final Class<?> valueErasure;
 
-    public SimpleMapMarker(String root, String source, Class<?> type, Class<?> keyErasure, Class<?> valueErasure) {
+    public TypedMapMarker(String root, String source, Class<?> type, Class<?> keyErasure, Class<?> valueErasure) {
         super(root, source, type);
         this.keyErasure = keyErasure;
         this.valueErasure = valueErasure;

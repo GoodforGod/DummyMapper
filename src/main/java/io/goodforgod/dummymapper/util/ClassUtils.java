@@ -27,8 +27,7 @@ import java.util.stream.Stream;
  */
 public class ClassUtils {
 
-    private ClassUtils() {
-    }
+    private ClassUtils() {}
 
     private static final Map<String, Class<?>> SIMPLE_FIELD_TYPES = new HashMap<>(70);
     private static final Map<String, Class<?>> COLLECTION_FIELD_TYPES = new HashMap<>(30);
@@ -64,9 +63,9 @@ public class ClassUtils {
                 Time.class,
                 Timestamp.class,
                 UUID.class).forEach(c -> {
-            SIMPLE_FIELD_TYPES.put(c.getName(), c);
-            SIMPLE_FIELD_TYPES.put(c.getSimpleName(), c);
-        });
+                    SIMPLE_FIELD_TYPES.put(c.getName(), c);
+                    SIMPLE_FIELD_TYPES.put(c.getSimpleName(), c);
+                });
 
         Stream.of(Iterable.class,
                 Collection.class,
@@ -80,9 +79,9 @@ public class ClassUtils {
                 TreeSet.class,
                 HashSet.class,
                 LinkedHashSet.class).forEach(c -> {
-            COLLECTION_FIELD_TYPES.put(c.getName(), c);
-            COLLECTION_FIELD_TYPES.put(c.getSimpleName(), c);
-        });
+                    COLLECTION_FIELD_TYPES.put(c.getName(), c);
+                    COLLECTION_FIELD_TYPES.put(c.getSimpleName(), c);
+                });
 
         Stream.of(Map.class,
                 WeakHashMap.class,
@@ -92,9 +91,9 @@ public class ClassUtils {
                 NavigableMap.class,
                 TreeMap.class,
                 LinkedHashMap.class).forEach(c -> {
-            MAP_FIELD_TYPES.put(c.getName(), c);
-            MAP_FIELD_TYPES.put(c.getSimpleName(), c);
-        });
+                    MAP_FIELD_TYPES.put(c.getName(), c);
+                    MAP_FIELD_TYPES.put(c.getSimpleName(), c);
+                });
     }
 
     public static boolean isTypeEnum(@NotNull PsiType type) {
@@ -152,6 +151,8 @@ public class ClassUtils {
     }
 
     public static Class<?> getSimpleTypeByName(String name) {
-        return SIMPLE_FIELD_TYPES.get(name);
+        return ("?".equals(name))
+                ? Object.class
+                : SIMPLE_FIELD_TYPES.get(name);
     }
 }
