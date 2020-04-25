@@ -14,6 +14,7 @@ public class RawMapMarker extends MapMarker {
     private final String keyErasure;
     private final String valueErasure;
 
+    //TODO maybe should change map marker to PAIR RAW marker (generic marker for all classes with 2 type erasures, like Pair<A,B>)
     public RawMapMarker(String root, String source, Class<?> type, String keyErasure, String valueErasure) {
         super(root, source, type);
         this.keyErasure = keyErasure;

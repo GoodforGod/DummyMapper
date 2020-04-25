@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 23.4.2020
  */
-public abstract class MapMarker extends FieldMarker {
+public abstract class MapMarker extends Marker {
 
     private final Class<?> type;
 

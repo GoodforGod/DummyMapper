@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
-public class TypedMarker extends FieldMarker {
+public class TypedMarker extends Marker {
 
     private Class<?> type;
 

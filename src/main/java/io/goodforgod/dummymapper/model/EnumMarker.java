@@ -14,7 +14,7 @@ import java.util.List;
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
-public class EnumMarker extends FieldMarker {
+public class EnumMarker extends Marker {
 
     public final List<String> values;
 

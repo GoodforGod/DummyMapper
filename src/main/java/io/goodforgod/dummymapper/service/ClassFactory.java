@@ -4,8 +4,10 @@ import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.model.EnumMarker;
 import io.goodforgod.dummymapper.model.TypedMarker;
 import javassist.*;
+import javassist.bytecode.SignatureAttribute;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,6 +108,9 @@ public class ClassFactory {
 
     private static CtField getEnumField(String fieldName, EnumMarker marker, CtClass owner) {
         try {
+            final String signature = new SignatureAttribute.ClassType(Collection.class.getName(),
+                    new SignatureAttribute.TypeArgument[]{new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(String.class.getName()))}).encode();
+
             final String src = String.format("public java.lang.String %s;", fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {

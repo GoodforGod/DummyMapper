@@ -2,23 +2,41 @@ package io.goodforgod.dummymapper.service;
 
 import com.intellij.lang.jvm.types.JvmType;
 import com.intellij.navigation.NavigationItem;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.CompilerModuleExtension;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtil;
 import io.goodforgod.dummymapper.model.*;
+import javassist.ClassPool;
+import javassist.CtClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.intellij.psi.util.ClassUtil.getJVMClassName;
 import static io.goodforgod.dummymapper.util.ClassUtils.*;
 
 /**
  * Scans java file and recreates its structure as map
+ * JetBrains class loader (only methods and only portion of them)
+ * https://intellij-support.jetbrains.com/hc/en-us/community/posts/360002746839-How-to-add-an-annotation-and-import-to-a-Java-class
  *
  * @author GoodforGod
  * @since 27.11.2019

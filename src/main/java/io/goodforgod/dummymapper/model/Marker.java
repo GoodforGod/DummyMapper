@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
-public abstract class FieldMarker {
+public abstract class Marker {
 
     private final String root;
     private final String source;
 
-    public FieldMarker(String root, String source) {
+    public Marker(@NotNull String root, @NotNull String source) {
         this.root = root;
         this.source = source;
     }
