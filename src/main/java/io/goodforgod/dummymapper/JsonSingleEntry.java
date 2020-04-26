@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
+import io.goodforgod.dummymapper.model.Marker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryBuilder;
 import io.goodforgod.dummymapper.service.JavaFileScanner;
@@ -29,7 +30,7 @@ public class JsonSingleEntry extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(() -> new IllegalArgumentException("File is not Java File!"));
 
-            final Map<String, Object> scan = new JavaFileScanner().scan(file);
+            final Map<String, Marker> scan = new JavaFileScanner().scan(file);
             final Class target = ClassFactory.build(scan);
 
             final GenFactory factory = GenFactoryBuilder.build(target, scan);

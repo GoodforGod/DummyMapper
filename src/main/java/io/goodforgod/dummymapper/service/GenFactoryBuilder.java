@@ -1,16 +1,15 @@
 package io.goodforgod.dummymapper.service;
 
-import io.dummymaker.annotation.special.GenAuto;
 import io.dummymaker.factory.impl.GenFactory;
 import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
+import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.model.EnumMarker;
+import io.goodforgod.dummymapper.model.Marker;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Description in progress
@@ -27,15 +26,11 @@ public class GenFactoryBuilder {
      * @see ClassFactory
      */
     public static GenFactory build(@NotNull Class target,
-                                   @NotNull Map<String, Object> scanned) {
-        final GenRule rule = GenRule.auto(target, GenAuto.MAX);
+                                   @NotNull Map<String, Marker> scanned) {
+        final GenRule rule = GenRule.auto(target, 2);
         scanned.forEach((k, v) -> {
             if (v instanceof EnumMarker) {
-                final IGenerator generator = () -> {
-                    final List<String> values = ((EnumMarker) v).getValues();
-                    return values.get(ThreadLocalRandom.current().nextInt(values.size()));
-                };
-
+                final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
                 rule.add(generator, k);
             }
         });

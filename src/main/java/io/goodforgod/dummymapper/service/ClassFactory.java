@@ -2,6 +2,8 @@ package io.goodforgod.dummymapper.service;
 
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.model.EnumMarker;
+import io.goodforgod.dummymapper.model.Marker;
+import io.goodforgod.dummymapper.model.RawMarker;
 import io.goodforgod.dummymapper.model.TypedMarker;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;
@@ -21,9 +23,11 @@ import java.util.Map;
 public class ClassFactory {
 
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
+    // TODO create own classloader that could be GC so old classes can be unloaded
+    // from memory
     private static final Map<String, Integer> CLASS_NAME_SUFFIX_COUNTER = new HashMap<>();
 
-    public static Class build(@NotNull Map<String, Object> map) {
+    public static Class build(@NotNull Map<String, Marker> map) {
         if (map.isEmpty())
             throw new IllegalArgumentException("Scanned map for Class construction is empty!");
 
@@ -35,7 +39,7 @@ public class ClassFactory {
                 CLASS_NAME_SUFFIX_COUNTER.put(key, counter + 1);
             }
 
-            return ctClass.toClass();
+            return Class.forName(ctClass.getName());
         } catch (Exception e) {
             if (e.getCause() == null)
                 throw new ClassBuildException(e.getMessage());
@@ -43,15 +47,14 @@ public class ClassFactory {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static CtClass buildInternal(@NotNull Map<String, Object> map,
+    private static CtClass buildInternal(@NotNull Map<String, Marker> map,
                                          @NotNull Map<String, CtClass> classMap) {
         try {
             final String className = getClassName(map);
             final CtClass ownClass = getOrCreateCtClass(className);
             classMap.put(className, ownClass);
 
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+            for (Map.Entry<String, Marker> entry : map.entrySet()) {
                 final String fieldName = entry.getKey();
                 if (entry.getValue() instanceof TypedMarker) {
                     final CtField field = getSimpleField(fieldName, (TypedMarker) entry.getValue(), ownClass);
@@ -59,11 +62,12 @@ public class ClassFactory {
                 } else if (entry.getValue() instanceof EnumMarker) {
                     final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof Map) {
-                    final String fieldClassName = getClassName((Map<?, ?>) entry.getValue());
+                } else if (entry.getValue() instanceof RawMarker) {
+                    final Map<String, Marker> structure = ((RawMarker) entry.getValue()).getStructure();
+                    final String fieldClassName = getClassName(structure);
                     CtClass fieldClass = classMap.get(fieldClassName);
                     if (fieldClass == null)
-                        fieldClass = buildInternal((Map<String, Object>) entry.getValue(), classMap);
+                        fieldClass = buildInternal(structure, classMap);
 
                     ownClass.addField(getClassField(fieldName, fieldClass, ownClass));
                 }
@@ -73,7 +77,8 @@ public class ClassFactory {
                 Class.forName(className);
                 return ownClass;
             } catch (Exception e) {
-                ownClass.toClass(ClassFactory.class.getClassLoader(), null);
+                // ownClass.toClass(ClassFactory.class.getClassLoader(), null);
+                ownClass.toClass();
                 return ownClass;
             }
         } catch (Exception e) {
@@ -109,7 +114,9 @@ public class ClassFactory {
     private static CtField getEnumField(String fieldName, EnumMarker marker, CtClass owner) {
         try {
             final String signature = new SignatureAttribute.ClassType(Collection.class.getName(),
-                    new SignatureAttribute.TypeArgument[]{new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(String.class.getName()))}).encode();
+                    new SignatureAttribute.TypeArgument[] {
+                            new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(String.class.getName())) })
+                                    .encode();
 
             final String src = String.format("public java.lang.String %s;", fieldName);
             return CtField.make(src, owner);
