@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.model.Marker;
@@ -40,7 +41,7 @@ public class JsonSingleEntry extends AnAction {
             IdeaUtils.copyToClipboard(json);
         } catch (Exception e) {
             e.printStackTrace();
-            Messages.showErrorDialog(currentProject, e.getMessage(), "Problem Occurred");
+            PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         }
     }
 }

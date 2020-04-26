@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 
-    id 'org.jetbrains.intellij' version '0.4.13'
+    id 'org.jetbrains.intellij' version '0.4.18'
     id 'com.diffplug.gradle.spotless' version '3.26.0'
 }
 
@@ -20,7 +20,7 @@ targetCompatibility = 1.8
 
 intellij {
     plugins 'java'
-    version '2019.3.2'
+    version '2020.1'
 }
 
 patchPluginXml {

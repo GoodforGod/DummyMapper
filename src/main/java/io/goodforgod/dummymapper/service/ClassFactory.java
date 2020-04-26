@@ -23,8 +23,7 @@ import java.util.Map;
 public class ClassFactory {
 
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
-    // TODO create own classloader that could be GC so old classes can be unloaded
-    // from memory
+    // TODO create own classloader that could be GC so old classes can be unloaded from memory
     private static final Map<String, Integer> CLASS_NAME_SUFFIX_COUNTER = new HashMap<>();
 
     public static Class build(@NotNull Map<String, Marker> map) {
@@ -41,9 +40,7 @@ public class ClassFactory {
 
             return Class.forName(ctClass.getName());
         } catch (Exception e) {
-            if (e.getCause() == null)
-                throw new ClassBuildException(e.getMessage());
-            throw new ClassBuildException(e.getMessage(), e.getCause());
+            throw new ClassBuildException(e);
         }
     }
 
@@ -82,9 +79,7 @@ public class ClassFactory {
                 return ownClass;
             }
         } catch (Exception e) {
-            if (e.getCause() == null)
-                throw new ClassBuildException(e.getMessage());
-            throw new ClassBuildException(e.getMessage(), e.getCause());
+            throw new ClassBuildException(e);
         }
     }
 
@@ -107,7 +102,7 @@ public class ClassFactory {
             final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
-            throw new IllegalArgumentException(e);
+            throw new ClassBuildException(e);
         }
     }
 
@@ -121,7 +116,7 @@ public class ClassFactory {
             final String src = String.format("public java.lang.String %s;", fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
-            throw new IllegalArgumentException(e);
+            throw new ClassBuildException(e);
         }
     }
 
@@ -130,7 +125,7 @@ public class ClassFactory {
             final String src = String.format("public %s %s;", fieldClass.getName(), fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
-            throw new IllegalArgumentException(e);
+            throw new ClassBuildException(e);
         }
     }
 
@@ -140,7 +135,7 @@ public class ClassFactory {
                 .map(v -> getClassNameFromPackage(((TypedMarker) v).getRoot()))
                 .map(name -> name + "_" + CLASS_NAME_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Can not find Name while class construction!"));
+                .orElseThrow(() -> new ClassBuildException("Can not find Name while class construction!"));
     }
 
     private static String getClassNameFromPackage(String source) {

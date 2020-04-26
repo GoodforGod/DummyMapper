@@ -12,6 +12,10 @@ public class ClassBuildException extends RuntimeException {
         super(message);
     }
 
+    public ClassBuildException(Throwable cause) {
+        super(cause.getMessage(), cause.getCause());
+    }
+
     public ClassBuildException(String message, Throwable cause) {
         super(message, cause);
     }
