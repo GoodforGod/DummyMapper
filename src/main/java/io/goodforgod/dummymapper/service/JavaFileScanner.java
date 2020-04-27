@@ -7,6 +7,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,8 +46,7 @@ public class JavaFileScanner {
 
             return scanJavaClass(root, target, Collections.emptyMap());
         } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyMap();
+            throw new ScanException(e);
         }
     }
 
