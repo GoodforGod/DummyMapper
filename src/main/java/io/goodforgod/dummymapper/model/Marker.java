@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.model;
 
-import io.dummymaker.util.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +28,7 @@ public abstract class Marker {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Marker> T setAnnotations(@Nullable List<String> annotations) {
+    public <T extends Marker> T setAnnotations(@Nullable Collection<String> annotations) {
         this.annotations = isEmpty(annotations) ? Collections.emptyList() : new ArrayList<>(annotations);
         return (T) this;
     }
@@ -42,7 +41,7 @@ public abstract class Marker {
         return root;
     }
 
-    public @NotNull List<String> getAnnotations() {
+    public @NotNull Collection<String> getAnnotations() {
         return isEmpty(annotations) ? Collections.emptyList() : new ArrayList<>(annotations);
     }
 }
