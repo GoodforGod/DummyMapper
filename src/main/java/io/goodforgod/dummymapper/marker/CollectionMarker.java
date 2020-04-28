@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.model;
+package io.goodforgod.dummymapper.marker;
 
 import org.jetbrains.annotations.NotNull;
 

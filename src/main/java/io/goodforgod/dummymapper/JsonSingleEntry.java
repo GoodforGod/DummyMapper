@@ -1,23 +1,18 @@
 package io.goodforgod.dummymapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
-import io.dummymaker.factory.impl.GenFactory;
-import io.goodforgod.dummymapper.model.Marker;
-import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.GenFactoryBuilder;
-import io.goodforgod.dummymapper.service.JavaFileScanner;
+import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymapper.error.MapperException;
+import io.goodforgod.dummymapper.mapper.impl.JsonMapper;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 
-import java.util.Map;
-
 /**
- * Entry-point fpr plugin
+ * Entry-point for JSON mapper plugin
  *
  * @author GoodforGod
  * @since 17.11.2019
@@ -26,22 +21,24 @@ public class JsonSingleEntry extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-        final Project currentProject = event.getProject();
         try {
+            final Project currentProject = event.getProject();
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(() -> new IllegalArgumentException("File is not Java File!"));
 
-            final Map<String, Marker> scan = new JavaFileScanner().scan(file);
-            final Class target = ClassFactory.build(scan);
+            final JsonMapper mapper = new JsonMapper();
+            final String json = mapper.map(file);
+            if (StringUtils.isEmpty(json)) {
+                PopupUtil.showBalloonForActiveComponent("No fields found to map for JSON", MessageType.WARNING);
+                return;
+            }
 
-            final GenFactory factory = GenFactoryBuilder.build(target, scan);
-            final Object o = factory.build(target);
-
-            final String json = new ObjectMapper().writeValueAsString(o);
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent("JSON copied to clipboard", MessageType.INFO);
-        } catch (Exception e) {
+        } catch (MapperException e) {
             e.printStackTrace();
+            PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
+        } catch (Exception e) {
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         }
     }

@@ -5,8 +5,8 @@ import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
-import io.goodforgod.dummymapper.model.EnumMarker;
-import io.goodforgod.dummymapper.model.Marker;
+import io.goodforgod.dummymapper.marker.EnumMarker;
+import io.goodforgod.dummymapper.marker.Marker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

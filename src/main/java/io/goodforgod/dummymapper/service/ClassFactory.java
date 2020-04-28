@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper.service;
 
 import io.goodforgod.dummymapper.error.ClassBuildException;
-import io.goodforgod.dummymapper.model.*;
+import io.goodforgod.dummymapper.marker.*;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;
 import org.jetbrains.annotations.NotNull;
