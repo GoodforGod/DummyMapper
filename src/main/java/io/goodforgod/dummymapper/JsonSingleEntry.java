@@ -39,6 +39,7 @@ public class JsonSingleEntry extends AnAction {
 
             final String json = new ObjectMapper().writeValueAsString(o);
             IdeaUtils.copyToClipboard(json);
+            PopupUtil.showBalloonForActiveComponent("JSON copied to clipboard", MessageType.INFO);
         } catch (Exception e) {
             e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);

@@ -114,7 +114,7 @@ public class JavaFileScanner {
 
                 } else { // COMPLEX CLASS SCAN
                     final Optional<Marker> marker = scanJavaComplexMarker(rootName, type);
-                    marker.map(m -> ((MapMarker) m.setAnnotations(annotations)))
+                    marker.map(m -> ((Marker) m.setAnnotations(annotations)))
                             .ifPresent(m -> structure.put(field.getName(), m));
                 }
             }

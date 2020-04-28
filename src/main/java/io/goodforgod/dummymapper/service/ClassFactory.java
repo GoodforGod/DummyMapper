@@ -6,7 +6,6 @@ import javassist.*;
 import javassist.bytecode.SignatureAttribute;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,9 +54,15 @@ public class ClassFactory {
                 } else if (entry.getValue() instanceof CollectionMarker) {
                     final Marker erasure = ((CollectionMarker) entry.getValue()).getErasure();
                     final Class<?> type = getErasureType(erasure, scanned);
-
+                    final CtField field = getCollectionField(fieldName, (CollectionMarker) entry.getValue(), type, ownClass);
+                    ownClass.addField(field);
                 } else if (entry.getValue() instanceof MapMarker) {
-
+                    final Marker keyErasure = ((MapMarker) entry.getValue()).getKeyErasure();
+                    final Marker valueErasure = ((MapMarker) entry.getValue()).getValueErasure();
+                    final Class<?> keyType = getErasureType(keyErasure, scanned);
+                    final Class<?> valueType = getErasureType(valueErasure, scanned);
+                    final CtField field = getMapField(fieldName, (MapMarker) entry.getValue(), keyType, valueType, ownClass);
+                    ownClass.addField(field);
                 } else if (entry.getValue() instanceof EnumMarker) {
                     final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
@@ -171,11 +176,6 @@ public class ClassFactory {
                                         @NotNull EnumMarker marker,
                                         @NotNull CtClass owner) {
         try {
-            final String signature = new SignatureAttribute.ClassType(Collection.class.getName(),
-                    new SignatureAttribute.TypeArgument[] {
-                            new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(String.class.getName())) })
-                                    .encode();
-
             final String src = String.format("public java.lang.String %s;", fieldName);
             return CtField.make(src, owner);
         } catch (CannotCompileException e) {
