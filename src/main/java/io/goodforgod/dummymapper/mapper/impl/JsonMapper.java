@@ -8,11 +8,14 @@ import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.GenFactoryBuilder;
+import io.goodforgod.dummymapper.service.GenFactoryProvider;
 import io.goodforgod.dummymapper.service.JavaFileScanner;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format
@@ -32,12 +35,13 @@ public class JsonMapper implements IMapper {
             if (scan.isEmpty())
                 return "";
 
-            final Class target = ClassFactory.build(scan.getStructure());
+            final Map<String, Marker> structure = scan.getStructure();
+            final Class target = ClassFactory.build(structure);
 
-            final GenFactory factory = GenFactoryBuilder.build(target, scan.getStructure());
-            final Object o = factory.build(target);
+            final GenFactory factory = GenFactoryProvider.get(structure);
+            final Object instance = factory.build(target);
 
-            return mapper.writeValueAsString(factory.build(target));
+            return mapper.writeValueAsString(instance);
         } catch (JsonProcessingException | ScanException | ClassBuildException e) {
             throw new MapperException(e);
         }

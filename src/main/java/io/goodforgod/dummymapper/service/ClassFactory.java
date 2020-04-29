@@ -22,12 +22,44 @@ public class ClassFactory {
     // TODO create own classloader that could be GC so old classes can be unloaded from memory
     private static final Map<String, Integer> CLASS_NAME_SUFFIX_COUNTER = new HashMap<>();
 
-    public static Class build(@NotNull Map<String, Marker> map) {
-        if (map.isEmpty())
+    public static Map<String, String> getMappedClasses(@NotNull Map<String, Marker> scan) {
+        final Map<String, String> scanned = new HashMap<>();
+        scan.values().stream()
+                .filter(m -> m instanceof RawMarker)
+                .map(m -> getMappedClasses(((RawMarker) m).getStructure()))
+                .forEach(scanned::putAll);
+
+        scan.values().stream()
+                .filter(m -> m instanceof CollectionMarker && ((CollectionMarker) m).isRaw())
+                .map(m -> getMappedClasses(((RawMarker) ((CollectionMarker) m).getErasure()).getStructure()))
+                .forEach(scanned::putAll);
+
+        scan.values().stream()
+                .filter(m -> m instanceof MapMarker && ((MapMarker) m).isRaw())
+                .map(m -> ((MapMarker) m).getKeyErasure() instanceof RawMarker
+                        ? getMappedClasses(((RawMarker) ((MapMarker) m).getKeyErasure()).getStructure())
+                        : getMappedClasses(((RawMarker) ((MapMarker) m).getValueErasure()).getStructure()))
+                .forEach(scanned::putAll);
+
+        scan.values().stream()
+                .filter(m -> m instanceof TypedMarker)
+                .findFirst()
+                .ifPresent(s -> {
+                    final String className = getClassName(s);
+                    final int num = Integer.parseInt(Character.valueOf(className.charAt(className.length() - 1)).toString());
+                    final String actualClassName = className.substring(0, className.length() - 1) + (num - 1);
+                    scanned.put(s.getRoot(), actualClassName);
+                });
+
+        return scanned;
+    }
+
+    public static Class build(@NotNull Map<String, Marker> scan) {
+        if (scan.isEmpty())
             throw new IllegalArgumentException("Scanned map for Class construction is empty!");
 
         try {
-            final CtClass ctClass = buildInternal(map, new HashMap<>());
+            final CtClass ctClass = buildInternal(scan, new HashMap<>());
             for (String key : CLASS_NAME_SUFFIX_COUNTER.keySet()) {
                 final Integer counter = CLASS_NAME_SUFFIX_COUNTER.get(key);
                 CLASS_NAME_SUFFIX_COUNTER.put(key, counter + 1);
@@ -81,7 +113,6 @@ public class ClassFactory {
                 Class.forName(className);
                 return ownClass;
             } catch (Exception e) {
-                // ownClass.toClass(ClassFactory.class.getClassLoader(), null);
                 ownClass.toClass();
                 return ownClass;
             }
@@ -197,10 +228,18 @@ public class ClassFactory {
     private static String getClassName(@NotNull Map<?, ?> map) {
         return map.values().stream()
                 .filter(v -> v instanceof TypedMarker)
-                .map(v -> getClassNameFromPackage(((TypedMarker) v).getRoot()))
-                .map(name -> name + "_" + CLASS_NAME_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0))
+                .map(m -> getClassName((Marker) m))
                 .findFirst()
                 .orElseThrow(() -> new ClassBuildException("Can not find Name while class construction!"));
+    }
+
+    private static String getClassName(@NotNull Marker marker) {
+        final String name = getClassNameFromPackage(marker.getRoot());
+        return getClassNameWithSuffix(name);
+    }
+
+    private static String getClassNameWithSuffix(@NotNull String name) {
+        return name + "_" + CLASS_NAME_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0);
     }
 
     private static String getClassNameFromPackage(@NotNull String source) {

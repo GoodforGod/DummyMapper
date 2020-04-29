@@ -19,6 +19,10 @@ public class CollectionMarker extends Marker {
         this.erasure = erasure;
     }
 
+    public boolean isRaw() {
+        return erasure instanceof RawMarker;
+    }
+
     public @NotNull Class<?> getType() {
         return type;
     }

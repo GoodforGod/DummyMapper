@@ -21,6 +21,10 @@ public class MapMarker extends Marker {
         this.valueErasure = valueErasure;
     }
 
+    public boolean isRaw() {
+        return keyErasure instanceof RawMarker || valueErasure instanceof RawMarker;
+    }
+
     public @NotNull Class<?> getType() {
         return type;
     }

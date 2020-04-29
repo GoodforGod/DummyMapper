@@ -19,6 +19,8 @@ import io.goodforgod.dummymapper.util.IdeaUtils;
  */
 public class JsonSingleEntry extends AnAction {
 
+    private final JsonMapper mapper = new JsonMapper();
+
     @Override
     public void actionPerformed(AnActionEvent event) {
         try {
@@ -26,7 +28,6 @@ public class JsonSingleEntry extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(() -> new IllegalArgumentException("File is not Java File!"));
 
-            final JsonMapper mapper = new JsonMapper();
             final String json = mapper.map(file);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveComponent("No fields found to map for JSON", MessageType.WARNING);
@@ -36,9 +37,9 @@ public class JsonSingleEntry extends AnAction {
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent("JSON copied to clipboard", MessageType.INFO);
         } catch (MapperException e) {
-            e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         } catch (Exception e) {
+            e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         }
     }

@@ -11,15 +11,26 @@ import java.util.List;
 import static io.dummymaker.util.CollectionUtils.isEmpty;
 
 /**
- * Description in progress
+ * Marker that contains information about class information
  *
  * @author Anton Kurako (GoodforGod)
  * @since 5.4.2020
  */
 public abstract class Marker {
 
+    /**
+     * Root CLASS marker was extracted from (always child)
+     */
     private final String root;
+
+    /**
+     * Source CLASS marker was extracted from (can be parent class if inheritance take place)
+     */
     private final String source;
+
+    /**
+     * Annotations that field is annotated with
+     */
     private List<String> annotations = Collections.emptyList();
 
     public Marker(@NotNull String root, @NotNull String source) {
@@ -42,6 +53,6 @@ public abstract class Marker {
     }
 
     public @NotNull Collection<String> getAnnotations() {
-        return isEmpty(annotations) ? Collections.emptyList() : new ArrayList<>(annotations);
+        return annotations;
     }
 }
