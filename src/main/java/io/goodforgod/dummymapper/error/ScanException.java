@@ -13,6 +13,6 @@ public class ScanException extends RuntimeException {
     }
 
     public ScanException(Throwable cause) {
-        super(cause.getMessage(), cause.getCause());
+        super(cause.getMessage(), cause);
     }
 }

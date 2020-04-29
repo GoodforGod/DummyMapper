@@ -43,8 +43,13 @@ dependencies {
     compile "org.slf4j:slf4j-simple:$log4jVersion"
 
     compile 'com.github.goodforgod:dummymaker:2.2.0-SNAPSHOT'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     compile 'org.javassist:javassist:3.27.0-GA'
+
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
+
+    compile 'com.github.victools:jsonschema-generator:4.11.0'
+    compile 'org.apache.avro:avro-compiler:1.9.2'
 
     testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }

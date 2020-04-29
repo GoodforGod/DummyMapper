@@ -151,8 +151,8 @@ public class ClassUtils {
     }
 
     public static Class<?> getSimpleTypeByName(String name) {
-        return ("?".equals(name))
-                ? Object.class
+        return "?".equals(name)
+                ? String.class
                 : SIMPLE_FIELD_TYPES.get(name);
     }
 }

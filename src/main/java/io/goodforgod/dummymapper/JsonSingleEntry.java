@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -8,7 +9,9 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.mapper.impl.JsonMapper;
+import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
+import io.goodforgod.dummymapper.mapper.impl.JsonSchemaMapper;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 
 /**
@@ -19,7 +22,11 @@ import io.goodforgod.dummymapper.util.IdeaUtils;
  */
 public class JsonSingleEntry extends AnAction {
 
-    private final JsonMapper mapper = new JsonMapper();
+    private final IMapper mapper = new JsonSchemaMapper();
+
+    public JsonSingleEntry() {
+        super(AllIcons.Actions.DiffWithClipboard);
+    }
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -37,6 +44,7 @@ public class JsonSingleEntry extends AnAction {
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent("JSON copied to clipboard", MessageType.INFO);
         } catch (MapperException e) {
+            e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         } catch (Exception e) {
             e.printStackTrace();
