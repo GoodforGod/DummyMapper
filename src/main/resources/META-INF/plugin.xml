@@ -15,11 +15,17 @@
     </extensions>
 
     <actions>
-        <action id="DummyMapper.SingleJson"
-                class="io.goodforgod.dummymapper.JsonSingleEntry"
-                text="Single JSON"
-                description="Get JSON object">
+        <group id="org.intellij.sdk.action.GroupedActions"
+               text="Map Options"
+               popup="true"
+               icon="AllIcons.Actions.DiffWithClipboard">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <action id="DummyMapper.SingleJson"
+                    class="io.goodforgod.dummymapper.JsonSingleEntry"
+                    text="JSON"
+                    description="Copy JSON to clipboard">
+            </action>
+        </group>
     </actions>
 </idea-plugin>
