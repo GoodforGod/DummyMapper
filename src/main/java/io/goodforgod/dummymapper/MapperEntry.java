@@ -3,48 +3,57 @@ package io.goodforgod.dummymapper;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
-import io.goodforgod.dummymapper.mapper.impl.JsonSchemaMapper;
 import io.goodforgod.dummymapper.util.IdeaUtils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
- * Entry-point for JSON mapper plugin
+ * Mapper entry point base implementation class
  *
- * @author GoodforGod
- * @since 17.11.2019
+ * @author Anton Kurako (GoodforGod)
+ * @since 1.5.2020
  */
-public class JsonSingleEntry extends AnAction {
+public abstract class MapperEntry extends AnAction {
 
-    private final IMapper mapper = new JsonSchemaMapper();
-
-    public JsonSingleEntry() {
-        super(AllIcons.Actions.DiffWithClipboard);
+    public MapperEntry() {
+        this(AllIcons.Actions.DiffWithClipboard);
     }
 
+    public MapperEntry(@NotNull Icon icon) {
+        super(icon);
+    }
+
+    @NotNull
+    public abstract IMapper getMapper();
+
+    @NotNull
+    public abstract String successMessage();
+
+    @NotNull
+    public abstract String emptyResultMessage();
+
     @Override
-    public void actionPerformed(AnActionEvent event) {
+    public void actionPerformed(@NotNull AnActionEvent event) {
         try {
-            final Project currentProject = event.getProject();
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(() -> new IllegalArgumentException("File is not Java File!"));
 
-            final String json = mapper.map(file);
+            final String json = getMapper().map(file);
             if (StringUtils.isEmpty(json)) {
-                PopupUtil.showBalloonForActiveComponent("No fields found to map for JSON", MessageType.WARNING);
+                PopupUtil.showBalloonForActiveComponent(emptyResultMessage(), MessageType.WARNING);
                 return;
             }
 
             IdeaUtils.copyToClipboard(json);
-            PopupUtil.showBalloonForActiveComponent("JSON copied to clipboard", MessageType.INFO);
+            PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
         } catch (MapperException e) {
-            e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         } catch (Exception e) {
             e.printStackTrace();

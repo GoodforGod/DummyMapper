@@ -13,7 +13,7 @@ import java.util.Map;
  * Class factory that creates Java Class from recreated java class map
  *
  * @author Anton Kurako (GoodforGod)
- * @see JavaFileScanner
+ * @see PsiJavaFileScanner
  * @since 5.4.2020
  */
 public class ClassFactory {

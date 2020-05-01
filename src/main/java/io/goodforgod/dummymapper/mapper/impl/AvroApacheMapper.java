@@ -8,7 +8,7 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.JavaFileScanner;
+import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import org.apache.avro.Schema;
 import org.apache.avro.reflect.ReflectData;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +21,13 @@ import java.util.Map;
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
  */
-public class AvroMapper implements IMapper {
+public class AvroApacheMapper implements IMapper {
 
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
-            final RawMarker scan = new JavaFileScanner().scan(file);
+            final RawMarker scan = new PsiJavaFileScanner().scan(file);
             if (scan.isEmpty())
                 return "";
 

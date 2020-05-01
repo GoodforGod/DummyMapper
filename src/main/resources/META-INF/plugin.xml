@@ -22,7 +22,7 @@
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
             <action id="DummyMapper.SingleJson"
-                    class="io.goodforgod.dummymapper.JsonSingleEntry"
+                    class="io.goodforgod.dummymapper.JsonMapperEntry"
                     text="JSON"
                     description="Copy JSON to clipboard">
             </action>

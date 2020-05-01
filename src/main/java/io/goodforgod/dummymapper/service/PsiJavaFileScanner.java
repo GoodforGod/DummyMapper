@@ -7,8 +7,10 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +28,7 @@ import static io.goodforgod.dummymapper.util.ClassUtils.*;
  * @author GoodforGod
  * @since 27.11.2019
  */
-public class JavaFileScanner {
+public class PsiJavaFileScanner {
 
     private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
 
@@ -57,14 +59,14 @@ public class JavaFileScanner {
         }
     }
 
-    private Map<String, Marker> scanJavaClass(@NotNull PsiJavaFile current,
-                                              @NotNull PsiClass target,
+    private Map<String, Marker> scanJavaClass(@NotNull PsiJavaFile rootFile,
+                                              @NotNull PsiClass targetFile,
                                               @NotNull Map<String, PsiType> parentTypes) {
         final Map<String, Marker> structure = new LinkedHashMap<>();
-        final PsiClass superTarget = target.getSuperClass();
+        final PsiClass superTarget = targetFile.getSuperClass();
 
         if (superTarget != null && !isTypeSimple(superTarget.getQualifiedName())) { // SCAN PARENT CLASS
-            final Map<String, PsiType> types = getTypeErasures(target);
+            final Map<String, PsiType> types = getTypeErasures(targetFile);
             final Map<String, PsiType> unknownParentTypes = types.entrySet().stream()
                     .filter(e -> !isTypeSimple(e.getValue().getPresentableText()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -75,18 +77,20 @@ public class JavaFileScanner {
                     types.put(k, type);
             });
 
-            final Map<String, Marker> superScan = scanJavaClass(current, superTarget, types);
+            final Map<String, Marker> superScan = scanJavaClass(rootFile, superTarget, types);
             structure.putAll(superScan);
         }
 
-        final PsiField[] fields = target.getFields();
-        final String source = getFullName(target);
-        final String root = getFullName(current);
+        final PsiField[] fields = targetFile.getFields();
+        final String source = getFullName(targetFile);
+        final String root = getFullName(rootFile);
         scanned.put(source, structure);
 
         for (PsiField field : fields) {
-            final Set<String> annotations = Arrays.stream(field.getAnnotations())
+            final Set<AnnotationMarker> annotations = Arrays.stream(field.getAnnotations())
                     .map(PsiAnnotation::getQualifiedName)
+                    .filter(StringUtils::isNotBlank)
+                    .map(AnnotationMarker::ofField)
                     .collect(Collectors.toSet());
 
             final PsiType type = field.getType();
@@ -125,6 +129,24 @@ public class JavaFileScanner {
                             .ifPresent(m -> structure.put(field.getName(), m));
                 }
             }
+        }
+
+        final Map<String, Collection<AnnotationMarker>> methodMarkers = new HashMap<>(structure.size());
+        for (String field : structure.keySet()) {
+            Arrays.stream(targetFile.getAllMethods())
+                    .filter(m -> m.getName().length() > 3)
+                    .filter(m -> field.equalsIgnoreCase(m.getName().substring(3)))
+                    .findFirst()
+                    .ifPresent(m -> {
+                        final Set<AnnotationMarker> annotations = Arrays.stream(m.getAnnotations())
+                                .map(PsiAnnotation::getQualifiedName)
+                                .filter(StringUtils::isNotBlank)
+                                .map(AnnotationMarker::ofMethod)
+                                .collect(Collectors.toSet());
+
+                        if (!annotations.isEmpty())
+                            methodMarkers.put(field, annotations);
+                    });
         }
 
         return structure;

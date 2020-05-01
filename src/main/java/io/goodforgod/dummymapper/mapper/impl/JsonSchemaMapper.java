@@ -10,7 +10,7 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.JavaFileScanner;
+import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ public class JsonSchemaMapper implements IMapper {
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
-            final RawMarker scan = new JavaFileScanner().scan(file);
+            final RawMarker scan = new PsiJavaFileScanner().scan(file);
             if (scan.isEmpty())
                 return "";
 

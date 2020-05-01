@@ -13,7 +13,7 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.JavaFileScanner;
+import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ public class AvroJacksonMapper implements IMapper {
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
-            final RawMarker scan = new JavaFileScanner().scan(file);
+            final RawMarker scan = new PsiJavaFileScanner().scan(file);
             if (scan.isEmpty())
                 return "";
 

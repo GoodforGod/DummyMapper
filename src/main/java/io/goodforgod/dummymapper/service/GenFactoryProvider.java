@@ -23,7 +23,7 @@ public class GenFactoryProvider {
     /**
      * @param scanned data from JavaFileScanner
      * @return builds GenFactory based on scanned data from java file scanner
-     * @see JavaFileScanner
+     * @see PsiJavaFileScanner
      * @see ClassFactory
      */
     public static GenFactory get(@NotNull Map<String, Marker> scanned) {
