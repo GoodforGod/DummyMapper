@@ -1,5 +1,7 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
@@ -24,14 +26,25 @@ import java.util.Map;
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format
  *
+ * {@link JsonProperty with required true) results in field being mandatory in AVRO, when its absent make type optional
+ *
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
 public class AvroJacksonMapper implements IMapper {
 
-    private final IFilter filter = new AvroFilter();
-    private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
+    private final IFilter filter;
+    private final ObjectMapper mapper;
+
+    public AvroJacksonMapper() {
+        this.filter = new AvroFilter();
+        this.mapper = new ObjectMapper(new AvroFactory());
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+    }
 
     @NotNull
     @Override

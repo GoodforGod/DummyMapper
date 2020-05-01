@@ -26,8 +26,8 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonSchemaMapper implements IMapper {
 
-    private final SchemaGenerator generator;
     private final IFilter filter;
+    private final SchemaGenerator generator;
 
     public JsonSchemaMapper() {
         final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09,

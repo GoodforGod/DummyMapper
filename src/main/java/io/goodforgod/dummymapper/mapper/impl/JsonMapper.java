@@ -28,8 +28,8 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonMapper implements IMapper {
 
-    private final ObjectMapper mapper = new ObjectMapper();
     private final IFilter filter = new JacksonFilter(false, true);
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @NotNull
     @Override

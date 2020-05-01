@@ -150,6 +150,14 @@ public class PsiJavaFileScanner {
                     });
         }
 
+        methodAnnotations.forEach((k, v) -> {
+            final Marker marker = structure.get(k);
+            final List<AnnotationMarker> mergedAnnotations = Stream.of(marker.getAnnotations(), v)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            marker.setAnnotations(mergedAnnotations);
+        });
+
         return structure;
     }
 

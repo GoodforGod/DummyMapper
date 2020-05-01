@@ -51,7 +51,7 @@ public abstract class AnnotationFilter implements IFilter {
                         .filter(a -> a.isFieldMarked() && filterFields()
                                 || a.isGetterMarked() && filterGetters()
                                 || a.isSetterMarked() && filterSetters())
-                        .anyMatch(a -> ignore.contains(a.getName())))
+                        .noneMatch(a -> ignore.contains(a.getName())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         final Map<String, RawMarker> rawMarkers = MarkerUtils.streamRawPairs(structure)
