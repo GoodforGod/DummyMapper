@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.MessageType;
@@ -23,7 +22,7 @@ import javax.swing.*;
 public abstract class MapperEntry extends AnAction {
 
     public MapperEntry() {
-        this(AllIcons.Actions.DiffWithClipboard);
+        super();
     }
 
     public MapperEntry(@NotNull Icon icon) {

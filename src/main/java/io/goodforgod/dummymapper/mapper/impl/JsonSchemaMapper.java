@@ -6,6 +6,8 @@ import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.JacksonFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -21,15 +23,18 @@ import java.util.Map;
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
  */
+@SuppressWarnings("DuplicatedCode")
 public class JsonSchemaMapper implements IMapper {
 
     private final SchemaGenerator generator;
+    private final IFilter filter;
 
     public JsonSchemaMapper() {
         final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09,
                 OptionPreset.PLAIN_JSON);
         final SchemaGeneratorConfig config = configBuilder.build();
         this.generator = new SchemaGenerator(config);
+        this.filter = new JacksonFilter(true, false);
     }
 
     @NotNull
@@ -37,10 +42,11 @@ public class JsonSchemaMapper implements IMapper {
     public String map(@NotNull PsiJavaFile file) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            if (marker.isEmpty())
+            final RawMarker filtered = this.filter.filter(marker);
+            if (filtered.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = marker.getStructure();
+            final Map<String, Marker> structure = filtered.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final JsonNode schema = generator.generateSchema(target);

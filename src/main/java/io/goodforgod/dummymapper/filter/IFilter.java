@@ -15,5 +15,6 @@ public interface IFilter {
      * @param marker to filter
      * @return marker without filtered fields (all inner RawMarkers should also be ignored)
      */
-    @NotNull RawMarker filter(@NotNull RawMarker marker);
+    @NotNull
+    RawMarker filter(@NotNull RawMarker marker);
 }

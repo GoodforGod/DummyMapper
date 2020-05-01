@@ -9,6 +9,8 @@ import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.AvroFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -25,8 +27,10 @@ import java.util.Map;
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
  */
+@SuppressWarnings("DuplicatedCode")
 public class AvroJacksonMapper implements IMapper {
 
+    private final IFilter filter = new AvroFilter();
     private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
 
     @NotNull
@@ -34,10 +38,11 @@ public class AvroJacksonMapper implements IMapper {
     public String map(@NotNull PsiJavaFile file) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            if (marker.isEmpty())
+            final RawMarker filtered = this.filter.filter(marker);
+            if (filtered.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = marker.getStructure();
+            final Map<String, Marker> structure = filtered.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();

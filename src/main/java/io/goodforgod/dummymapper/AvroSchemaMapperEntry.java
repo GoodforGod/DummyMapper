@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper;
 
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.mapper.impl.JsonMapper;
+import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class JsonMapperEntry extends MapperEntry {
+public class AvroSchemaMapperEntry extends MapperEntry {
 
-    private final IMapper mapper = new JsonMapper();
+    private final IMapper mapper = new AvroJacksonMapper();
 
     @NotNull
     @Override
@@ -23,12 +23,12 @@ public class JsonMapperEntry extends MapperEntry {
     @NotNull
     @Override
     public String successMessage() {
-        return "JSON copied to clipboard";
+        return "AVRO Schema copied to clipboard";
     }
 
     @NotNull
     @Override
     public String emptyResultMessage() {
-        return "No fields found to map for JSON";
+        return "No fields found to map for AVRO Schema";
     }
 }

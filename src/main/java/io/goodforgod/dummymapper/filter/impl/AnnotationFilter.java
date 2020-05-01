@@ -73,7 +73,8 @@ public abstract class AnnotationFilter implements IFilter {
                             ? filter((RawMarker) p.getSecond().getValueErasure())
                             : p.getSecond().getValueErasure();
 
-                    final MapMarker mapMarker = new MapMarker(p.getSecond().getRoot(), p.getSecond().getSource(), p.getSecond().getType(), m1, m2);
+                    final MapMarker mapMarker = new MapMarker(p.getSecond().getRoot(), p.getSecond().getSource(),
+                            p.getSecond().getType(), m1, m2);
                     return Pair.create(p.getFirst(), mapMarker);
                 })
                 .collect(Collectors.toMap(p -> p.getFirst(), p -> p.getSecond()));

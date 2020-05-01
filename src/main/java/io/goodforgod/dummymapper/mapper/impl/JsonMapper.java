@@ -8,7 +8,7 @@ import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.filter.IFilter;
-import io.goodforgod.dummymapper.filter.impl.JacksonGetFilter;
+import io.goodforgod.dummymapper.filter.impl.JacksonFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -25,21 +25,22 @@ import java.util.Map;
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
  */
+@SuppressWarnings("DuplicatedCode")
 public class JsonMapper implements IMapper {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final IFilter filter = new JacksonGetFilter();
+    private final IFilter filter = new JacksonFilter(false, true);
 
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            if (marker.isEmpty())
+            final RawMarker filtered = this.filter.filter(marker);
+            if (filtered.isEmpty())
                 return "";
 
-            final RawMarker filteredMarker = this.filter.filter(marker);
-            final Map<String, Marker> structure = filteredMarker.getStructure();
+            final Map<String, Marker> structure = filtered.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final GenFactory factory = GenFactoryProvider.get(structure);
