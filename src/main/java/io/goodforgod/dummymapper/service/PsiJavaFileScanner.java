@@ -131,21 +131,22 @@ public class PsiJavaFileScanner {
             }
         }
 
-        final Map<String, Collection<AnnotationMarker>> methodMarkers = new HashMap<>(structure.size());
+        final Map<String, Collection<AnnotationMarker>> methodAnnotations = new HashMap<>(structure.size());
         for (String field : structure.keySet()) {
             Arrays.stream(targetFile.getAllMethods())
                     .filter(m -> m.getName().length() > 3)
                     .filter(m -> field.equalsIgnoreCase(m.getName().substring(3)))
-                    .findFirst()
-                    .ifPresent(m -> {
+                    .forEach(m -> {
                         final Set<AnnotationMarker> annotations = Arrays.stream(m.getAnnotations())
                                 .map(PsiAnnotation::getQualifiedName)
                                 .filter(StringUtils::isNotBlank)
-                                .map(AnnotationMarker::ofMethod)
+                                .map(a -> m.getName().startsWith("set")
+                                        ? AnnotationMarker.ofSetter(a)
+                                        : AnnotationMarker.ofGetter(a))
                                 .collect(Collectors.toSet());
 
                         if (!annotations.isEmpty())
-                            methodMarkers.put(field, annotations);
+                            methodAnnotations.put(field, annotations);
                     });
         }
 
@@ -234,7 +235,7 @@ public class PsiJavaFileScanner {
      * @return map of super type erasure name and targeted class erasure psiType
      */
     private Map<String, PsiType> getTypeErasures(@Nullable PsiClass psiClass) {
-        if (psiClass.getSuperClass() == null || psiClass.getSuperClassType() == null)
+        if (psiClass == null || psiClass.getSuperClass() == null || psiClass.getSuperClassType() == null)
             return Collections.emptyMap();
 
         final Map<String, PsiType> types = new LinkedHashMap<>();

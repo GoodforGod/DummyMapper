@@ -2,10 +2,12 @@ package io.goodforgod.dummymapper.service;
 
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.util.MarkerUtils;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,21 +26,27 @@ public class ClassFactory {
 
     public static Map<String, String> getMappedClasses(@NotNull Map<String, Marker> scan) {
         final Map<String, String> scanned = new HashMap<>();
-        scan.values().stream()
-                .filter(m -> m instanceof RawMarker)
-                .map(m -> getMappedClasses(((RawMarker) m).getStructure()))
+        MarkerUtils.streamRawMarkers(scan)
+                .map(m -> getMappedClasses(m.getStructure()))
                 .forEach(scanned::putAll);
 
-        scan.values().stream()
-                .filter(m -> m instanceof CollectionMarker && ((CollectionMarker) m).isRaw())
-                .map(m -> getMappedClasses(((RawMarker) ((CollectionMarker) m).getErasure()).getStructure()))
+        MarkerUtils.streamCollectionRawMarkers(scan)
+                .map(m -> getMappedClasses(((RawMarker) m.getErasure()).getStructure()))
                 .forEach(scanned::putAll);
 
-        scan.values().stream()
-                .filter(m -> m instanceof MapMarker && ((MapMarker) m).isRaw())
-                .map(m -> ((MapMarker) m).getKeyErasure() instanceof RawMarker
-                        ? getMappedClasses(((RawMarker) ((MapMarker) m).getKeyErasure()).getStructure())
-                        : getMappedClasses(((RawMarker) ((MapMarker) m).getValueErasure()).getStructure()))
+        MarkerUtils.streamMapRawMarkers(scan)
+                .map(m -> {
+                    final Map<String, String> mapped1 = m.getKeyErasure() instanceof RawMarker
+                            ? getMappedClasses(((RawMarker) m.getKeyErasure()).getStructure())
+                            : new HashMap<>(1);
+
+                    final Map<String, String> mapped2 = m.getKeyErasure() instanceof RawMarker
+                            ? getMappedClasses(((RawMarker) m.getKeyErasure()).getStructure())
+                            : Collections.emptyMap();
+
+                    mapped1.putAll(mapped2);
+                    return mapped1;
+                })
                 .forEach(scanned::putAll);
 
         scan.values().stream()

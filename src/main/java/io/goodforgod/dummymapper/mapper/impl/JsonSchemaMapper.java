@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 /**
- * Maps instance of {@link PsiJavaFile} to JSON Schema format
+ * Maps instance of {@link PsiJavaFile} to {@link JsonNode} JSON Schema format
  *
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
@@ -36,11 +36,11 @@ public class JsonSchemaMapper implements IMapper {
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
-            final RawMarker scan = new PsiJavaFileScanner().scan(file);
-            if (scan.isEmpty())
+            final RawMarker marker = new PsiJavaFileScanner().scan(file);
+            if (marker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = scan.getStructure();
+            final Map<String, Marker> structure = marker.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final JsonNode schema = generator.generateSchema(target);

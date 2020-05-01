@@ -7,6 +7,8 @@ import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.JacksonGetFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 /**
- * Maps instance of {@link PsiJavaFile} to JSON format
+ * Maps instance of {@link PsiJavaFile} to JSON format as example
  *
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
@@ -26,16 +28,18 @@ import java.util.Map;
 public class JsonMapper implements IMapper {
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final IFilter filter = new JacksonGetFilter();
 
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
-            final RawMarker scan = new PsiJavaFileScanner().scan(file);
-            if (scan.isEmpty())
+            final RawMarker marker = new PsiJavaFileScanner().scan(file);
+            if (marker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = scan.getStructure();
+            final RawMarker filteredMarker = this.filter.filter(marker);
+            final Map<String, Marker> structure = filteredMarker.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final GenFactory factory = GenFactoryProvider.get(structure);

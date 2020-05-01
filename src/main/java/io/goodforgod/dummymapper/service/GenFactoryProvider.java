@@ -6,6 +6,7 @@ import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Description in progress
+ * GenFactory Provider that builds GenFactory with special generators for ENUM or other complex values
  *
  * @author Anton Kurako (GoodforGod)
  * @since 19.4.2020
@@ -51,22 +52,26 @@ public class GenFactoryProvider {
                 }
             });
 
-            final List<GenRule> rawRules = scanned.values().stream()
-                    .filter(m -> m instanceof RawMarker)
-                    .flatMap(m -> getRules(((RawMarker) m).getStructure(), mappedClasses).stream())
+            final List<GenRule> rawRules = MarkerUtils.streamRawMarkers(scanned)
+                    .flatMap(m -> getRules(m.getStructure(), mappedClasses).stream())
                     .collect(Collectors.toList());
 
-            final List<GenRule> collectionRules = scanned.values().stream()
-                    .filter(m -> m instanceof CollectionMarker && ((CollectionMarker) m).isRaw())
-                    .flatMap(m -> getRules(((RawMarker) ((CollectionMarker) m).getErasure()).getStructure(), mappedClasses)
-                            .stream())
+            final List<GenRule> collectionRules = MarkerUtils.streamCollectionRawMarkers(scanned)
+                    .flatMap(m -> getRules(((RawMarker) m.getErasure()).getStructure(), mappedClasses).stream())
                     .collect(Collectors.toList());
 
-            final List<GenRule> mapRules = scanned.values().stream()
-                    .filter(m -> m instanceof MapMarker && ((MapMarker) m).isRaw())
-                    .flatMap(m -> ((MapMarker) m).getKeyErasure() instanceof RawMarker
-                            ? getRules(((RawMarker) ((MapMarker) m).getKeyErasure()).getStructure(), mappedClasses).stream()
-                            : getRules(((RawMarker) ((MapMarker) m).getValueErasure()).getStructure(), mappedClasses).stream())
+            final List<GenRule> mapRules = MarkerUtils.streamMapRawMarkers(scanned)
+                    .flatMap(m -> {
+                        final Stream<GenRule> stream1 = m.getKeyErasure() instanceof RawMarker
+                                ? getRules(((RawMarker) m.getKeyErasure()).getStructure(), mappedClasses).stream()
+                                : Stream.empty();
+
+                        final Stream<GenRule> stream2 = m.getValueErasure() instanceof RawMarker
+                                ? getRules(((RawMarker) m.getValueErasure()).getStructure(), mappedClasses).stream()
+                                : Stream.empty();
+
+                        return Stream.concat(stream1, stream2);
+                    })
                     .collect(Collectors.toList());
 
             return Stream.of(Collections.singletonList(rule), rawRules, collectionRules, mapRules)

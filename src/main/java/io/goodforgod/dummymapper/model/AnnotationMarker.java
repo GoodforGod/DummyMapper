@@ -10,22 +10,28 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AnnotationMarker {
 
-    private String name;
-    private boolean isFieldMarked;
-    private boolean isGetterMarked;
+    private final String name;
+    private final boolean isFieldMarked;
+    private final boolean isGetterMarked;
+    private final boolean isSetterMarked;
 
-    private AnnotationMarker(String name, boolean isFieldMarked, boolean isGetterMarked) {
+    private AnnotationMarker(String name, boolean isFieldMarked, boolean isGetterMarked, boolean isSetterMarked) {
         this.name = name;
         this.isFieldMarked = isFieldMarked;
         this.isGetterMarked = isGetterMarked;
+        this.isSetterMarked = isSetterMarked;
     }
 
     public static AnnotationMarker ofField(@NotNull String name) {
-        return new AnnotationMarker(name, true, false);
+        return new AnnotationMarker(name, true, false, false);
     }
 
-    public static AnnotationMarker ofMethod(@NotNull String name) {
-        return new AnnotationMarker(name, false, true);
+    public static AnnotationMarker ofGetter(@NotNull String name) {
+        return new AnnotationMarker(name, false, true, false);
+    }
+
+    public static AnnotationMarker ofSetter(@NotNull String name) {
+        return new AnnotationMarker(name, false, false, true);
     }
 
     public @NotNull String getName() {
@@ -38,5 +44,9 @@ public class AnnotationMarker {
 
     public boolean isGetterMarked() {
         return isGetterMarked;
+    }
+
+    public boolean isSetterMarked() {
+        return isSetterMarked;
     }
 }
