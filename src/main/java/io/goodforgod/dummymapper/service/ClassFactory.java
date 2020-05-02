@@ -1,10 +1,17 @@
 package io.goodforgod.dummymapper.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import javassist.*;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.FieldInfo;
 import javassist.bytecode.SignatureAttribute;
+import javassist.bytecode.annotation.Annotation;
+import javassist.bytecode.annotation.BooleanMemberValue;
+import javassist.bytecode.annotation.StringMemberValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -166,7 +173,15 @@ public class ClassFactory {
                                           @NotNull CtClass owner) {
         try {
             final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
-            return CtField.make(src, owner);
+            final CtField field = CtField.make(src, owner);
+            final FieldInfo fieldInfo = field.getFieldInfo();
+            final ConstPool constPool = fieldInfo.getConstPool();
+            final Annotation annotation = new Annotation(JsonProperty.class.getName(), constPool);
+            annotation.addMemberValue("required", new BooleanMemberValue(true, constPool));
+            AnnotationsAttribute attributeNew = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+            attributeNew.setAnnotation(annotation);
+            fieldInfo.addAttribute(attributeNew);
+            return field;
         } catch (CannotCompileException e) {
             throw new ClassBuildException(e);
         }
