@@ -7,7 +7,7 @@ import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.filter.IFilter;
-import io.goodforgod.dummymapper.filter.impl.JacksonFilter;
+import io.goodforgod.dummymapper.filter.impl.SupportedAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -34,19 +34,19 @@ public class JsonSchemaMapper implements IMapper {
                 OptionPreset.PLAIN_JSON);
         final SchemaGeneratorConfig config = configBuilder.build();
         this.generator = new SchemaGenerator(config);
-        this.filter = new JacksonFilter(true, false);
+        this.filter = new SupportedAnnotationFilter();
     }
 
+    //TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            final RawMarker filtered = this.filter.filter(marker);
-            if (filtered.isEmpty())
+            if (marker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = filtered.getStructure();
+            final Map<String, Marker> structure = marker.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final JsonNode schema = generator.generateSchema(target);

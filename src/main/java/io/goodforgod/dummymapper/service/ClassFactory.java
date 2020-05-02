@@ -1,22 +1,19 @@
 package io.goodforgod.dummymapper.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.FieldInfo;
 import javassist.bytecode.SignatureAttribute;
-import javassist.bytecode.annotation.Annotation;
-import javassist.bytecode.annotation.BooleanMemberValue;
-import javassist.bytecode.annotation.StringMemberValue;
+import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class factory that creates Java Class from recreated java class map
@@ -96,7 +93,7 @@ public class ClassFactory {
             for (Map.Entry<String, Marker> entry : map.entrySet()) {
                 final String fieldName = entry.getKey();
                 if (entry.getValue() instanceof TypedMarker) {
-                    final CtField field = getSimpleField(fieldName, (TypedMarker) entry.getValue(), ownClass);
+                    final CtField field = getTypedField(fieldName, (TypedMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
                 } else if (entry.getValue() instanceof CollectionMarker) {
                     final Marker erasure = ((CollectionMarker) entry.getValue()).getErasure();
@@ -128,7 +125,7 @@ public class ClassFactory {
                 Class.forName(className);
                 return ownClass;
             } catch (Exception e) {
-                ownClass.toClass();
+                ownClass.toClass(ObjectMapper.class.getClassLoader(), null);
                 return ownClass;
             }
         } catch (Exception e) {
@@ -156,7 +153,7 @@ public class ClassFactory {
 
     private static CtClass getOrCreateCtClass(@NotNull String className) {
         try {
-            // Clean previously used class
+            // Clean previously used class (actually doesn't work such way)
             final CtClass ctClass = CLASS_POOL.get(className);
             ctClass.defrost();
             for (CtField field : ctClass.getFields())
@@ -168,20 +165,13 @@ public class ClassFactory {
         }
     }
 
-    private static CtField getSimpleField(@NotNull String fieldName,
-                                          @NotNull TypedMarker marker,
-                                          @NotNull CtClass owner) {
+    private static CtField getTypedField(@NotNull String fieldName,
+                                         @NotNull TypedMarker marker,
+                                         @NotNull CtClass owner) {
         try {
             final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
             final CtField field = CtField.make(src, owner);
-            final FieldInfo fieldInfo = field.getFieldInfo();
-            final ConstPool constPool = fieldInfo.getConstPool();
-            final Annotation annotation = new Annotation(JsonProperty.class.getName(), constPool);
-            annotation.addMemberValue("required", new BooleanMemberValue(true, constPool));
-            AnnotationsAttribute attributeNew = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-            attributeNew.setAnnotation(annotation);
-            fieldInfo.addAttribute(attributeNew);
-            return field;
+            return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {
             throw new ClassBuildException(e);
         }
@@ -199,7 +189,7 @@ public class ClassFactory {
 
             final CtField field = CtField.make(src, owner);
             field.setGenericSignature(signature.encode());
-            return field;
+            return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {
             throw new ClassBuildException(e);
         }
@@ -220,7 +210,7 @@ public class ClassFactory {
 
             final CtField field = CtField.make(src, owner);
             field.setGenericSignature(signature.encode());
-            return field;
+            return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {
             throw new ClassBuildException(e);
         }
@@ -231,10 +221,74 @@ public class ClassFactory {
                                         @NotNull CtClass owner) {
         try {
             final String src = String.format("public java.lang.String %s;", fieldName);
-            return CtField.make(src, owner);
+            final CtField field = CtField.make(src, owner);
+            return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {
             throw new ClassBuildException(e);
         }
+    }
+
+    private static CtField addAnnotationInfo(@NotNull CtField field,
+                                             @NotNull Marker marker) {
+        if (marker.getAnnotations().isEmpty())
+            return field;
+
+        final FieldInfo fieldInfo = field.getFieldInfo();
+        final ConstPool constPool = fieldInfo.getConstPool();
+
+        for (AnnotationMarker annotationMarker : marker.getAnnotations()) {
+            final Annotation a = new Annotation(annotationMarker.getName(), constPool);
+            annotationMarker.getAttributes()
+                    .forEach((name, v) -> getMember(v, constPool)
+                            .ifPresent(member -> a.addMemberValue(name, member)));
+            final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+            attribute.setAnnotation(a);
+            fieldInfo.addAttribute(attribute);
+        }
+
+        // final Annotation annotation = new Annotation(JsonProperty.class.getName(), constPool);
+        // annotation.addMemberValue("required", new BooleanMemberValue(true, constPool));
+        // AnnotationsAttribute attributeNew = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+        // attributeNew.setAnnotation(annotation);
+        // fieldInfo.addAttribute(attributeNew);
+
+        return field;
+    }
+
+    private static Optional<MemberValue> getMember(Object v, ConstPool constPool) {
+        if (v instanceof Boolean) {
+            return Optional.of(new BooleanMemberValue((Boolean) v, constPool));
+        } else if (v instanceof String) {
+            return Optional.of(new StringMemberValue((String) v, constPool));
+        } else if (v instanceof Character) {
+            return Optional.of(new CharMemberValue((Character) v, constPool));
+        } else if (v instanceof Byte) {
+            return Optional.of(new ByteMemberValue((Byte) v, constPool));
+        } else if (v instanceof Short) {
+            return Optional.of(new ShortMemberValue((Short) v, constPool));
+        } else if (v instanceof Integer) {
+            return Optional.of(new IntegerMemberValue((Integer) v, constPool));
+        } else if (v instanceof Long) {
+            return Optional.of(new LongMemberValue((Long) v, constPool));
+        } else if (v instanceof Float) {
+            return Optional.of(new FloatMemberValue((Float) v, constPool));
+        } else if (v instanceof Double) {
+            return Optional.of(new DoubleMemberValue((Double) v, constPool));
+        } else if (v instanceof Collection) {
+            final MemberValue[] values = ((Collection<?>) v).stream()
+                    .map(r -> getMember(r, constPool))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .toArray(MemberValue[]::new);
+
+            if (values.length > 0) {
+                final ArrayMemberValue value = new ArrayMemberValue(values[0], constPool);
+                value.setValue(values);
+                return Optional.of(value);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private static CtField getClassField(@NotNull String fieldName,

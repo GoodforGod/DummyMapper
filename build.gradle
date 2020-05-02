@@ -38,6 +38,17 @@ spotless {
     }
 }
 
+configurations {
+    all {
+        resolutionStrategy {
+            force 'com.fasterxml.jackson.core:jackson-core:2.11.0'
+            force 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+            force 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
+            force 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
+        }
+    }
+}
+
 dependencies {
     compile "org.slf4j:slf4j-api:$log4jVersion"
     compile "org.slf4j:slf4j-simple:$log4jVersion"
@@ -45,7 +56,6 @@ dependencies {
     compile 'com.github.goodforgod:dummymaker:2.2.0-SNAPSHOT'
     compile 'org.javassist:javassist:3.27.0-GA'
 
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
 
     compile 'com.github.victools:jsonschema-generator:4.11.0'

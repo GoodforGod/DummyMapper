@@ -58,14 +58,11 @@ public class AnnotationMarker {
         if (o == null || getClass() != o.getClass())
             return false;
         AnnotationMarker that = (AnnotationMarker) o;
-        return isFieldMarked == that.isFieldMarked &&
-                isGetterMarked == that.isGetterMarked &&
-                isSetterMarked == that.isSetterMarked &&
-                Objects.equals(name, that.name);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, isFieldMarked, isGetterMarked, isSetterMarked);
+        return Objects.hash(name);
     }
 }

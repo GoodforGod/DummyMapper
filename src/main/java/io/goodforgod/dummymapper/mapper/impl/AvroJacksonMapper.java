@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
@@ -11,7 +10,7 @@ import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.filter.IFilter;
-import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.SupportedAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -25,7 +24,7 @@ import java.util.Map;
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format
  *
- * {@link JsonProperty with required true) results in field being mandatory in AVRO, when its absent make type optional
+ * {@link com.fasterxml.jackson.annotation.JsonProperty with required true) results in field being mandatory in AVRO, when its absent make type optional
  *
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
@@ -37,20 +36,20 @@ public class AvroJacksonMapper implements IMapper {
     private final ObjectMapper mapper;
 
     public AvroJacksonMapper() {
-        this.filter = new AvroFilter();
+        this.filter = new SupportedAnnotationFilter();
         this.mapper = new ObjectMapper(new AvroFactory());
     }
 
+    //TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            final RawMarker filtered = this.filter.filter(marker);
-            if (filtered.isEmpty())
+            if (marker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = filtered.getStructure();
+            final Map<String, Marker> structure = marker.getStructure();
             final Class target = ClassFactory.build(structure);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();

@@ -4,10 +4,7 @@ import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static io.dummymaker.util.CollectionUtils.isEmpty;
 
@@ -32,7 +29,7 @@ public abstract class Marker {
     /**
      * Annotations that field is annotated with
      */
-    private List<AnnotationMarker> annotations = Collections.emptyList();
+    private Set<AnnotationMarker> annotations = Collections.emptySet();
 
     public Marker(@NotNull String root, @NotNull String source) {
         this.root = root;
@@ -41,7 +38,7 @@ public abstract class Marker {
 
     @SuppressWarnings("unchecked")
     public <T extends Marker> T setAnnotations(@Nullable Collection<AnnotationMarker> annotations) {
-        this.annotations = isEmpty(annotations) ? Collections.emptyList() : new ArrayList<>(annotations);
+        this.annotations = isEmpty(annotations) ? Collections.emptySet() : new HashSet<>(annotations);
         return (T) this;
     }
 

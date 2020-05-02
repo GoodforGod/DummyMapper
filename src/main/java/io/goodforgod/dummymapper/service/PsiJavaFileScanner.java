@@ -38,6 +38,9 @@ public class PsiJavaFileScanner {
     private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
 
     public RawMarker scan(@Nullable PsiJavaFile file) {
+        if (file == null || file.getClasses().length == 0)
+            return RawMarker.EMPTY;
+
         final Map<String, Marker> scanned = scanJavaFile(file, file);
         if (scanned.isEmpty())
             return RawMarker.EMPTY;
@@ -51,7 +54,7 @@ public class PsiJavaFileScanner {
     private Map<String, Marker> scanJavaFile(@Nullable PsiJavaFile current,
                                              @Nullable PsiJavaFile file) {
         try {
-            if (file == null || current == null || file.getClasses().length < 1)
+            if (file == null || current == null || file.getClasses().length == 0)
                 return Collections.emptyMap();
 
             final PsiClass target = file.getClasses()[0];
