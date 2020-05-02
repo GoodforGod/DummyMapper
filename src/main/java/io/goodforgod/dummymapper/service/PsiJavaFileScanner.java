@@ -1,5 +1,8 @@
 package io.goodforgod.dummymapper.service;
 
+import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
+import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
+import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
 import com.intellij.lang.jvm.types.JvmType;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.Pair;
@@ -11,6 +14,8 @@ import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.goodforgod.dummymapper.util.ClassUtils.*;
+import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 
 /**
  * Scans java file and recreates its structure as map JetBrains class loader
@@ -87,10 +92,9 @@ public class PsiJavaFileScanner {
         scanned.put(source, structure);
 
         for (PsiField field : fields) {
-            final Set<AnnotationMarker> annotations = Arrays.stream(field.getAnnotations())
-                    .map(PsiAnnotation::getQualifiedName)
-                    .filter(StringUtils::isNotBlank)
-                    .map(AnnotationMarker::ofField)
+            final Set<AnnotationMarker> annotations = scanAnnotations(field.getAnnotations())
+                    .map(AnnotationMarkerBuilder::ofField)
+                    .map(AnnotationMarkerBuilder::build)
                     .collect(Collectors.toSet());
 
             final PsiType type = field.getType();
@@ -134,15 +138,15 @@ public class PsiJavaFileScanner {
         final Map<String, Collection<AnnotationMarker>> methodAnnotations = new HashMap<>(structure.size());
         for (String field : structure.keySet()) {
             Arrays.stream(targetFile.getAllMethods())
+                    .filter(m -> ArrayUtils.isNotEmpty(m.getAnnotations()))
                     .filter(m -> m.getName().length() > 3)
                     .filter(m -> field.equalsIgnoreCase(m.getName().substring(3)))
                     .forEach(m -> {
-                        final Set<AnnotationMarker> annotations = Arrays.stream(m.getAnnotations())
-                                .map(PsiAnnotation::getQualifiedName)
-                                .filter(StringUtils::isNotBlank)
-                                .map(a -> m.getName().startsWith("set")
-                                        ? AnnotationMarker.ofSetter(a)
-                                        : AnnotationMarker.ofGetter(a))
+                        final Set<AnnotationMarker> annotations = scanAnnotations(m.getAnnotations())
+                                .map(b -> m.getName().startsWith("set")
+                                        ? b.ofSetter()
+                                        : b.ofGetter())
+                                .map(AnnotationMarkerBuilder::build)
                                 .collect(Collectors.toSet());
 
                         if (!annotations.isEmpty())
@@ -236,6 +240,35 @@ public class PsiJavaFileScanner {
                                          @NotNull String rootName,
                                          @NotNull PsiType type) {
         return new TypedMarker(rootName, source, getSimpleTypeByName(type.getCanonicalText()));
+    }
+
+    private Stream<AnnotationMarkerBuilder> scanAnnotations(PsiAnnotation[] psiAnnotations) {
+        return Arrays.stream(psiAnnotations)
+                .filter(a -> StringUtils.isNotBlank(a.getQualifiedName()))
+                .map(a -> {
+                    final Map<String, Object> attrs = new HashMap<>(a.getAttributes().size());
+                    a.getAttributes().forEach(attr -> {
+                        final Object value = getAttributeValue(attr.getAttributeValue());
+                        if (value != null)
+                            attrs.put(attr.getAttributeName(), value);
+                    });
+
+                    return AnnotationMarkerBuilder.get()
+                            .withName(a.getQualifiedName())
+                            .withAttributes(attrs);
+                });
+    }
+
+    private Object getAttributeValue(JvmAnnotationAttributeValue attribute) {
+        if (attribute instanceof JvmAnnotationConstantValue) {
+            return ((JvmAnnotationConstantValue) attribute).getConstantValue();
+        } else if (attribute instanceof JvmAnnotationArrayValue) {
+            return ((JvmAnnotationArrayValue) attribute).getValues().stream()
+                    .map(this::getAttributeValue)
+                    .collect(Collectors.toList());
+        } else {
+            return null;
+        }
     }
 
     /**

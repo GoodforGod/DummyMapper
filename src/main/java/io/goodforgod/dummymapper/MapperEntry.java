@@ -53,6 +53,7 @@ public abstract class MapperEntry extends AnAction {
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
         } catch (MapperException e) {
+            e.printStackTrace();
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
         } catch (Exception e) {
             e.printStackTrace();

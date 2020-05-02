@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,10 +39,6 @@ public class AvroJacksonMapper implements IMapper {
     public AvroJacksonMapper() {
         this.filter = new AvroFilter();
         this.mapper = new ObjectMapper(new AvroFactory());
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
 
     @NotNull

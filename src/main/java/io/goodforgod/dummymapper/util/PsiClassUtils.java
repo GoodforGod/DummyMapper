@@ -25,9 +25,9 @@ import java.util.stream.Stream;
  * @author GoodforGod
  * @since 1.12.2019
  */
-public class ClassUtils {
+public class PsiClassUtils {
 
-    private ClassUtils() {}
+    private PsiClassUtils() {}
 
     private static final Map<String, Class<?>> SIMPLE_FIELD_TYPES = new HashMap<>(70);
     private static final Map<String, Class<?>> COLLECTION_FIELD_TYPES = new HashMap<>(30);
