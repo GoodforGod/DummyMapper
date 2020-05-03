@@ -28,7 +28,7 @@ public class AvroApacheMapper implements IMapper {
 
     private final IFilter filter = new SupportedAnnotationFilter();
 
-    //TODO fix class name with suffix
+    // TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {

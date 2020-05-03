@@ -23,13 +23,6 @@ intellij {
     version '2020.1.1'
 }
 
-patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
-      """
-}
-
 spotless {
     java {
         encoding 'UTF-8'
@@ -51,13 +44,12 @@ configurations {
 
 dependencies {
     compile "org.slf4j:slf4j-api:$log4jVersion"
-    compile "org.slf4j:slf4j-simple:$log4jVersion"
+    compile 'ch.qos.logback:logback-classic:1.2.3'
 
     compile 'com.github.goodforgod:dummymaker:2.2.0-SNAPSHOT'
     compile 'org.javassist:javassist:3.27.0-GA'
 
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
-
     compile 'com.github.victools:jsonschema-generator:4.11.0'
     compile 'org.apache.avro:avro-compiler:1.9.2'
 

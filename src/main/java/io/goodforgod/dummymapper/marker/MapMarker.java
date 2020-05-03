@@ -3,7 +3,7 @@ package io.goodforgod.dummymapper.marker;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Description in progress
+ * Marker for {@link java.util.Map} java type
  *
  * @author Anton Kurako (GoodforGod)
  * @since 23.4.2020
@@ -14,7 +14,11 @@ public class MapMarker extends Marker {
     private final Marker keyErasure;
     private final Marker valueErasure;
 
-    public MapMarker(String root, String source, Class<?> type, Marker keyErasure, Marker valueErasure) {
+    public MapMarker(@NotNull String root,
+                     @NotNull String source,
+                     @NotNull Class<?> type,
+                     @NotNull Marker keyErasure,
+                     @NotNull Marker valueErasure) {
         super(root, source);
         this.type = type;
         this.keyErasure = keyErasure;

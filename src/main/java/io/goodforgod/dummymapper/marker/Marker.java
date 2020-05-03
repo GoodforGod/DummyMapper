@@ -53,4 +53,21 @@ public abstract class Marker {
     public @NotNull Collection<AnnotationMarker> getAnnotations() {
         return annotations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Marker marker = (Marker) o;
+        return Objects.equals(root, marker.root) &&
+                Objects.equals(source, marker.source) &&
+                Objects.equals(annotations, marker.annotations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(root, source, annotations);
+    }
 }

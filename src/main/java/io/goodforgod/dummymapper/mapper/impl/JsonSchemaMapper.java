@@ -37,7 +37,7 @@ public class JsonSchemaMapper implements IMapper {
         this.filter = new SupportedAnnotationFilter();
     }
 
-    //TODO fix class name with suffix
+    // TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {

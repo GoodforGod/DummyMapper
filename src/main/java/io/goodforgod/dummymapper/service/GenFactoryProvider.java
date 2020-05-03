@@ -5,11 +5,18 @@ import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
-import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.marker.EnumMarker;
+import io.goodforgod.dummymapper.marker.Marker;
+import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +27,10 @@ import java.util.stream.Stream;
  * @since 19.4.2020
  */
 public class GenFactoryProvider {
+
+    private static final Logger logger = LoggerFactory.getLogger(GenFactoryProvider.class);
+
+    private GenFactoryProvider() {}
 
     /**
      * @param scanned data from JavaFileScanner
@@ -33,34 +44,34 @@ public class GenFactoryProvider {
         return new GenFactory(GenRules.of(rules));
     }
 
-    private static List<GenRule> getRules(@NotNull Map<String, Marker> scanned,
+    private static List<GenRule> getRules(@NotNull Map<String, Marker> structure,
                                           @NotNull Map<String, String> mappedClasses) {
-        if (scanned.isEmpty())
+        if (structure.isEmpty())
             return Collections.emptyList();
 
-        final String mapped = scanned.values().stream()
+        final String mapped = structure.values().stream()
                 .map(m -> mappedClasses.get(m.getRoot()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Class scanned but is not registered by ClassFactory"));
 
         try {
             final GenRule rule = GenRule.auto(Class.forName(mapped), 2);
-            scanned.forEach((k, v) -> {
+            structure.forEach((k, v) -> {
                 if (v instanceof EnumMarker) {
                     final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
                     rule.add(generator, k);
                 }
             });
 
-            final List<GenRule> rawRules = MarkerUtils.streamRawMarkers(scanned)
+            final List<GenRule> rawRules = MarkerUtils.streamRawMarkers(structure)
                     .flatMap(m -> getRules(m.getStructure(), mappedClasses).stream())
                     .collect(Collectors.toList());
 
-            final List<GenRule> collectionRules = MarkerUtils.streamCollectionRawMarkers(scanned)
+            final List<GenRule> collectionRules = MarkerUtils.streamCollectionRawMarkers(structure)
                     .flatMap(m -> getRules(((RawMarker) m.getErasure()).getStructure(), mappedClasses).stream())
                     .collect(Collectors.toList());
 
-            final List<GenRule> mapRules = MarkerUtils.streamMapRawMarkers(scanned)
+            final List<GenRule> mapRules = MarkerUtils.streamMapRawMarkers(structure)
                     .flatMap(m -> {
                         final Stream<GenRule> stream1 = m.getKeyErasure() instanceof RawMarker
                                 ? getRules(((RawMarker) m.getKeyErasure()).getStructure(), mappedClasses).stream()
@@ -78,7 +89,7 @@ public class GenFactoryProvider {
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e.getMessage(), e.getCause());
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
 }

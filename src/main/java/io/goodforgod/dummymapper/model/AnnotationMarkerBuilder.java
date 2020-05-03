@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Description in progress
+ * Builder for {@link AnnotationMarker}
  *
  * @author Anton Kurako (GoodforGod)
  * @since 2.5.2020

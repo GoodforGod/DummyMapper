@@ -40,7 +40,7 @@ public class AvroJacksonMapper implements IMapper {
         this.mapper = new ObjectMapper(new AvroFactory());
     }
 
-    //TODO fix class name with suffix
+    // TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
