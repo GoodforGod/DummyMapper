@@ -20,7 +20,7 @@ targetCompatibility = 1.8
 
 intellij {
     plugins 'java'
-    version '2020.1'
+    version '2020.1.1'
 }
 
 patchPluginXml {
@@ -77,4 +77,10 @@ jacocoTestReport {
         html.enabled = true
         html.destination file("${buildDir}/jacocoHtml")
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.incremental = true
+    options.fork = true
 }

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * @author Anton Kurako (GoodforGod)
  * @since 2.5.2020
  */
-public class SupportedAnnotationFilter extends AnnotationMarkerFilter {
+public class SupportedAnnotationFilter extends AnnotationFilter {
 
     private final Set<String> names = Stream.of(JsonProperty.class,
             JsonIgnore.class,

@@ -2,6 +2,7 @@ package io.goodforgod.dummymapper.mapper.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ClassBuildException;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class JsonMapper implements IMapper {
 
     private final IFilter filter = new SupportedAnnotationFilter();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     @NotNull
     @Override

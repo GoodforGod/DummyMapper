@@ -6,16 +6,17 @@ import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.MapMarker;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
+import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Filters out fields which are marked provided via {@link #getIgnoreAnnotations()} method
+ * Filters out {@link AnnotationMarker} from {@link Marker} which are not qualified to {@link #predicate()}
  *
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
@@ -25,33 +26,22 @@ public abstract class AnnotationFilter implements IFilter {
     /**
      * @return annotation classes that should be ignored
      */
-    protected abstract Collection<Class<?>> getIgnoreAnnotations();
-
-    protected boolean filterSetters() {
-        return true;
-    }
-
-    protected boolean filterGetters() {
-        return true;
-    }
-
-    protected boolean filterFields() {
-        return true;
-    }
+    protected abstract Predicate<AnnotationMarker> predicate();
 
     @NotNull
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
-        final Set<String> ignore = getIgnoreAnnotations().stream()
-                .map(Class::getName)
-                .collect(Collectors.toSet());
+        final Predicate<AnnotationMarker> predicate = predicate();
 
         final Map<String, Marker> structure = marker.getStructure().entrySet().stream()
-                .filter(m -> m.getValue().getAnnotations().stream()
-                        .filter(a -> a.isFieldMarked() && filterFields()
-                                || a.isGetterMarked() && filterGetters()
-                                || a.isSetterMarked() && filterSetters())
-                        .noneMatch(a -> ignore.contains(a.getName())))
+                .map(m -> {
+                    final List<AnnotationMarker> markers = m.getValue().getAnnotations().stream()
+                            .filter(predicate)
+                            .collect(Collectors.toList());
+
+                    m.getValue().setAnnotations(markers);
+                    return m;
+                })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         final Map<String, RawMarker> rawMarkers = MarkerUtils.streamRawPairs(structure)
