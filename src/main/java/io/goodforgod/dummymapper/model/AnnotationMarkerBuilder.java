@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper.model;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +31,11 @@ public final class AnnotationMarkerBuilder {
         return this;
     }
 
+    public AnnotationMarkerBuilder withName(@NotNull Class<?> annotation) {
+        this.name = annotation.getName();
+        return this;
+    }
+
     public AnnotationMarkerBuilder ofField() {
         this.isFieldMarked = true;
         this.isGetterMarked = false;
@@ -51,8 +57,15 @@ public final class AnnotationMarkerBuilder {
         return this;
     }
 
+    public AnnotationMarkerBuilder withAttribute(@NotNull String name, Object value) {
+        if (this.attributes.isEmpty())
+            this.attributes = new HashMap<>(2);
+        this.attributes.put(name, value);
+        return this;
+    }
+
     public AnnotationMarkerBuilder withAttributes(@NotNull Map<String, Object> attributes) {
-        this.attributes = (attributes.isEmpty()) ? Collections.emptyMap() : attributes;
+        this.attributes = attributes.isEmpty() ? Collections.emptyMap() : attributes;
         return this;
     }
 

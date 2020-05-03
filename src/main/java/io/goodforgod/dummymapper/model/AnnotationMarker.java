@@ -51,6 +51,14 @@ public class AnnotationMarker {
         return attributes;
     }
 
+    public boolean named(@NotNull Class<?> annotation) {
+        return named(annotation.getName());
+    }
+
+    public boolean named(@NotNull String annotation) {
+        return name.equals(annotation);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

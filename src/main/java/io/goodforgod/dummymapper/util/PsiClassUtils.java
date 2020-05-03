@@ -140,9 +140,9 @@ public class PsiClassUtils {
     public static boolean isFieldValid(@NotNull PsiField field) {
         return !field.hasModifier(JvmModifier.STATIC)
                 && !field.hasModifier(JvmModifier.VOLATILE)
-                && !field.hasModifier(JvmModifier.NATIVE)
-                && !field.hasModifier(JvmModifier.STATIC)
                 && !field.hasModifier(JvmModifier.SYNCHRONIZED)
+                && !field.hasModifier(JvmModifier.NATIVE)
+                && !field.hasModifier(JvmModifier.TRANSIENT)
                 && !field.hasModifier(JvmModifier.TRANSITIVE);
     }
 
