@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class AvroSchemaMapperEntry extends MapperEntry {
+public class AvroSchemaMapperAction extends MapperAction {
 
     private final IMapper mapper = new AvroJacksonMapper();
 
@@ -22,13 +22,7 @@ public class AvroSchemaMapperEntry extends MapperEntry {
 
     @NotNull
     @Override
-    public String successMessage() {
-        return "AVRO Schema copied to clipboard";
-    }
-
-    @NotNull
-    @Override
-    public String emptyResultMessage() {
-        return "No fields found to map for AVRO Schema";
+    protected String format() {
+        return "AVRO Schema";
     }
 }

@@ -8,10 +8,11 @@
         <h1>DummyMapper</h1>
         <br/>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
-        <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a> |
+        <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
         <br/>
         <br/>
         <b>DummyMapper</b> is a plugin for mapping JAVA POJO files to supported formats such as JSON, JSON Schema, AVRO Schema, etc.
+        <br/>
         <br/>
         Plugin supports mapping to formats:
         <ul>
@@ -51,17 +52,17 @@
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
             <action id="DummyMapper.JsonExample"
-                    class="io.goodforgod.dummymapper.JsonMapperEntry"
+                    class="io.goodforgod.dummymapper.JsonMapperAction"
                     text="Map as JSON"
                     description="Copy JSON to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
-                    class="io.goodforgod.dummymapper.JsonSchemaMapperEntry"
+                    class="io.goodforgod.dummymapper.JsonSchemaMapperAction"
                     text="Map as JSON Schema"
                     description="Copy JSON Schema to clipboard">
             </action>
             <action id="DummyMapper.AvroSchema"
-                    class="io.goodforgod.dummymapper.AvroSchemaMapperEntry"
+                    class="io.goodforgod.dummymapper.AvroSchemaMapperAction"
                     text="Map as AVRO Schema"
                     description="Copy AVRO Schema to clipboard">
             </action>

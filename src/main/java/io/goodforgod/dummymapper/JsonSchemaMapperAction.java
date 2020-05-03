@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class JsonSchemaMapperEntry extends MapperEntry {
+public class JsonSchemaMapperAction extends MapperAction {
 
     private final IMapper mapper = new JsonSchemaMapper();
 
@@ -21,14 +21,7 @@ public class JsonSchemaMapperEntry extends MapperEntry {
     }
 
     @NotNull
-    @Override
-    public String successMessage() {
-        return "JSON Schema copied to clipboard";
-    }
-
-    @NotNull
-    @Override
-    public String emptyResultMessage() {
-        return "No fields found to map for JSON Schema";
+    public String format() {
+        return "JSON Schema";
     }
 }

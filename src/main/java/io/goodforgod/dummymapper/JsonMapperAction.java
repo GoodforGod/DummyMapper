@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class JsonMapperEntry extends MapperEntry {
+public class JsonMapperAction extends MapperAction {
 
     private final IMapper mapper = new JsonMapper();
 
@@ -22,13 +22,7 @@ public class JsonMapperEntry extends MapperEntry {
 
     @NotNull
     @Override
-    public String successMessage() {
-        return "JSON copied to clipboard";
-    }
-
-    @NotNull
-    @Override
-    public String emptyResultMessage() {
-        return "No fields found to map for JSON";
+    protected String format() {
+        return "JSON";
     }
 }
