@@ -66,8 +66,10 @@ public abstract class MapperAction extends AnAction {
 
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
-        } catch (MapperException | IllegalArgumentException e) {
-            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            if(StringUtils.isEmpty(e.getMessage()))
+                throw new IllegalArgumentException("Unknown error occurred", e);
+
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
             final String title = "Failed mapping to " + format();

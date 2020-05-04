@@ -10,26 +10,20 @@ import java.util.Objects;
  * @author Anton Kurako (GoodforGod)
  * @since 24.4.2020
  */
-public class CollectionMarker extends Marker {
+public class CollectionMarker extends TypedMarker {
 
-    private final Class<?> type;
     private final Marker erasure;
 
     public CollectionMarker(@NotNull String root,
                             @NotNull String source,
                             @NotNull Class<?> type,
                             @NotNull Marker erasure) {
-        super(root, source);
-        this.type = type;
+        super(root, source, type);
         this.erasure = erasure;
     }
 
     public boolean isRaw() {
         return erasure instanceof RawMarker;
-    }
-
-    public @NotNull Class<?> getType() {
-        return type;
     }
 
     public @NotNull Marker getErasure() {
@@ -38,19 +32,15 @@ public class CollectionMarker extends Marker {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         CollectionMarker that = (CollectionMarker) o;
-        return Objects.equals(type.getName(), that.type.getName()) &&
-                Objects.equals(erasure, that.erasure);
+        return Objects.equals(erasure, that.erasure);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), type.getName(), erasure);
+        return Objects.hash(super.hashCode(), erasure);
     }
 }
