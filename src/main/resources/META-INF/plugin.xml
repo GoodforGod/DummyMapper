@@ -3,7 +3,7 @@
     <name>DummyMapper (JSON,AVRO)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
 
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.9.1-SNAPSHOT</version>
     <description><![CDATA[
         <h1>DummyMapper</h1>
         <br/>
