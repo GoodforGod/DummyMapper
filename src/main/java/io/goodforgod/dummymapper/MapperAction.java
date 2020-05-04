@@ -68,12 +68,12 @@ public abstract class MapperAction extends AnAction {
             PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
         } catch (MapperException | IllegalArgumentException e) {
             e.printStackTrace();
-            PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.ERROR);
+            PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
             final String title = "Failed mapping to " + format();
             final StringJoiner joiner = new StringJoiner("\n");
             joiner.add("There was an error mapping file to " + format() + ".\n");
-            joiner.add("Please report <a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here.</a>\n");
+            joiner.add("Please report <a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here</a>.\n");
             joiner.add("Error message: " + e.getMessage());
             joiner.add("Stacktrace: " + getStackTrace(e));
 

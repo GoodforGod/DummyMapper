@@ -1,6 +1,6 @@
 <idea-plugin url="https://goodforgod.github.io/DummyMapper/">
     <id>com.github.goodforgod.dummymapper</id>
-    <name>DummyMapper</name>
+    <name>DummyMapper (JSON,AVRO)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
 
     <version>0.9.0-SNAPSHOT</version>
@@ -17,22 +17,21 @@
         Plugin supports mapping to formats:
         <ul>
             <li>JSON</li>
-            <li>JSON Schema</li>
-            <li>AVRO Schema</li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
+            <li>AVRO Schema <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
-        <br/>
     ]]></description>
     <change-notes><![CDATA[
         Snapshot release of the plugin.
-
+        <br/>
         <i>Features or changes in release 0.9.0-SNAPSHOT</i>
         <ul>
             <li>Support of JSON mapping option</li>
-            <li>Support of JSON Schema mapping option</li>
-            <li>Support of AVRO Schema mapping option</li>
+            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
+            <li>Support of AVRO Schema mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support all basic Java types, collections, maps, enums and more</li>
             <li>Jackson annotations support for fields \ methods handling when mapping to AVRO \ JSON</li>
-            <li>Compatibility with 2020.1</li>
+            <li>Compatibility with IDEA 2020.1</li>
         </ul>
     ]]></change-notes>
 
