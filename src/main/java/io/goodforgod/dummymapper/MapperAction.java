@@ -71,6 +71,7 @@ public abstract class MapperAction extends AnAction {
 
             PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
+            e.printStackTrace();
             final String title = "Failed mapping to " + format();
             final StringJoiner joiner = new StringJoiner("\n");
             joiner.add("There was an error mapping file to " + format() + ".\n");

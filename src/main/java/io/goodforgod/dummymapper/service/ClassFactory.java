@@ -108,7 +108,12 @@ public class ClassFactory {
 
             for (Map.Entry<String, Marker> entry : structure.entrySet()) {
                 final String fieldName = entry.getKey();
-                if (entry.getValue() instanceof CollectionMarker) {
+                if (entry.getValue() instanceof ArrayMarker) {
+                    final Marker erasure = ((ArrayMarker) entry.getValue()).getErasure();
+                    final Class<?> type = getErasureType(erasure, scanned);
+                    final CtField field = getArrayField(fieldName, (ArrayMarker) entry.getValue(), type, ownClass);
+                    ownClass.addField(field);
+                } else if (entry.getValue() instanceof CollectionMarker) {
                     final Marker erasure = ((CollectionMarker) entry.getValue()).getErasure();
                     final Class<?> type = getErasureType(erasure, scanned);
                     final CtField field = getCollectionField(fieldName, (CollectionMarker) entry.getValue(), type, ownClass);
@@ -194,6 +199,19 @@ public class ClassFactory {
                                          @NotNull CtClass owner) {
         try {
             final String src = String.format("public %s %s;", marker.getType().getName(), fieldName);
+            final CtField field = CtField.make(src, owner);
+            return addAnnotationInfo(field, marker);
+        } catch (CannotCompileException e) {
+            throw new ClassBuildException(e);
+        }
+    }
+
+    private static CtField getArrayField(@NotNull String fieldName,
+                                         @NotNull ArrayMarker marker,
+                                         @NotNull Class<?> erasure,
+                                         @NotNull CtClass owner) {
+        try {
+            final String src = String.format("public %s[] %s;", erasure.getName(), fieldName);
             final CtField field = CtField.make(src, owner);
             return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {

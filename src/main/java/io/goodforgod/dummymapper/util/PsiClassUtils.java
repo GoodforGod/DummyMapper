@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.util;
 
 import com.intellij.lang.jvm.JvmModifier;
+import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -95,6 +96,10 @@ public class PsiClassUtils {
                     MAP_FIELD_TYPES.put(c.getName(), c);
                     MAP_FIELD_TYPES.put(c.getSimpleName(), c);
                 });
+    }
+
+    public static boolean isTypeArray(@NotNull PsiType type) {
+        return type instanceof PsiArrayType;
     }
 
     public static boolean isTypeEnum(@NotNull PsiType type) {

@@ -15,6 +15,7 @@ import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
+import io.goodforgod.dummymapper.util.PsiClassUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -122,38 +123,33 @@ public class PsiJavaFileScanner {
             final String fieldName = field.getName();
             final PsiType type = field.getType();
             final String typeName = type.getPresentableText();
-            final Set<AnnotationMarker> annotations = scanAnnotations(field.getAnnotations())
-                    .map(AnnotationMarkerBuilder::ofField)
-                    .map(AnnotationMarkerBuilder::build)
-                    .collect(Collectors.toSet());
-
-            logger.debug("Scanned '{}' annotations for field '{}'", annotations.size(), fieldName);
 
             if (isTypeEnum(type)) {
-                final EnumMarker marker = scanEnumMarker(source, root, rootClass, type)
-                        .setAnnotations(annotations);
+                final EnumMarker marker = scanEnumMarker(source, root, rootClass, type);
                 structure.put(fieldName, marker);
                 logger.debug("Field '{}' is ENUM type with '{}' values",
                         fieldName, marker.getValues().size());
 
             } else if (isFieldValid(field)) {
-                if (isTypeCollection(type)) {
-                    final CollectionMarker marker = scanCollectionMarker(source, root, targetClass, type)
-                            .setAnnotations(annotations);
+                if (isTypeArray(type)) {
+                    final ArrayMarker marker = scanArrayMarker(source, root, targetClass, type);
+                    structure.put(fieldName, marker);
+                    logger.debug("Field '{}' is ARRAY type", fieldName);
+
+                } else if (isTypeCollection(type)) {
+                    final CollectionMarker marker = scanCollectionMarker(source, root, targetClass, type);
                     structure.put(fieldName, marker);
                     logger.debug("Field '{}' is '{}' COLLECTION type",
                             fieldName, marker.getType().getSimpleName());
 
                 } else if (isTypeMap(type)) {
-                    final MapMarker marker = scanMapMarker(source, root, targetClass, type)
-                            .setAnnotations(annotations);
+                    final MapMarker marker = scanMapMarker(source, root, targetClass, type);
                     structure.put(fieldName, marker);
                     logger.debug("Field '{}' is '{}' MAP type",
                             fieldName, marker.getType().getSimpleName());
 
                 } else if (isTypeSimple(type)) {
-                    final TypedMarker marker = scanSimpleMarker(source, root, type)
-                            .setAnnotations(annotations);
+                    final TypedMarker marker = scanSimpleMarker(source, root, type);
                     structure.put(fieldName, marker);
                     logger.debug("Field '{}' is '{}' KNOWN type",
                             fieldName, marker.getType().getSimpleName());
@@ -161,8 +157,7 @@ public class PsiJavaFileScanner {
                 } else if (parentTypes.containsKey(typeName)) { // PARENT CLASS ERASURE
                     final PsiType parentType = parentTypes.get(typeName);
                     if (parentType != null && isTypeSimple(parentType)) {
-                        final TypedMarker marker = scanSimpleMarker(source, root, parentType)
-                                .setAnnotations(annotations);
+                        final TypedMarker marker = scanSimpleMarker(source, root, parentType);
                         structure.put(fieldName, marker);
                         logger.debug("Field '{}' is had PARENT ERASURE '{}' type",
                                 fieldName, marker.getType().getSimpleName());
@@ -172,48 +167,52 @@ public class PsiJavaFileScanner {
                     logger.debug("Scanning field '{}' for Java Class '{}'", fieldName, typeName);
                     final Optional<Marker> marker = scanJavaFileClass(root, type);
                     if (marker.isPresent()) {
-                        structure.put(fieldName, marker.get().setAnnotations(annotations));
+                        structure.put(fieldName, marker.get());
                         logger.debug("Scanned field '{}' as Java Class", fieldName);
                     } else {
                         logger.debug("Scanning field '{}' for Java Inner Class '{}'", fieldName, typeName);
                         scanJavaInnerClass(targetClass, type).ifPresent(m -> {
-                            structure.put(fieldName, m.setAnnotations(annotations));
+                            structure.put(fieldName, m);
                             logger.debug("Scanned field '{}' as Java Inner Class", fieldName);
                         });
                     }
                 }
             }
+
+            structure.computeIfPresent(fieldName, (k, v) -> {
+                final Collection<AnnotationMarker> annotations = scanMarkerAnnotations(targetClass, field);
+                return v.setAnnotations(annotations);
+            });
         }
-
-        final Map<String, Collection<AnnotationMarker>> methodAnnotations = new HashMap<>(structure.size());
-        for (String field : structure.keySet()) {
-            Arrays.stream(targetClass.getAllMethods())
-                    .filter(m -> ArrayUtils.isNotEmpty(m.getAnnotations()))
-                    .filter(m -> m.getName().length() > 3)
-                    .filter(m -> field.equalsIgnoreCase(m.getName().substring(3)))
-                    .forEach(m -> {
-                        final Set<AnnotationMarker> annotations = scanAnnotations(m.getAnnotations())
-                                .map(b -> m.getName().startsWith("set") ? b.ofSetter() : b.ofGetter())
-                                .map(AnnotationMarkerBuilder::build)
-                                .collect(Collectors.toSet());
-
-                        if (!annotations.isEmpty()) {
-                            logger.debug("Found '{}' annotations for method '{}'", annotations.size(), m.getName());
-                            methodAnnotations.put(field, annotations);
-                        }
-                    });
-        }
-
-        methodAnnotations.forEach((k, v) -> {
-            final Marker marker = structure.get(k);
-            final List<AnnotationMarker> mergedAnnotations = Stream.of(marker.getAnnotations(), v)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
-            marker.setAnnotations(mergedAnnotations);
-        });
 
         logger.debug("SCANNED structure with '{}' fields for source '{}' and root '{}'", structure.size(), source, root);
         return structure;
+    }
+
+    private Collection<AnnotationMarker> scanMarkerAnnotations(@NotNull PsiClass targetClass,
+                                                               @NotNull PsiField field) {
+        final String fieldName = field.getName();
+        final List<AnnotationMarker> annotations = scanAnnotations(field.getAnnotations())
+                .map(AnnotationMarkerBuilder::ofField)
+                .map(AnnotationMarkerBuilder::build)
+                .collect(Collectors.toList());
+
+        logger.debug("Scanned '{}' annotations for field '{}'", annotations.size(), fieldName);
+
+        final List<AnnotationMarker> methodAnnotations = Arrays.stream(targetClass.getAllMethods())
+                .filter(m -> ArrayUtils.isNotEmpty(m.getAnnotations()))
+                .filter(m -> m.getName().length() > 3)
+                .filter(m -> fieldName.equalsIgnoreCase(m.getName().substring(3)))
+                .flatMap(m -> scanAnnotations(m.getAnnotations())
+                        .map(b -> m.getName().startsWith("set") ? b.ofSetter() : b.ofGetter())
+                        .map(AnnotationMarkerBuilder::build))
+                .collect(Collectors.toList());
+
+        logger.debug("Found '{}' annotations from methods", annotations.size());
+
+        return Stream.of(annotations, methodAnnotations)
+                .flatMap(List::stream)
+                .collect(Collectors.toSet());
     }
 
     private Optional<Marker> scanJavaInnerClass(@NotNull PsiClass rootClass,
@@ -272,6 +271,26 @@ public class PsiJavaFileScanner {
                         .filter(m -> m instanceof EnumMarker)
                         .map(m -> ((EnumMarker) m))
                         .orElseGet(() -> new EnumMarker(rootName, fullName, Collections.emptyList())));
+    }
+
+    private ArrayMarker scanArrayMarker(@NotNull String source,
+                                        @NotNull String rootName,
+                                        @NotNull PsiClass rootClass,
+                                        @NotNull PsiType type) {
+        final Marker marker = Optional.of(((PsiArrayType) type).getComponentType())
+                .map(PsiClassUtils::getSimpleTypeByName)
+                .filter(Objects::nonNull)
+                .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
+                .orElseGet(() -> Optional.of(((PsiArrayType) type).getComponentType())
+                        .flatMap(t -> {
+                            final Optional<Marker> javaFile = scanJavaFileClass(rootName, t);
+                            return javaFile.isPresent()
+                                    ? javaFile
+                                    : scanJavaInnerClass(rootClass, t);
+                        })
+                        .orElseGet(() -> new TypedMarker(rootName, source, String.class)));
+
+        return new ArrayMarker(rootName, source, marker);
     }
 
     private CollectionMarker scanCollectionMarker(@NotNull String source,
