@@ -5,6 +5,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
+import io.dummymaker.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -150,7 +151,10 @@ public class PsiClassUtils {
         return getSimpleTypeByName(type.getCanonicalText());
     }
 
-    public static Class<?> getSimpleTypeByName(String name) {
+    public static @Nullable Class<?> getSimpleTypeByName(@Nullable String name) {
+        if (StringUtils.isEmpty(name))
+            return null;
+
         return "?".equals(name)
                 ? String.class
                 : SIMPLE_FIELD_TYPES.get(name);

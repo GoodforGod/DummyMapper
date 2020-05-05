@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.util;
 
-import com.intellij.openapi.util.Pair;
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.MapMarker;
 import io.goodforgod.dummymapper.marker.Marker;
@@ -33,23 +32,5 @@ public class MarkerUtils {
         return structure.values().stream()
                 .filter(m -> m instanceof MapMarker && ((MapMarker) m).isRaw())
                 .map(m -> ((MapMarker) m));
-    }
-
-    public static Stream<Pair<String, RawMarker>> streamRawPairs(Map<String, Marker> structure) {
-        return structure.entrySet().stream()
-                .filter(e -> e.getValue() instanceof RawMarker)
-                .map(e -> Pair.create(e.getKey(), ((RawMarker) e.getValue())));
-    }
-
-    public static Stream<Pair<String, CollectionMarker>> streamCollectionRawPairs(Map<String, Marker> structure) {
-        return structure.entrySet().stream()
-                .filter(e -> e.getValue() instanceof CollectionMarker && ((CollectionMarker) e.getValue()).isRaw())
-                .map(e -> Pair.create(e.getKey(), ((CollectionMarker) e.getValue())));
-    }
-
-    public static Stream<Pair<String, MapMarker>> streamMapRawPairs(Map<String, Marker> structure) {
-        return structure.entrySet().stream()
-                .filter(e -> e.getValue() instanceof MapMarker && ((MapMarker) e.getValue()).isRaw())
-                .map(e -> Pair.create(e.getKey(), ((MapMarker) e.getValue())));
     }
 }
