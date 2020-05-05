@@ -39,9 +39,12 @@ public class MapMarker extends TypedMarker {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         MapMarker mapMarker = (MapMarker) o;
         return Objects.equals(keyErasure, mapMarker.keyErasure) &&
                 Objects.equals(valueErasure, mapMarker.valueErasure);

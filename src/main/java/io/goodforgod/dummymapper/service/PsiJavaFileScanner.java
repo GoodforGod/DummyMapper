@@ -128,14 +128,14 @@ public class PsiJavaFileScanner {
 
             } else if (isFieldValid(field)) {
                 if (isTypeCollection(type)) {
-                    final CollectionMarker marker = scanCollectionMarker(source, root, type)
+                    final CollectionMarker marker = scanCollectionMarker(source, root, targetClass, type)
                             .setAnnotations(annotations);
                     structure.put(fieldName, marker);
                     logger.debug("Field '{}' is '{}' COLLECTION type",
                             fieldName, marker.getType().getSimpleName());
 
                 } else if (isTypeMap(type)) {
-                    final MapMarker marker = scanMapMarker(source, root, type)
+                    final MapMarker marker = scanMapMarker(source, root, targetClass, type)
                             .setAnnotations(annotations);
                     structure.put(fieldName, marker);
                     logger.debug("Field '{}' is '{}' MAP type",
@@ -211,7 +211,7 @@ public class PsiJavaFileScanner {
     private Optional<Marker> scanJavaInnerClass(@NotNull PsiClass rootClass,
                                                 @NotNull PsiType type) {
         final PsiFile file = rootClass.getContainingFile();
-        if(file instanceof PsiJavaFile) {
+        if (file instanceof PsiJavaFile) {
             final String rootName = getFullName((PsiJavaFile) file);
             return Arrays.stream(((PsiJavaFile) file).getClasses()[0].getAllInnerClasses())
                     .filter(c -> type.getCanonicalText().equals(c.getQualifiedName()))
@@ -260,6 +260,7 @@ public class PsiJavaFileScanner {
 
     private CollectionMarker scanCollectionMarker(@NotNull String source,
                                                   @NotNull String rootName,
+                                                  @NotNull PsiClass rootClass,
                                                   @NotNull PsiType type) {
         final Marker marker = Optional.of(((PsiClassReferenceType) type).getParameters())
                 .filter(p -> p.length == 1)
@@ -268,14 +269,22 @@ public class PsiJavaFileScanner {
                 .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
                 .orElseGet(() -> Optional.of(((PsiClassReferenceType) type).getParameters())
                         .filter(p -> p.length == 1)
-                        .flatMap(p -> scanJavaFileClass(rootName, p[0]))
+                        .map(p -> p[0])
+                        .flatMap(t -> {
+                            final Optional<Marker> javaFile = scanJavaFileClass(rootName, t);
+                            return javaFile.isPresent()
+                                    ? javaFile
+                                    : scanJavaInnerClass(rootClass, t);
+                        })
                         .orElseGet(() -> new TypedMarker(rootName, source, String.class)));
 
+        // noinspection ConstantConditions
         return new CollectionMarker(rootName, source, getCollectionType(type), marker);
     }
 
     private MapMarker scanMapMarker(@NotNull String source,
                                     @NotNull String rootName,
+                                    @NotNull PsiClass rootClass,
                                     @NotNull PsiType type) {
         final Pair<Marker, Marker> pair = Optional.of(((PsiClassReferenceType) type).getParameters())
                 .filter(p -> p.length == 2)
@@ -285,14 +294,24 @@ public class PsiJavaFileScanner {
                         (Marker) new TypedMarker(source, rootName, p.getSecond())))
                 .orElseGet(() -> Optional.of(((PsiClassReferenceType) type).getParameters())
                         .filter(p -> p.length == 2)
-                        .map(p -> scanJavaFileClass(rootName, p[0])
-                                .map(t1 -> scanJavaFileClass(rootName, p[1])
-                                        .map(t2 -> Pair.create(t1, t2)).orElseGet(Pair::empty))
-                                .orElseGet(Pair::empty))
+                        .map(p -> {
+                            final Optional<Marker> javaFile1 = scanJavaFileClass(rootName, p[0]);
+                            final Optional<Marker> m1 = javaFile1.isPresent()
+                                    ? javaFile1
+                                    : scanJavaInnerClass(rootClass, p[0]);
+
+                            final Optional<Marker> javaFile2 = scanJavaFileClass(rootName, p[1]);
+                            final Optional<Marker> m2 = javaFile2.isPresent()
+                                    ? javaFile2
+                                    : scanJavaInnerClass(rootClass, p[1]);
+
+                            return Pair.create(m1.orElse(null), m2.orElse(null));
+                        })
                         .filter(p -> p.getFirst() != null && p.getSecond() != null)
                         .orElseGet(() -> Pair.create(new TypedMarker(rootName, source, String.class),
                                 new TypedMarker(rootName, source, String.class))));
 
+        // noinspection ConstantConditions
         return new MapMarker(rootName, source, getMapType(type), pair.getFirst(), pair.getSecond());
     }
 
