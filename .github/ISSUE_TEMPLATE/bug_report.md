@@ -7,21 +7,21 @@ assignees: GoodforGod
 
 ---
 
+**Stack-trace**
+Stack-trace from IDEA Event Log.
+
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Stack-trace from event log:**
 
-**POJO example and expected behavior**
-Pojo example (structure, fields, class name, etc what can be important in such case).
-And expected behavior for such POJO.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**POJO examples \ Screenshots**
+POJO example (fields, annotations, method, type or what is applicable in a situation).
 
 
-**IntelliJ IDEA version:**
+**Expected Behavior**
+Behavior you expected from mapper.
 
 
-**Additional context**
-Add any other context about the problem here.
+**IDEA version**
+Your IntelliJ IDEA version. [check in IDEA: Help -> About]

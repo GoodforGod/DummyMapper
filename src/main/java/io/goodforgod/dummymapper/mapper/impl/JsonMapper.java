@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
-import io.goodforgod.dummymapper.error.ClassBuildException;
-import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.error.ScanException;
+import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.SupportedAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
@@ -52,8 +50,8 @@ public class JsonMapper implements IMapper {
             final Object instance = factory.build(target);
 
             return mapper.writeValueAsString(instance);
-        } catch (JsonProcessingException | ScanException | ClassBuildException e) {
-            throw new MapperException(e);
+        } catch (JsonProcessingException e) {
+            throw new ParseException(e.getMessage(), e);
         }
     }
 }

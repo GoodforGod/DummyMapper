@@ -6,9 +6,7 @@ import com.fasterxml.jackson.dataformat.avro.AvroFactory;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
 import com.intellij.psi.PsiJavaFile;
-import io.goodforgod.dummymapper.error.ClassBuildException;
-import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.error.ScanException;
+import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
@@ -58,8 +56,11 @@ public class AvroJacksonMapper implements IMapper {
             final AvroSchema generatedSchema = generator.getGeneratedSchema();
             final Schema schema = generatedSchema.getAvroSchema();
             return schema.toString(true);
-        } catch (ScanException | ClassBuildException | JsonMappingException e) {
-            throw new MapperException(e);
+        } catch (JsonMappingException e) {
+            if (e.getMessage().startsWith("\"Any\" type (usually for `java.lang.Object`)"))
+                throw new IllegalArgumentException("POJO field with type 'java.lang.Object' can not be mapped to AVRO Schema");
+
+            throw new ParseException(e.getMessage(), e);
         }
     }
 }

@@ -3,9 +3,6 @@ package io.goodforgod.dummymapper.mapper.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
 import com.intellij.psi.PsiJavaFile;
-import io.goodforgod.dummymapper.error.ClassBuildException;
-import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.SupportedAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
@@ -41,18 +38,15 @@ public class JsonSchemaMapper implements IMapper {
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
-        try {
-            final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            if (marker.isEmpty())
-                return "";
+        final RawMarker marker = new PsiJavaFileScanner().scan(file);
+        if (marker.isEmpty())
+            return "";
 
-            final Map<String, Marker> structure = marker.getStructure();
-            final Class target = ClassFactory.build(structure);
+        final Map<String, Marker> structure = marker.getStructure();
+        final Class target = ClassFactory.build(structure);
 
-            final JsonNode schema = generator.generateSchema(target);
-            return schema.toPrettyString();
-        } catch (ScanException | ClassBuildException e) {
-            throw new MapperException(e);
-        }
+        final JsonNode schema = generator.generateSchema(target);
+        return schema.toPrettyString();
+
     }
 }
