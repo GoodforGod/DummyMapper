@@ -5,13 +5,17 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.ui.AvroDialogWrapper;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,6 +71,10 @@ public abstract class MapperAction extends AnAction {
 
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
+
+            final Project project = event.getProject();
+            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
+            dialog.show();
         } catch (MapperException | JavaFileException e) {
             if (StringUtils.isEmpty(e.getMessage()))
                 throw new IllegalArgumentException("Unknown error occurred", e);
