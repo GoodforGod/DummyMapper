@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class EnumMarker extends Marker {
 
-    public final List<String> values;
+    private final List<String> values;
 
     public EnumMarker(@NotNull String root,
                       @NotNull String source,

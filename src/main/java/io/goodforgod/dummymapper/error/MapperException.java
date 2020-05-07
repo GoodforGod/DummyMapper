@@ -6,6 +6,10 @@ package io.goodforgod.dummymapper.error;
  */
 public class MapperException extends RuntimeException {
 
+    public MapperException(String message) {
+        super(message);
+    }
+
     public MapperException(Throwable cause) {
         super(cause.getMessage(), cause);
     }

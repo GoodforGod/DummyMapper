@@ -1,9 +1,6 @@
 package io.goodforgod.dummymapper.util;
 
-import io.goodforgod.dummymapper.marker.CollectionMarker;
-import io.goodforgod.dummymapper.marker.MapMarker;
-import io.goodforgod.dummymapper.marker.Marker;
-import io.goodforgod.dummymapper.marker.RawMarker;
+import io.goodforgod.dummymapper.marker.*;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -26,6 +23,12 @@ public class MarkerUtils {
         return structure.values().stream()
                 .filter(m -> m instanceof CollectionMarker && ((CollectionMarker) m).isRaw())
                 .map(m -> ((CollectionMarker) m));
+    }
+
+    public static Stream<ArrayMarker> streamArrayRawMarkers(Map<String, Marker> structure) {
+        return structure.values().stream()
+                .filter(m -> m instanceof ArrayMarker && ((ArrayMarker) m).isRaw())
+                .map(m -> ((ArrayMarker) m));
     }
 
     public static Stream<MapMarker> streamMapRawMarkers(Map<String, Marker> structure) {

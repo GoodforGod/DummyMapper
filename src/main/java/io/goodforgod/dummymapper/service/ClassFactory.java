@@ -44,6 +44,10 @@ public class ClassFactory {
                 .map(m -> getMappedClasses(m.getStructure()))
                 .forEach(mapped::putAll);
 
+        MarkerUtils.streamArrayRawMarkers(structure)
+                .map(m -> getMappedClasses(((RawMarker) m.getErasure()).getStructure()))
+                .forEach(mapped::putAll);
+
         MarkerUtils.streamCollectionRawMarkers(structure)
                 .map(m -> getMappedClasses(((RawMarker) m.getErasure()).getStructure()))
                 .forEach(mapped::putAll);

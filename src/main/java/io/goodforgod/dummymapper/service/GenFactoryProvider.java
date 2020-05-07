@@ -5,19 +5,15 @@ import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
-import io.goodforgod.dummymapper.marker.EnumMarker;
-import io.goodforgod.dummymapper.marker.Marker;
-import io.goodforgod.dummymapper.marker.RawMarker;
+import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -60,11 +56,31 @@ public class GenFactoryProvider {
                 if (v instanceof EnumMarker) {
                     final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
                     rule.add(generator, k);
+                } else if (v instanceof CollectionMarker && ((CollectionMarker) v).getErasure() instanceof EnumMarker) {
+                    final EnumMarker erasure = (EnumMarker) ((CollectionMarker) v).getErasure();
+                    final int total = CollectionUtils.random(1, erasure.getValues().size());
+                    final IGenerator<Collection<String>> generator = () -> IntStream.range(0, total)
+                            .mapToObj(i -> erasure.getValues().get(i))
+                            .collect(Collectors.toCollection(() -> Set.class.isAssignableFrom(((CollectionMarker) v).getType())
+                                    ? new HashSet<>()
+                                    : new ArrayList<>()));
+                    rule.add(generator, k);
+                } else if (v instanceof ArrayMarker && ((ArrayMarker) v).getErasure() instanceof EnumMarker) {
+                    final EnumMarker erasure = (EnumMarker) ((ArrayMarker) v).getErasure();
+                    final int total = CollectionUtils.random(1, erasure.getValues().size());
+                    final IGenerator<String[]> generator = () -> IntStream.range(0, total)
+                            .mapToObj(i -> erasure.getValues().get(i))
+                            .toArray(String[]::new);
+                    rule.add(generator, k);
                 }
             });
 
             final List<GenRule> rawRules = MarkerUtils.streamRawMarkers(structure)
                     .flatMap(m -> getRules(m.getStructure(), mappedClasses).stream())
+                    .collect(Collectors.toList());
+
+            final List<GenRule> arrayRules = MarkerUtils.streamArrayRawMarkers(structure)
+                    .flatMap(m -> getRules(((RawMarker) m.getErasure()).getStructure(), mappedClasses).stream())
                     .collect(Collectors.toList());
 
             final List<GenRule> collectionRules = MarkerUtils.streamCollectionRawMarkers(structure)
@@ -85,7 +101,7 @@ public class GenFactoryProvider {
                     })
                     .collect(Collectors.toList());
 
-            return Stream.of(Collections.singletonList(rule), rawRules, collectionRules, mapRules)
+            return Stream.of(Collections.singletonList(rule), rawRules, arrayRules, collectionRules, mapRules)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
