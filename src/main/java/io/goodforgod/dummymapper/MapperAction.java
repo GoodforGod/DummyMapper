@@ -75,6 +75,7 @@ public abstract class MapperAction extends AnAction {
             final Project project = event.getProject();
             final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
             dialog.show();
+
         } catch (MapperException | JavaFileException e) {
             if (StringUtils.isEmpty(e.getMessage()))
                 throw new IllegalArgumentException("Unknown error occurred", e);
