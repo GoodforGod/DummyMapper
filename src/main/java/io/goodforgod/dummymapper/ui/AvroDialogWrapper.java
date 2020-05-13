@@ -22,12 +22,19 @@ public class AvroDialogWrapper extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        final JCheckBox allRequiredDefaultCheckBox = new JCheckBox();
-        final JPanel dialogPanel = new JPanel(new BorderLayout());
-        final JLabel label = new JLabel("AVRO Schema Options");
 
+        final JPanel dialogPanel = new JPanel(new BorderLayout());
+        dialogPanel.setPreferredSize(new Dimension(250, 250));
+
+        final JLabel label = new JLabel("AVRO Schema Options");
         label.setPreferredSize(new Dimension(100, 100));
         dialogPanel.add(label, BorderLayout.CENTER);
+
+        final JCheckBox allRequiredDefaultCheckBox = new JCheckBox("All Required By Default");
+        dialogPanel.add(allRequiredDefaultCheckBox);
+
+        final JCheckBox useJacksonAnnotations = new JCheckBox("All Required By Default");
+        useJacksonAnnotations.add(allRequiredDefaultCheckBox);
 
         return dialogPanel;
     }
