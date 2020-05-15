@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -75,6 +76,9 @@ public abstract class MapperAction extends AnAction {
             final Project project = event.getProject();
             final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
             dialog.show();
+
+            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
+            final String s = boxMap.toString();
 
         } catch (MapperException | JavaFileException e) {
             if (StringUtils.isEmpty(e.getMessage()))
