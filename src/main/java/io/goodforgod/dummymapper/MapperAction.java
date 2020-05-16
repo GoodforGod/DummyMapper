@@ -64,6 +64,15 @@ public abstract class MapperAction extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(JavaFileException::new);
 
+            final Project project = event.getProject();
+
+            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
+            dialog.show();
+
+            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
+            final String s = boxMap.toString();
+
+
             final String json = getMapper().map(file);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveComponent(emptyResultMessage(), MessageType.WARNING);
@@ -72,14 +81,6 @@ public abstract class MapperAction extends AnAction {
 
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
-
-            final Project project = event.getProject();
-            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
-            dialog.show();
-
-            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
-            final String s = boxMap.toString();
-
         } catch (MapperException | JavaFileException e) {
             if (StringUtils.isEmpty(e.getMessage()))
                 throw new IllegalArgumentException("Unknown error occurred", e);
