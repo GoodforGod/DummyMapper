@@ -3,7 +3,7 @@
     <name>DummyMapper (JSON,AVRO)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
 
-    <version>0.9.7</version>
+    <version>0.9.8</version>
     <description><![CDATA[
         <h1>DummyMapper</h1>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
@@ -17,7 +17,8 @@
         <ul>
             <li>JSON</li>
             <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
-            <li>AVRO Schema <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
+            <li>AVRO Schema (Apache) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
+            <li>AVRO Schema (Jackson) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
     ]]></description>
     <change-notes><![CDATA[
@@ -27,7 +28,8 @@
         <ul>
             <li>Support of JSON mapping option</li>
             <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
-            <li>Support of AVRO Schema mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
+            <li>Support of AVRO Schema (Jackson) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
+            <li>Support of AVRO Schema (Apache) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support all basic Java types, collections, maps, enums and more</li>
             <li>Jackson annotations support for fields \ methods handling when mapping to AVRO \ JSON</li>
             <li>Compatibility with IDEA 2020.1</li>
@@ -52,17 +54,22 @@
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonMapperAction"
                     text="Map as JSON"
-                    description="Copy JSON to clipboard">
+                    description="Copy POJOs as JSON representation to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaMapperAction"
                     text="Map as JSON Schema"
                     description="Copy JSON Schema to clipboard">
             </action>
-            <action id="DummyMapper.AvroSchema"
-                    class="io.goodforgod.dummymapper.AvroSchemaMapperAction"
-                    text="Map as AVRO Schema"
-                    description="Copy AVRO Schema to clipboard">
+            <action id="DummyMapper.AvroSchemaJackson"
+                    class="io.goodforgod.dummymapper.AvroSchemaJacksonMapperAction"
+                    text="Map as AVRO Schema (Jackson)"
+                    description="Copy AVRO Schema to clipboard produced by Jackson Schema Builder">
+            </action>
+            <action id="DummyMapper.AvroSchemaApache"
+                    class="io.goodforgod.dummymapper.AvroSchemaApacheMapperAction"
+                    text="Map as AVRO Schema (Apache)"
+                    description="Copy AVRO Schema to clipboard produced by Apache Schema Builder">
             </action>
         </group>
     </actions>

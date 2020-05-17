@@ -66,12 +66,11 @@ public abstract class MapperAction extends AnAction {
 
             final Project project = event.getProject();
 
-            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
-            dialog.show();
-
-            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
-            final String s = boxMap.toString();
-
+//            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
+//            dialog.show();
+//
+//            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
+//            final String s = boxMap.toString();
 
             final String json = getMapper().map(file);
             if (StringUtils.isEmpty(json)) {

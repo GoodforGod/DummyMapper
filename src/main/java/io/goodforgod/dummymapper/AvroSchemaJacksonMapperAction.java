@@ -5,12 +5,12 @@ import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Entry-point for JSON mapper plugin
+ * Entry-point for AVRO Schema Jackson Mapper
  *
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class AvroSchemaMapperAction extends MapperAction {
+public class AvroSchemaJacksonMapperAction extends MapperAction {
 
     private final IMapper mapper = new AvroJacksonMapper();
 
