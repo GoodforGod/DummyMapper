@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper;
 
+import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -23,8 +24,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Mapper entry point base implementation class
@@ -66,11 +70,19 @@ public abstract class MapperAction extends AnAction {
 
             final Project project = event.getProject();
 
-//            final AvroDialogWrapper dialog = new AvroDialogWrapper(project);
-//            dialog.show();
-//
-//            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
-//            final String s = boxMap.toString();
+            final List<String> drafts = Arrays.stream(SchemaVersion.values())
+                    .map(Enum::name)
+                    .collect(Collectors.toList());
+
+            final AvroDialogWrapper dialog = new AvroDialogWrapper(project)
+                    .addCheckBox("Required by default", true)
+                    .addCheckBox("Use Jackson Annotations", true)
+                    .addComboBox("Schema Draft", SchemaVersion.DRAFT_2019_09.name(), drafts)
+                    .build();
+            dialog.show();
+
+            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
+            final String s = boxMap.toString();
 
             final String json = getMapper().map(file);
             if (StringUtils.isEmpty(json)) {

@@ -10,7 +10,7 @@
         <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
         <br/>
         <br/>
-        <b>DummyMapper</b> is a plugin for mapping JAVA POJO files to supported formats such as JSON, JSON Schema, AVRO Schema, etc.
+        <b>DummyMapper</b> is a plugin for mapping Java POJO classes to supported formats such as JSON, JSON Schema, AVRO Schema, etc.
         <br/>
         <br/>
         Plugin supports mapping to formats:
@@ -24,7 +24,7 @@
     <change-notes><![CDATA[
         Snapshot release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.7</i>
+        <i>Features or changes in release 0.9.8</i>
         <ul>
             <li>Support of JSON mapping option</li>
             <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>

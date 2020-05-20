@@ -27,7 +27,8 @@ public class JsonSchemaMapper implements IMapper {
     private final SchemaGenerator generator;
 
     public JsonSchemaMapper() {
-        final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09,
+        final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(
+                SchemaVersion.DRAFT_2019_09,
                 OptionPreset.PLAIN_JSON);
         final SchemaGeneratorConfig config = configBuilder.build();
         this.generator = new SchemaGenerator(config);
