@@ -52,22 +52,22 @@
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
             <action id="DummyMapper.JsonExample"
-                    class="io.goodforgod.dummymapper.JsonMapperAction"
+                    class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
                     description="Copy POJOs as JSON representation to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
-                    class="io.goodforgod.dummymapper.JsonSchemaMapperAction"
+                    class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
                     description="Copy JSON Schema to clipboard">
             </action>
             <action id="DummyMapper.AvroSchemaJackson"
-                    class="io.goodforgod.dummymapper.AvroSchemaJacksonMapperAction"
+                    class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
                     text="Map as AVRO Schema (Jackson)"
                     description="Copy AVRO Schema to clipboard produced by Jackson Schema Builder">
             </action>
             <action id="DummyMapper.AvroSchemaApache"
-                    class="io.goodforgod.dummymapper.AvroSchemaApacheMapperAction"
+                    class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
                     description="Copy AVRO Schema to clipboard produced by Apache Schema Builder">
             </action>

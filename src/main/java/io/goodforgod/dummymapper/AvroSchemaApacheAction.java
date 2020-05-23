@@ -1,18 +1,19 @@
 package io.goodforgod.dummymapper;
 
 import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
 import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Entry-point for AVRO Schema Jackson Mapper
+ * Entry-point for AVRO Schema Apache Mapper
  *
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class AvroSchemaJacksonMapperAction extends MapperAction {
+public class AvroSchemaApacheAction extends MapperAction {
 
-    private final IMapper mapper = new AvroJacksonMapper();
+    private final IMapper mapper = new AvroApacheMapper();
 
     @NotNull
     @Override

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author GoodforGod
  * @since 17.11.2019
  */
-public class JsonSchemaMapperAction extends MapperAction {
+public class JsonSchemaAction extends MapperAction {
 
     private final IMapper mapper = new JsonSchemaMapper();
 

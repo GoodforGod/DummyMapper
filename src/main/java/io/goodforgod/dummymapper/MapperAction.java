@@ -7,6 +7,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
@@ -23,7 +24,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,10 @@ public abstract class MapperAction extends AnAction {
         return "No fields found to map for " + format();
     }
 
+    protected Optional<ConfigDialog> getDialog(final Project project) {
+        return Optional.empty();
+    }
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         try {
@@ -66,20 +71,8 @@ public abstract class MapperAction extends AnAction {
                     .orElseThrow(JavaFileException::new);
 
             final Project project = event.getProject();
-
-            final List<String> drafts = Arrays.stream(SchemaVersion.values())
-                    .map(Enum::name)
-                    .collect(Collectors.toList());
-
-            final ConfigDialog dialog = new ConfigDialog(project)
-                    .addCheckBox("Required by default", true)
-                    .addCheckBox("Use Jackson Annotations", true)
-                    .addComboBox("Schema Draft", SchemaVersion.DRAFT_2019_09.name(), drafts)
-                    .build();
-            dialog.show();
-
-            final Map<String, Boolean> boxMap = dialog.getCheckBoxMap();
-            final String s = boxMap.toString();
+            final Optional<ConfigDialog> dialog = getDialog(project);
+            dialog.ifPresent(DialogWrapper::show);
 
             final String json = getMapper().map(file);
             if (StringUtils.isEmpty(json)) {

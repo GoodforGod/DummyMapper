@@ -29,7 +29,7 @@ public class JsonSchemaMapper implements IMapper {
     public JsonSchemaMapper() {
         final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(
                 SchemaVersion.DRAFT_2019_09,
-                OptionPreset.PLAIN_JSON);
+                OptionPreset.JAVA_OBJECT);
         final SchemaGeneratorConfig config = configBuilder.build();
         this.generator = new SchemaGenerator(config);
         this.filter = new SupportedAnnotationFilter();

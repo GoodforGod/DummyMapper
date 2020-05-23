@@ -3,6 +3,8 @@ package io.goodforgod.dummymapper.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
+import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,18 +40,14 @@ public abstract class ConfigDialog extends DialogWrapper {
         return this;
     }
 
-    public ConfigDialog addCheckBox(String text, boolean isSelectedByDefault) {
-        this.checkBoxes.add(getDialogCheckBox(text, isSelectedByDefault));
+    public ConfigDialog addCheckBox(@NotNull CheckBoxOptions options) {
+        this.checkBoxes.add(getDialogCheckBox(options.getName(), options.isSelected()));
         return this;
     }
 
-    public ConfigDialog addComboBox(String text, String selected, Collection<String> values) {
-        this.comboBoxes.add(getDialogComboBox(text, selected, values));
+    public ConfigDialog addComboBox(@NotNull ComboBoxOptions options) {
+        this.comboBoxes.add(getDialogComboBox(options.getName(), options.getDefaultValue(), options.getValues()));
         return this;
-    }
-
-    public ConfigDialog addComboBox(String text, String selected, String[] values) {
-        return addComboBox(text, selected, Arrays.asList(values));
     }
 
     @Nullable
@@ -82,6 +80,7 @@ public abstract class ConfigDialog extends DialogWrapper {
         return checkBox;
     }
 
+    @NotNull
     public ComboBox<String> getDialogComboBox(@NotNull String text,
                                               @NotNull String selected,
                                               @NotNull Collection<String> values) {
