@@ -7,21 +7,18 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.ui.AvroDialogWrapper;
+import io.goodforgod.dummymapper.ui.ConfigDialog;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -74,7 +71,7 @@ public abstract class MapperAction extends AnAction {
                     .map(Enum::name)
                     .collect(Collectors.toList());
 
-            final AvroDialogWrapper dialog = new AvroDialogWrapper(project)
+            final ConfigDialog dialog = new ConfigDialog(project)
                     .addCheckBox("Required by default", true)
                     .addCheckBox("Use Jackson Annotations", true)
                     .addComboBox("Schema Draft", SchemaVersion.DRAFT_2019_09.name(), drafts)

@@ -14,7 +14,7 @@ import java.util.*;
  * @author Anton Kurako (GoodforGod)
  * @since 7.5.2020
  */
-public class AvroDialogWrapper extends DialogWrapper {
+public abstract class ConfigDialog extends DialogWrapper {
 
     private static final int INITIAL_SIZE = 2;
 
@@ -24,38 +24,38 @@ public class AvroDialogWrapper extends DialogWrapper {
     private final Collection<JCheckBox> checkBoxes = new ArrayList<>(INITIAL_SIZE);
     private final Collection<ComboBox<String>> comboBoxes = new ArrayList<>(INITIAL_SIZE);
 
-    public AvroDialogWrapper(@Nullable Project project) {
-        this(project, "AVRO Schema Options");
+    public ConfigDialog(@Nullable Project project) {
+        this(project, "Options");
     }
 
-    public AvroDialogWrapper(@Nullable Project project, String title) {
+    public ConfigDialog(@Nullable Project project, String title) {
         super(project, true, IdeModalityType.PROJECT);
         setTitle(title);
     }
 
-    public AvroDialogWrapper build() {
+    public ConfigDialog build() {
         init();
         return this;
     }
 
-    public AvroDialogWrapper addCheckBox(String text, boolean isSelectedByDefault) {
+    public ConfigDialog addCheckBox(String text, boolean isSelectedByDefault) {
         this.checkBoxes.add(getDialogCheckBox(text, isSelectedByDefault));
         return this;
     }
 
-    public AvroDialogWrapper addComboBox(String text, String selected, Collection<String> values) {
+    public ConfigDialog addComboBox(String text, String selected, Collection<String> values) {
         this.comboBoxes.add(getDialogComboBox(text, selected, values));
         return this;
     }
 
-    public AvroDialogWrapper addComboBox(String text, String selected, String[] values) {
+    public ConfigDialog addComboBox(String text, String selected, String[] values) {
         return addComboBox(text, selected, Arrays.asList(values));
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        final JPanel panel = new JPanel(new GridLayout());
+        final JPanel panel = new JPanel(new GridLayout(0, 1));
         panel.setPreferredSize(new Dimension(350, 250));
 
         comboBoxes.forEach(panel::add);
