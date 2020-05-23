@@ -24,14 +24,8 @@ import java.util.Map;
 public class JsonSchemaMapper implements IMapper {
 
     private final IFilter filter;
-    private final SchemaGenerator generator;
 
     public JsonSchemaMapper() {
-        final SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(
-                SchemaVersion.DRAFT_2019_09,
-                OptionPreset.JAVA_OBJECT);
-        final SchemaGeneratorConfig config = configBuilder.build();
-        this.generator = new SchemaGenerator(config);
         this.filter = new SupportedAnnotationFilter();
     }
 
@@ -46,8 +40,12 @@ public class JsonSchemaMapper implements IMapper {
         final Map<String, Marker> structure = marker.getStructure();
         final Class target = ClassFactory.build(structure);
 
+        final SchemaGeneratorConfig config = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.JAVA_OBJECT)
+                .build();
+
+        final SchemaGenerator generator = new SchemaGenerator(config);
+
         final JsonNode schema = generator.generateSchema(target);
         return schema.toPrettyString();
-
     }
 }

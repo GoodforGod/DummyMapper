@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Description in progress
- *
  * @author Anton Kurako (GoodforGod)
  * @since 23.5.2020
  */
