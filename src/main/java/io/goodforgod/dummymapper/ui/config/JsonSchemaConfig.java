@@ -5,6 +5,7 @@ import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +18,7 @@ public class JsonSchemaConfig implements IConfig {
 
     @Override
     public Collection<ComboBoxOptions> comboBoxes() {
-        return Arrays.asList(
+        return Collections.singletonList(
                 new ComboBoxOptions(DRAFT_OPTION,
                         SchemaVersion.DRAFT_2019_09.name(),
                         Arrays.stream(SchemaVersion.values())
