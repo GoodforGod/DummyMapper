@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.ui.config;
 
 import com.github.victools.jsonschema.generator.SchemaVersion;
+import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
 import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
 
 import java.util.Arrays;
@@ -14,16 +15,14 @@ import java.util.stream.Collectors;
  */
 public class AvroJacksonSchemaConfig implements IConfig {
 
-    public static final String DRAFT_OPTION = "draft";
+    public static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
 
     @Override
-    public Collection<ComboBoxOptions> comboBoxes() {
-        return Collections.singletonList(
-                new ComboBoxOptions(DRAFT_OPTION,
-                        SchemaVersion.DRAFT_2019_09.name(),
-                        Arrays.stream(SchemaVersion.values())
-                                .map(Enum::name)
-                                .collect(Collectors.toSet()))
+    public Collection<CheckBoxOptions> checkBoxes() {
+        return Arrays.asList(
+                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true),
+                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true),
+                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true)
         );
     }
 }

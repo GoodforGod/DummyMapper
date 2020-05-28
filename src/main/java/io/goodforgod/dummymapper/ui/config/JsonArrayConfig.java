@@ -14,16 +14,4 @@ import java.util.stream.Collectors;
  */
 public class JsonArrayConfig implements IConfig {
 
-    public static final String DRAFT_OPTION = "draft";
-
-    @Override
-    public Collection<ComboBoxOptions> comboBoxes() {
-        return Collections.singletonList(
-                new ComboBoxOptions(DRAFT_OPTION,
-                        SchemaVersion.DRAFT_2019_09.name(),
-                        Arrays.stream(SchemaVersion.values())
-                                .map(Enum::name)
-                                .collect(Collectors.toSet()))
-        );
-    }
 }
