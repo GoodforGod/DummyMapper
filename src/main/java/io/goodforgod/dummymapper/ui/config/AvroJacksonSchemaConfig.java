@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 public class AvroJacksonSchemaConfig implements IConfig {
 
     public static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
+    public static final String USE_AVRO_ANNOTATIONS = "Use Avro Annotations";
 
     @Override
     public Collection<CheckBoxOptions> checkBoxes() {
         return Arrays.asList(
                 new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true),
-                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true),
-                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true)
+                new CheckBoxOptions(USE_AVRO_ANNOTATIONS, false)
         );
     }
 }
