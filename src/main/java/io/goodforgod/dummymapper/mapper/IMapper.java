@@ -1,7 +1,9 @@
 package io.goodforgod.dummymapper.mapper;
 
 import com.intellij.psi.PsiJavaFile;
+import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Map contract to map instance of {@link PsiJavaFile} to format as string value
@@ -18,4 +20,9 @@ public interface IMapper {
      */
     @NotNull
     String map(@NotNull PsiJavaFile file);
+
+    @NotNull
+    default String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
+        return map(file);
+    }
 }

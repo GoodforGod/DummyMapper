@@ -2,6 +2,7 @@ package io.goodforgod.dummymapper.ui.config;
 
 import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
 import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
+import io.goodforgod.dummymapper.ui.options.TextBoxOptions;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +18,10 @@ public interface IConfig {
     }
 
     default Collection<ComboBoxOptions> comboBoxes() {
+        return Collections.emptyList();
+    }
+
+    default Collection<TextBoxOptions> textBoxes() {
         return Collections.emptyList();
     }
 }

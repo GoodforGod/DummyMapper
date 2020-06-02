@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
 import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
+import io.goodforgod.dummymapper.ui.options.TextBoxOptions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +23,11 @@ public abstract class ConfigDialog extends DialogWrapper {
 
     private final Map<String, Boolean> checkBoxMap = new HashMap<>(INITIAL_SIZE);
     private final Map<String, String> comboBoxMap = new HashMap<>(INITIAL_SIZE);
+    private final Map<String, String> textBoxMap = new HashMap<>(INITIAL_SIZE);
 
     private final Collection<JCheckBox> checkBoxes = new ArrayList<>(INITIAL_SIZE);
     private final Collection<ComboBox<String>> comboBoxes = new ArrayList<>(INITIAL_SIZE);
+    private final Collection<JTextField> textBoxes = new ArrayList<>(INITIAL_SIZE);
 
     public ConfigDialog(@Nullable Project project) {
         this(project, "Options");
@@ -41,12 +44,20 @@ public abstract class ConfigDialog extends DialogWrapper {
     }
 
     public ConfigDialog addCheckBox(@NotNull CheckBoxOptions options) {
-        this.checkBoxes.add(getDialogCheckBox(options.getName(), options.isSelected()));
+        final JCheckBox box = getDialogCheckBox(options.getName(), options.isSelected());
+        this.checkBoxes.add(box);
         return this;
     }
 
     public ConfigDialog addComboBox(@NotNull ComboBoxOptions options) {
-        this.comboBoxes.add(getDialogComboBox(options.getName(), options.getDefaultValue(), options.getValues()));
+        final ComboBox<String> box = getDialogComboBox(options.getName(), options.getDefaultValue(), options.getValues());
+        this.comboBoxes.add(box);
+        return this;
+    }
+
+    public ConfigDialog addTextBox(@NotNull TextBoxOptions options) {
+        final JTextField box = getDialogTextBox(options.getName(), options.getDefaultValue());
+        this.textBoxes.add(box);
         return this;
     }
 
@@ -81,7 +92,7 @@ public abstract class ConfigDialog extends DialogWrapper {
     }
 
     @NotNull
-    public ComboBox<String> getDialogComboBox(@NotNull String text,
+    private ComboBox<String> getDialogComboBox(@NotNull String text,
                                               @NotNull String selected,
                                               @NotNull Collection<String> values) {
         final ComboBox<String> comboBox = new ComboBox<>(values.toArray(new String[0]));
@@ -101,12 +112,36 @@ public abstract class ConfigDialog extends DialogWrapper {
         return comboBox;
     }
 
+    @NotNull
+    private JTextField getDialogTextBox(@NotNull String text,
+                                              @NotNull String defaultValue) {
+        final JTextField field = new JTextField();
+        field.setText(defaultValue);
+        field.setVisible(true);
+        field.setEnabled(true);
+        field.setName(text);
+
+        textBoxMap.put(text, defaultValue);
+        field.addActionListener(e -> {
+            if (e.getSource() instanceof JTextField) {
+                final JTextField source = (JTextField) e.getSource();
+                textBoxMap.put(source.getName(), String.valueOf(source.getText()));
+            }
+        });
+
+        return field;
+    }
+
     public Map<String, Boolean> getCheckBoxMap() {
         return checkBoxMap;
     }
 
     public Map<String, String> getComboBoxMap() {
         return comboBoxMap;
+    }
+
+    public Map<String, String> getTextBoxMap() {
+        return textBoxMap;
     }
 
     @Nullable

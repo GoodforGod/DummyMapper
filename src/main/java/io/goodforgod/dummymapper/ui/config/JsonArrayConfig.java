@@ -2,6 +2,7 @@ package io.goodforgod.dummymapper.ui.config;
 
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
+import io.goodforgod.dummymapper.ui.options.TextBoxOptions;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,4 +15,12 @@ import java.util.stream.Collectors;
  */
 public class JsonArrayConfig implements IConfig {
 
+    public static final String AMOUNT_OPTION = "amount";
+
+    @Override
+    public Collection<TextBoxOptions> textBoxes() {
+        return Collections.singletonList(
+                new TextBoxOptions(AMOUNT_OPTION, "1")
+        );
+    }
 }
