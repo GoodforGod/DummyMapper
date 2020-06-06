@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
  */
-public interface IMapper {
+public interface IMapper<T extends IConfig> {
 
     /**
      * @param file to map
@@ -19,10 +19,10 @@ public interface IMapper {
      * @throws io.goodforgod.dummymapper.error.MapperException in case of map exception
      */
     @NotNull
-    String map(@NotNull PsiJavaFile file);
+    default String map(@NotNull PsiJavaFile file) {
+        return map(file, null);
+    }
 
     @NotNull
-    default String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
-        return map(file);
-    }
+    String map(@NotNull PsiJavaFile file, @Nullable T config);
 }

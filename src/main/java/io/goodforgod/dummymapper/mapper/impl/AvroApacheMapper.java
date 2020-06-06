@@ -8,9 +8,11 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.reflect.ReflectData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -24,6 +26,12 @@ import java.util.Map;
 public class AvroApacheMapper implements IMapper {
 
     private final IFilter filter = new AvroFilter();
+
+    @NotNull
+    @Override
+    public String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
+        return map(file);
+    }
 
     // TODO fix class name with suffix
     @NotNull

@@ -15,8 +15,11 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
+import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -29,7 +32,7 @@ import java.util.Map;
  * @since 29.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
-public class AvroJacksonMapper implements IMapper {
+public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
     private final IFilter filter;
     private final ObjectMapper mapper;
@@ -42,7 +45,7 @@ public class AvroJacksonMapper implements IMapper {
     // TODO fix class name with suffix
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file) {
+    public String map(@NotNull PsiJavaFile file, @Nullable AvroJacksonConfig config) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
             final RawMarker filtered = this.filter.filter(marker);
@@ -63,5 +66,11 @@ public class AvroJacksonMapper implements IMapper {
 
             throw new ParseException(e.getMessage(), e);
         }
+    }
+
+    @NotNull
+    @Override
+    public String map(@NotNull PsiJavaFile file) {
+        return map(file, null);
     }
 }

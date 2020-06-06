@@ -14,7 +14,9 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -53,5 +55,11 @@ public class JsonMapper implements IMapper {
         } catch (JsonProcessingException e) {
             throw new ParseException(e.getMessage(), e);
         }
+    }
+
+    @NotNull
+    @Override
+    public String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
+        return map(file);
     }
 }

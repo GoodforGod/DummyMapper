@@ -10,7 +10,10 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.ui.config.IConfig;
+import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -21,7 +24,7 @@ import java.util.Map;
  * @since 29.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
-public class JsonSchemaMapper implements IMapper {
+public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
     private final IFilter filter;
 
@@ -29,10 +32,9 @@ public class JsonSchemaMapper implements IMapper {
         this.filter = new SupportedAnnotationFilter();
     }
 
-    // TODO fix class name with suffix
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file) {
+    public String map(@NotNull PsiJavaFile file, @Nullable JsonSchemaConfig config) {
         final RawMarker marker = new PsiJavaFileScanner().scan(file);
         if (marker.isEmpty())
             return "";
@@ -40,10 +42,10 @@ public class JsonSchemaMapper implements IMapper {
         final Map<String, Marker> structure = marker.getStructure();
         final Class target = ClassFactory.build(structure);
 
-        final SchemaGeneratorConfig config = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.JAVA_OBJECT)
+        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.JAVA_OBJECT)
                 .build();
 
-        final SchemaGenerator generator = new SchemaGenerator(config);
+        final SchemaGenerator generator = new SchemaGenerator(generatorConfig);
 
         final JsonNode schema = generator.generateSchema(target);
         return schema.toPrettyString();
