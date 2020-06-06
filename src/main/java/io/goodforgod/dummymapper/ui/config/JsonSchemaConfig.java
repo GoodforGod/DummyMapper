@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Anton Kurako (GoodforGod)
  * @since 23.5.2020
  */
-public class JsonSchemaConfig implements IConfig {
+public class JsonSchemaConfig extends AbstractConfig {
 
     public static final String DRAFT_OPTION = "draft";
 

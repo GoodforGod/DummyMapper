@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author Anton Kurako (GoodforGod)
  * @since 23.5.2020
  */
-public class JsonArrayConfig implements IConfig {
+public class JsonArrayConfig extends AbstractConfig {
 
     public static final String AMOUNT_OPTION = "amount";
 

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author Anton Kurako (GoodforGod)
  * @since 23.5.2020
  */
-public class AvroJacksonConfig implements IConfig {
+public class AvroJacksonConfig extends AbstractConfig{
 
     public static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
 

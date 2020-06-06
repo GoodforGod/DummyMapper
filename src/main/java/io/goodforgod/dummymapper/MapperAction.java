@@ -1,13 +1,11 @@
 package io.goodforgod.dummymapper;
 
-import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
@@ -16,17 +14,15 @@ import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
+import io.goodforgod.dummymapper.ui.config.AbstractConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
  * Mapper entry point base implementation class
@@ -34,7 +30,7 @@ import java.util.stream.Collectors;
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
  */
-public abstract class MapperAction extends AnAction {
+public abstract class MapperAction<T extends AbstractConfig> extends AnAction {
 
     public MapperAction() {
         super();
@@ -45,7 +41,7 @@ public abstract class MapperAction extends AnAction {
     }
 
     @NotNull
-    public abstract IMapper getMapper();
+    public abstract IMapper<T> getMapper();
 
     @NotNull
     protected abstract String format();
@@ -60,7 +56,11 @@ public abstract class MapperAction extends AnAction {
         return "No fields found to map for " + format();
     }
 
-    protected Optional<ConfigDialog> getDialog(final Project project) {
+    protected String configDialogTitle() {
+        return "Options";
+    }
+
+    protected Optional<T> getConfig() {
         return Optional.empty();
     }
 
@@ -70,11 +70,14 @@ public abstract class MapperAction extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(JavaFileException::new);
 
-            final Project project = event.getProject();
-            final Optional<ConfigDialog> dialog = getDialog(project);
-            dialog.ifPresent(DialogWrapper::show);
+            final T config = getConfig().map(c -> {
+                final Project project = event.getProject();
+                final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle()).build(c);
+                dialog.show();
+                return c;
+            }).orElse(null);
 
-            final String json = getMapper().map(file);
+            final String json = getMapper().map(file, config);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveComponent(emptyResultMessage(), MessageType.WARNING);
                 return;
