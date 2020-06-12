@@ -19,7 +19,7 @@ public class AvroJacksonConfig extends AbstractConfig {
     @Override
     public Collection<JComponent> getComponents() {
         return Collections.singletonList(
-                new CheckBoxComponent(REQUIRED_BY_DEFAULT_OPTION, true).build(this));
+                new CheckBoxComponent(REQUIRED_BY_DEFAULT_OPTION, false).build(this));
     }
 
     public boolean isRequiredByDefault() {

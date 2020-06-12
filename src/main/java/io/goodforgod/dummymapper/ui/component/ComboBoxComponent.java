@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.Collection;
 
 /**
- * Description in progress
+ * {@link ComboBox} component
  *
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020

@@ -25,12 +25,6 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
-    private final IFilter filter;
-
-    public JsonSchemaMapper() {
-        this.filter = new SupportedAnnotationFilter();
-    }
-
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file, @Nullable JsonSchemaConfig config) {

@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.ui.component;
 
+import com.intellij.util.ui.CheckBox;
 import io.goodforgod.dummymapper.ui.IComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * Description in progress
+ * {@link JCheckBox} component
  *
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020

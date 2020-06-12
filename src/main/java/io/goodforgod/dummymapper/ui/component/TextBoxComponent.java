@@ -6,7 +6,7 @@ import io.goodforgod.dummymapper.ui.config.IConfig;
 import javax.swing.*;
 
 /**
- * Description in progress
+ * {@link JTextField} component
  *
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020

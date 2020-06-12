@@ -35,6 +35,6 @@ public class JsonArrayAction extends MapperAction<JsonArrayConfig> {
     @NotNull
     @Override
     protected String format() {
-        return "JSON";
+        return "JSON array";
     }
 }

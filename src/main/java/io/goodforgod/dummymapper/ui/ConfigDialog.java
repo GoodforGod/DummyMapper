@@ -27,7 +27,7 @@ public class ConfigDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         final JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.setPreferredSize(new Dimension(350, 250));
+        panel.setPreferredSize(new Dimension(300, 120));
         components.forEach(panel::add);
         return panel;
     }

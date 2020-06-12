@@ -29,13 +29,7 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonMapper implements IMapper {
 
-    private final IFilter filter;
-    private final ObjectMapper mapper;
-
-    public JsonMapper() {
-        this.filter = new SupportedAnnotationFilter();
-        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    }
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     @NotNull
     @Override

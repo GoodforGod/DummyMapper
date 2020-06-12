@@ -30,13 +30,7 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
 
-    private final IFilter filter;
-    private final ObjectMapper mapper;
-
-    public JsonArrayMapper() {
-        this.filter = new SupportedAnnotationFilter();
-        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    }
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     @NotNull
     @Override

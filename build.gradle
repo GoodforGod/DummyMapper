@@ -3,8 +3,8 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 
-    id 'org.jetbrains.intellij' version '0.4.18'
-    id 'com.diffplug.gradle.spotless' version '3.26.0'
+    id 'org.jetbrains.intellij' version '0.4.21'
+    id 'com.diffplug.gradle.spotless' version '4.3.0'
 }
 
 repositories {
@@ -20,7 +20,7 @@ targetCompatibility = 1.8
 
 intellij {
     plugins 'java'
-    version '2020.1.1'
+    version '2020.1.2'
 }
 
 spotless {
@@ -50,7 +50,7 @@ dependencies {
     compile 'org.javassist:javassist:3.27.0-GA'
 
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
-    compile 'com.github.victools:jsonschema-generator:4.12.0'
+    compile 'com.github.victools:jsonschema-generator:4.12.2'
     compile 'org.apache.avro:avro-compiler:1.9.2'
 
     testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"

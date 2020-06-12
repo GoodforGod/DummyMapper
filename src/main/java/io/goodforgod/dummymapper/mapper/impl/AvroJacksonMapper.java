@@ -10,6 +10,7 @@ import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.JacksonPropertyFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -33,13 +34,9 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
-    private final IFilter filter;
-    private final ObjectMapper mapper;
-
-    public AvroJacksonMapper() {
-        this.filter = new AvroFilter();
-        this.mapper = new ObjectMapper(new AvroFactory());
-    }
+    private final IFilter avroFilter = new AvroFilter();
+    private final IFilter propertyFilter = new JacksonPropertyFilter();
+    private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
 
     // TODO fix class name with suffix
     @NotNull
@@ -47,9 +44,13 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     public String map(@NotNull PsiJavaFile file, @Nullable AvroJacksonConfig config) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            final RawMarker filtered = this.filter.filter(marker);
-            if (filtered.isEmpty())
+            final RawMarker coreMarker = this.avroFilter.filter(marker);
+            if (coreMarker.isEmpty())
                 return "";
+
+            final RawMarker filtered = (config != null && config.isRequiredByDefault())
+                    ? propertyFilter.filter(coreMarker)
+                    : coreMarker;
 
             final Map<String, Marker> structure = filtered.getStructure();
             final Class<?> target = ClassFactory.build(structure);

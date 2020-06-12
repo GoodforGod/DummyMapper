@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.ui.config;
 
+import io.goodforgod.dummymapper.ui.component.SpinnerComponent;
 import io.goodforgod.dummymapper.ui.component.TextBoxComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +19,7 @@ public class JsonArrayConfig extends AbstractConfig {
     @NotNull
     @Override
     public Collection<JComponent> getComponents() {
-        return Collections.singletonList(
-                new TextBoxComponent(AMOUNT_OPTION, "1").build(this));
+        return Collections.singletonList(new SpinnerComponent(AMOUNT_OPTION, 1000).build(this));
     }
 
     public int getAmount() {
