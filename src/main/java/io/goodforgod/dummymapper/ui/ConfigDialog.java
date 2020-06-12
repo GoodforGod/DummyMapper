@@ -17,7 +17,7 @@ public class ConfigDialog extends DialogWrapper {
     private final Collection<JComponent> components;
 
     public ConfigDialog(@Nullable Project project, String title, Collection<JComponent> components) {
-        super(project, true, IdeModalityType.PROJECT);
+        super(project, false, IdeModalityType.PROJECT);
         this.components = components;
         setTitle(title);
         init();
@@ -27,7 +27,6 @@ public class ConfigDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         final JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.setPreferredSize(new Dimension(300, 120));
         components.forEach(panel::add);
         return panel;
     }

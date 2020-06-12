@@ -78,22 +78,24 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                 final Collection<JComponent> components = c.getComponents();
                 final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
                 dialog.show();
+                dialog.close(0);
+                dialog.disposeIfNeeded();
                 return c;
             }).orElse(null);
 
             final String json = getMapper().map(file, config);
             if (StringUtils.isEmpty(json)) {
-                PopupUtil.showBalloonForActiveComponent(emptyResultMessage(), MessageType.WARNING);
+                PopupUtil.showBalloonForActiveFrame(emptyResultMessage(), MessageType.WARNING);
                 return;
             }
 
             IdeaUtils.copyToClipboard(json);
-            PopupUtil.showBalloonForActiveComponent(successMessage(), MessageType.INFO);
+            PopupUtil.showBalloonForActiveFrame(successMessage(), MessageType.INFO);
         } catch (MapperException | JavaFileException e) {
             if (StringUtils.isEmpty(e.getMessage()))
                 throw new IllegalArgumentException("Unknown error occurred", e);
 
-            PopupUtil.showBalloonForActiveComponent(e.getMessage(), MessageType.WARNING);
+            PopupUtil.showBalloonForActiveFrame(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
             e.printStackTrace();
             final String title = "Failed mapping to " + format();

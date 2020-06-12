@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
-import io.goodforgod.dummymapper.filter.IFilter;
-import io.goodforgod.dummymapper.filter.impl.SupportedAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;

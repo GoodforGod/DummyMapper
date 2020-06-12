@@ -1,7 +1,6 @@
 package io.goodforgod.dummymapper.ui.config;
 
 import io.goodforgod.dummymapper.ui.component.SpinnerComponent;
-import io.goodforgod.dummymapper.ui.component.TextBoxComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

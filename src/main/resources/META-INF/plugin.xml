@@ -3,7 +3,7 @@
     <name>DummyMapper (JSON,AVRO)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
 
-    <version>0.9.8</version>
+    <version>0.9.9</version>
     <description><![CDATA[
         <h1>DummyMapper</h1>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
@@ -16,7 +16,7 @@
         Plugin supports mapping to formats:
         <ul>
             <li>JSON</li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019), draft-5, draft-7</a></li>
             <li>AVRO Schema (Apache) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>AVRO Schema (Jackson) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
@@ -24,15 +24,15 @@
     <change-notes><![CDATA[
         Snapshot release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.8</i>
+        <i>Features or changes in release 0.9.9</i>
         <ul>
             <li>Support of JSON mapping option</li>
-            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a></li>
+            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019), draft-5, draft-7</a></li>
             <li>Support of AVRO Schema (Jackson) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support of AVRO Schema (Apache) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support all basic Java types, collections, maps, enums and more</li>
             <li>Jackson annotations support for fields \ methods handling when mapping to AVRO \ JSON</li>
-            <li>Compatibility with IDEA 2020.1</li>
+            <li>Compatibility with IDEA 2020.1+</li>
         </ul>
     ]]></change-notes>
 
