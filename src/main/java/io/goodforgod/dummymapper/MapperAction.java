@@ -15,12 +15,14 @@ import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
 import io.goodforgod.dummymapper.ui.config.AbstractConfig;
+import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -30,7 +32,7 @@ import java.util.StringJoiner;
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
  */
-public abstract class MapperAction<T extends AbstractConfig> extends AnAction {
+public abstract class MapperAction<T extends IConfig> extends AnAction {
 
     public MapperAction() {
         super();
@@ -72,7 +74,8 @@ public abstract class MapperAction<T extends AbstractConfig> extends AnAction {
 
             final T config = getConfig().map(c -> {
                 final Project project = event.getProject();
-                final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle()).build(c);
+                final Collection<JComponent> components = c.getComponents();
+                final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
                 dialog.show();
                 return c;
             }).orElse(null);

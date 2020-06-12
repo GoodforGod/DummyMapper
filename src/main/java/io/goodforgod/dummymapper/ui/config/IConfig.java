@@ -1,11 +1,10 @@
 package io.goodforgod.dummymapper.ui.config;
 
-import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
-import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
-import io.goodforgod.dummymapper.ui.options.TextBoxOptions;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -13,15 +12,10 @@ import java.util.Collections;
  */
 public interface IConfig {
 
-    default Collection<CheckBoxOptions> checkBoxes() {
-        return Collections.emptyList();
-    }
+    void set(@NotNull String key, @NotNull Object value);
 
-    default Collection<ComboBoxOptions> comboBoxes() {
-        return Collections.emptyList();
-    }
+    @Nullable String get(@NotNull String key);
 
-    default Collection<TextBoxOptions> textBoxes() {
-        return Collections.emptyList();
-    }
+    @NotNull
+    Collection<JComponent> getComponents();
 }

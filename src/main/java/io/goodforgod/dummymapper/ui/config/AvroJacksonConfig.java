@@ -1,13 +1,12 @@
 package io.goodforgod.dummymapper.ui.config;
 
-import com.github.victools.jsonschema.generator.SchemaVersion;
+import io.goodforgod.dummymapper.ui.CheckBoxComponent;
 import io.goodforgod.dummymapper.ui.options.CheckBoxOptions;
-import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -17,10 +16,15 @@ public class AvroJacksonConfig extends AbstractConfig{
 
     public static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
 
+    @NotNull
     @Override
-    public Collection<CheckBoxOptions> checkBoxes() {
+    public Collection<JComponent> getComponents() {
         return Collections.singletonList(
-                new CheckBoxOptions(REQUIRED_BY_DEFAULT_OPTION, true)
+                new CheckBoxComponent(REQUIRED_BY_DEFAULT_OPTION, true).build(this)
         );
+    }
+
+    public boolean isRequiredByDefault() {
+        return Boolean.parseBoolean(config.getOrDefault(REQUIRED_BY_DEFAULT_OPTION, "false"));
     }
 }
