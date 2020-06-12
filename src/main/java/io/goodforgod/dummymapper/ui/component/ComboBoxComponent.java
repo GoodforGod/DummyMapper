@@ -1,6 +1,7 @@
-package io.goodforgod.dummymapper.ui;
+package io.goodforgod.dummymapper.ui.component;
 
 import com.intellij.openapi.ui.ComboBox;
+import io.goodforgod.dummymapper.ui.IComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 
 import javax.swing.*;

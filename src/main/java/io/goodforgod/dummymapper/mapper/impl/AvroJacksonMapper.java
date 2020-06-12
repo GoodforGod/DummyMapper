@@ -16,7 +16,6 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
-import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +52,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
                 return "";
 
             final Map<String, Marker> structure = filtered.getStructure();
-            final Class target = ClassFactory.build(structure);
+            final Class<?> target = ClassFactory.build(structure);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();
             mapper.acceptJsonFormatVisitor(target, generator);

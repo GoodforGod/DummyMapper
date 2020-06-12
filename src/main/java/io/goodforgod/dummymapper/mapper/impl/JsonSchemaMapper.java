@@ -10,7 +10,6 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
-import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +39,10 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
             return "";
 
         final Map<String, Marker> structure = marker.getStructure();
-        final Class target = ClassFactory.build(structure);
+        final Class<?> target = ClassFactory.build(structure);
 
-        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.JAVA_OBJECT)
+        final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
+        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.JAVA_OBJECT)
                 .build();
 
         final SchemaGenerator generator = new SchemaGenerator(generatorConfig);

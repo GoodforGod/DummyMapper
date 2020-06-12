@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.ui.config;
 
 import com.github.victools.jsonschema.generator.SchemaVersion;
-import io.goodforgod.dummymapper.ui.ComboBoxComponent;
-import io.goodforgod.dummymapper.ui.TextBoxComponent;
-import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
+import io.goodforgod.dummymapper.ui.component.ComboBoxComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -29,8 +27,7 @@ public class JsonSchemaConfig extends AbstractConfig {
                         Arrays.stream(SchemaVersion.values())
                                 .map(Enum::name)
                                 .collect(Collectors.toSet()))
-                .build(this)
-        );
+                                        .build(this));
     }
 
     public SchemaVersion getSchemaVersion() {

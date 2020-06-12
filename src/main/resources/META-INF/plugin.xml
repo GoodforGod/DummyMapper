@@ -56,6 +56,11 @@
                     text="Map as JSON"
                     description="Copy POJOs as JSON representation to clipboard">
             </action>
+            <action id="DummyMapper.JsonArrayExample"
+                    class="io.goodforgod.dummymapper.JsonArrayAction"
+                    text="Map as JSON Array"
+                    description="Copy POJOs as JSON array representation to clipboard">
+            </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
@@ -64,12 +69,12 @@
             <action id="DummyMapper.AvroSchemaJackson"
                     class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
                     text="Map as AVRO Schema (Jackson)"
-                    description="Copy AVRO Schema to clipboard produced by Jackson Schema Builder">
+                    description="Copy AVRO Schema to clipboard produced by Jackson mapper">
             </action>
             <action id="DummyMapper.AvroSchemaApache"
                     class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
-                    description="Copy AVRO Schema to clipboard produced by Apache Schema Builder">
+                    description="Copy AVRO Schema to clipboard produced by Apache builder">
             </action>
         </group>
     </actions>

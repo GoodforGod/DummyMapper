@@ -43,7 +43,7 @@ public class AvroApacheMapper implements IMapper {
             return "";
 
         final Map<String, Marker> structure = filtered.getStructure();
-        final Class target = ClassFactory.build(structure);
+        final Class<?> target = ClassFactory.build(structure);
 
         final Schema schema = ReflectData.get().getSchema(target);
         return schema.toString(true);

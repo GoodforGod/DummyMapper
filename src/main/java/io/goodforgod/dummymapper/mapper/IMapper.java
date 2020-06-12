@@ -13,16 +13,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface IMapper<T extends IConfig> {
 
-    /**
-     * @param file to map
-     * @return file mapped to its type as string value
-     * @throws io.goodforgod.dummymapper.error.MapperException in case of map exception
-     */
     @NotNull
     default String map(@NotNull PsiJavaFile file) {
         return map(file, null);
     }
 
+    /**
+     * @param file to map
+     * @param config for specific mapper
+     * @return file mapped to its type as string value
+     * @throws io.goodforgod.dummymapper.error.MapperException in case of map exception
+     */
     @NotNull
     String map(@NotNull PsiJavaFile file, @Nullable T config);
 }

@@ -1,17 +1,11 @@
 package io.goodforgod.dummymapper.ui.config;
 
-import com.github.victools.jsonschema.generator.SchemaVersion;
-import io.goodforgod.dummymapper.ui.CheckBoxComponent;
-import io.goodforgod.dummymapper.ui.TextBoxComponent;
-import io.goodforgod.dummymapper.ui.options.ComboBoxOptions;
-import io.goodforgod.dummymapper.ui.options.TextBoxOptions;
+import io.goodforgod.dummymapper.ui.component.TextBoxComponent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -25,8 +19,7 @@ public class JsonArrayConfig extends AbstractConfig {
     @Override
     public Collection<JComponent> getComponents() {
         return Collections.singletonList(
-                new TextBoxComponent(AMOUNT_OPTION, "1").build(this)
-        );
+                new TextBoxComponent(AMOUNT_OPTION, "1").build(this));
     }
 
     public int getAmount() {

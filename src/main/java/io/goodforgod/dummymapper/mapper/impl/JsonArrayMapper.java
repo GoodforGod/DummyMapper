@@ -14,10 +14,11 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
 import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
-import io.goodforgod.dummymapper.ui.config.IConfig;
+import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,12 +28,12 @@ import java.util.Map;
  * @since 28.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
-public class JsonMapper implements IMapper {
+public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
 
     private final IFilter filter;
     private final ObjectMapper mapper;
 
-    public JsonMapper() {
+    public JsonArrayMapper() {
         this.filter = new SupportedAnnotationFilter();
         this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     }
@@ -40,6 +41,12 @@ public class JsonMapper implements IMapper {
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
+        return map(file, null);
+    }
+
+    @NotNull
+    @Override
+    public String map(@NotNull PsiJavaFile file, @Nullable JsonArrayConfig config) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
             if (marker.isEmpty())
@@ -49,17 +56,13 @@ public class JsonMapper implements IMapper {
             final Class<?> target = ClassFactory.build(structure);
 
             final GenFactory factory = GenFactoryProvider.get(structure);
-            final Object instance = factory.build(target);
 
-            return mapper.writeValueAsString(instance);
+            final int amount = (config == null) ? 1 : config.getAmount();
+            final List<?> list = factory.build(target, amount);
+
+            return mapper.writeValueAsString(list);
         } catch (JsonProcessingException e) {
             throw new ParseException(e.getMessage(), e);
         }
-    }
-
-    @NotNull
-    @Override
-    public String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
-        return map(file);
     }
 }

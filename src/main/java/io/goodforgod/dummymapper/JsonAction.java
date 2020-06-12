@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JsonAction extends MapperAction {
 
-    private final IMapper mapper = new JsonMapper();
+    private final JsonMapper mapper = new JsonMapper();
 
     @NotNull
     @Override

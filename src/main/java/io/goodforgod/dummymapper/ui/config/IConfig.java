@@ -14,7 +14,8 @@ public interface IConfig {
 
     void set(@NotNull String key, @NotNull Object value);
 
-    @Nullable String get(@NotNull String key);
+    @Nullable
+    String get(@NotNull String key);
 
     @NotNull
     Collection<JComponent> getComponents();

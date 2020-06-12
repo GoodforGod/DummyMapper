@@ -42,6 +42,14 @@ public abstract class Marker {
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends Marker> T addAnnotation(@NotNull AnnotationMarker annotation) {
+        if (isEmpty(annotations))
+            this.annotations = new HashSet<>();
+        this.annotations.add(annotation);
+        return (T) this;
+    }
+
     public @NotNull String getSource() {
         return source;
     }

@@ -51,6 +51,10 @@ public class AnnotationMarker {
         return attributes;
     }
 
+    public boolean haveAttribute(String key) {
+        return attributes.containsKey(key);
+    }
+
     public boolean named(@NotNull Class<?> annotation) {
         return named(annotation.getName());
     }

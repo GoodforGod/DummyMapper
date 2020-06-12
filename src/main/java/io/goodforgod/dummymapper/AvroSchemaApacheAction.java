@@ -2,7 +2,6 @@ package io.goodforgod.dummymapper;
 
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
-import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**

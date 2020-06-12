@@ -14,10 +14,10 @@ import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
-import io.goodforgod.dummymapper.ui.config.AbstractConfig;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.PrintWriter;
@@ -62,8 +62,9 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
         return "Options";
     }
 
-    protected Optional<T> getConfig() {
-        return Optional.empty();
+    @Nullable
+    protected T getConfig() {
+        return null;
     }
 
     @Override
@@ -72,7 +73,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(JavaFileException::new);
 
-            final T config = getConfig().map(c -> {
+            final T config = Optional.ofNullable(getConfig()).map(c -> {
                 final Project project = event.getProject();
                 final Collection<JComponent> components = c.getComponents();
                 final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
