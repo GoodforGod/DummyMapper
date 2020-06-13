@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
@@ -136,13 +137,15 @@ public class ClassFactory {
                     final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
                     ownClass.addField(field);
                 } else if (entry.getValue() instanceof RawMarker) {
-                    final Map<String, Marker> innerStructure = ((RawMarker) entry.getValue()).getStructure();
+                    final RawMarker marker = (RawMarker) entry.getValue();
+                    final Map<String, Marker> innerStructure = marker.getStructure();
                     final String innerClassName = getOriginClassName(innerStructure);
                     CtClass innerClass = scanned.get(innerClassName);
                     if (innerClass == null)
                         innerClass = buildInternal(innerStructure, scanned);
 
-                    ownClass.addField(getClassField(fieldName, innerClass, ownClass));
+                    final CtField field = getClassField(fieldName, innerClass, ownClass, marker);
+                    ownClass.addField(field);
                 }
             }
 
@@ -274,6 +277,19 @@ public class ClassFactory {
         }
     }
 
+    private static CtField getClassField(@NotNull String fieldName,
+                                         @NotNull CtClass fieldClass,
+                                         @NotNull CtClass owner,
+                                         @NotNull RawMarker marker) {
+        try {
+            final String src = String.format("public %s %s;", fieldClass.getName(), fieldName);
+            final CtField field = CtField.make(src, owner);
+            return addAnnotationInfo(field, marker);
+        } catch (CannotCompileException e) {
+            throw new ClassBuildException(e);
+        }
+    }
+
     private static CtField addAnnotationInfo(@NotNull CtField field,
                                              @NotNull Marker marker) {
         if (marker.getAnnotations().isEmpty())
@@ -282,15 +298,17 @@ public class ClassFactory {
         final FieldInfo fieldInfo = field.getFieldInfo();
         final ConstPool constPool = fieldInfo.getConstPool();
 
+        final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
         for (AnnotationMarker annotationMarker : marker.getAnnotations()) {
             final Annotation a = new Annotation(annotationMarker.getName(), constPool);
             annotationMarker.getAttributes()
-                    .forEach((name, v) -> getMember(v, constPool)
-                            .ifPresent(member -> a.addMemberValue(name, member)));
-            final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-            attribute.setAnnotation(a);
-            fieldInfo.addAttribute(attribute);
+                    .forEach((n, v) -> getMember(v, constPool)
+                            .ifPresent(member -> a.addMemberValue(n, member)));
+            attribute.addAnnotation(a);
         }
+
+        if (CollectionUtils.isNotEmpty(attribute.getAnnotations()))
+            fieldInfo.addAttribute(attribute);
 
         return field;
     }
@@ -331,17 +349,6 @@ public class ClassFactory {
         return Optional.empty();
     }
 
-    private static CtField getClassField(@NotNull String fieldName,
-                                         @NotNull CtClass fieldClass,
-                                         @NotNull CtClass owner) {
-        try {
-            final String src = String.format("public %s %s;", fieldClass.getName(), fieldName);
-            return CtField.make(src, owner);
-        } catch (CannotCompileException e) {
-            throw new ClassBuildException(e);
-        }
-    }
-
     private static String getClassName(@NotNull Map<?, ?> structure) {
         return structure.values().stream()
                 .filter(v -> v instanceof TypedMarker)
@@ -380,6 +387,6 @@ public class ClassFactory {
     }
 
     private static String getClassPackage(int num) {
-        return "io.dummymapper.dummies_" + num;
+        return "io.goodforgod.dummymapper.dummies_" + num;
     }
 }

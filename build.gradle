@@ -38,6 +38,9 @@ configurations {
             force 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
             force 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
             force 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
+            force 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0'
+            force 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0'
+            force 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0'
         }
     }
 }
@@ -52,6 +55,7 @@ dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
     compile 'com.github.victools:jsonschema-generator:4.12.2'
     compile 'org.apache.avro:avro-compiler:1.9.2'
+    compile 'io.leangen.graphql:spqr:0.10.1'
 
     testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }

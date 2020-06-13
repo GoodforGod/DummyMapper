@@ -3,7 +3,7 @@
     <name>DummyMapper (JSON,AVRO)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
 
-    <version>0.9.9</version>
+    <version>0.9.10</version>
     <description><![CDATA[
         <h1>DummyMapper</h1>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
@@ -27,7 +27,7 @@
     <change-notes><![CDATA[
         Snapshot release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.9</i>
+        <i>Features or changes in release 0.9.10</i>
         <ul>
             <li>Support of JSON mapping option</li>
             <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
@@ -70,6 +70,11 @@
                     class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
                     description="Copy JSON Schema to clipboard">
+            </action>
+            <action id="DummyMapper.GraphQLSchema"
+                    class="io.goodforgod.dummymapper.GraphQLAction"
+                    text="Map as GraphQL Schema"
+                    description="Copy GraphQL Schema to clipboard">
             </action>
             <action id="DummyMapper.AvroSchemaJackson"
                     class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
