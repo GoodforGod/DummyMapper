@@ -38,7 +38,6 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     private final IFilter propertyFilter = new JacksonPropertyFilter();
     private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
 
-    // TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file, @Nullable AvroJacksonConfig config) {

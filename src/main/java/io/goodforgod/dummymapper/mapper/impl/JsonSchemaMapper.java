@@ -34,7 +34,7 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
         final Class<?> target = ClassFactory.build(structure);
 
         final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
-        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.JAVA_OBJECT)
+        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)
                 .build();
 
         final SchemaGenerator generator = new SchemaGenerator(generatorConfig);

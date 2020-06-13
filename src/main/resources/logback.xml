@@ -13,5 +13,5 @@
 		<appender-ref ref="ASYNC"/>
 	</root>
 
-	<logger level="DEBUG" name="io.goodforgod.dummymapper"/>
+	<logger level="INFO" name="io.goodforgod.dummymapper"/>
 </configuration>

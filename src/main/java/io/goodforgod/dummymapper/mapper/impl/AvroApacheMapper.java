@@ -33,7 +33,6 @@ public class AvroApacheMapper implements IMapper {
         return map(file);
     }
 
-    // TODO fix class name with suffix
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file) {
