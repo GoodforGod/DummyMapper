@@ -10,13 +10,16 @@
         <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
         <br/>
         <br/>
-        <b>DummyMapper</b> is a plugin for mapping Java POJO classes to supported formats such as JSON, JSON Schema, AVRO Schema, etc.
+        <b>DummyMapper</b> is a plugin for mapping Java POJO classes to supported formats such as JSON, JSON array, JSON Schema, AVRO Schema, etc.
         <br/>
         <br/>
         Plugin supports mapping to formats:
         <ul>
             <li>JSON</li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019), draft-5, draft-7</a></li>
+            <li>JSON Array</li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
+            <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
+            <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li>AVRO Schema (Apache) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>AVRO Schema (Jackson) <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
@@ -27,7 +30,9 @@
         <i>Features or changes in release 0.9.9</i>
         <ul>
             <li>Support of JSON mapping option</li>
-            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019), draft-5, draft-7</a></li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
+            <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
+            <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li>Support of AVRO Schema (Jackson) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support of AVRO Schema (Apache) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
             <li>Support all basic Java types, collections, maps, enums and more</li>

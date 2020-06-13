@@ -78,7 +78,7 @@ public class ClassFactory {
         return mapped;
     }
 
-    public static Class build(@NotNull Map<String, Marker> structure) {
+    public static Class<?> build(@NotNull Map<String, Marker> structure) {
         if (structure.isEmpty())
             throw new IllegalArgumentException("Scanned map for Class construction is empty!");
 
@@ -292,12 +292,6 @@ public class ClassFactory {
             fieldInfo.addAttribute(attribute);
         }
 
-        // final Annotation annotation = new Annotation(JsonProperty.class.getName(), constPool);
-        // annotation.addMemberValue("required", new BooleanMemberValue(true, constPool));
-        // AnnotationsAttribute attributeNew = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-        // attributeNew.setAnnotation(annotation);
-        // fieldInfo.addAttribute(attributeNew);
-
         return field;
     }
 
@@ -356,19 +350,6 @@ public class ClassFactory {
                 .orElseThrow(() -> new ClassBuildException("Can not find Class Name while construction!"));
     }
 
-    private static String getClassName(@NotNull Marker marker) {
-        final String name = getClassNameFromPackage(marker.getRoot());
-        return getClassNameWithSuffix(name);
-    }
-
-    private static String getOriginClassNameFull(@NotNull Map<?, ?> structure) {
-        return structure.values().stream()
-                .filter(v -> v instanceof TypedMarker)
-                .map(m -> ((TypedMarker) m).getRoot())
-                .findFirst()
-                .orElseThrow(() -> new ClassBuildException("Can not find origin Class Name Full while construction!"));
-    }
-
     private static String getOriginClassName(@NotNull Map<?, ?> structure) {
         return structure.values().stream()
                 .filter(v -> v instanceof TypedMarker)
@@ -377,18 +358,28 @@ public class ClassFactory {
                 .orElseThrow(() -> new ClassBuildException("Can not find origin Class Name while construction!"));
     }
 
-    private static String getPrevClassName(@NotNull Marker marker) {
-        final String originClassName = getClassNameFromPackage(marker.getRoot());
-        final int num = CLASS_SUFFIX_COUNTER.computeIfAbsent(originClassName, k -> 1) - 1;
-        return originClassName + "_" + num;
+    private static String getClassName(@NotNull Marker marker) {
+        final String name = getClassNameFromPackage(marker.getRoot());
+        return getClassNameWithSuffix(name);
     }
 
     private static String getClassNameWithSuffix(@NotNull String name) {
-        return name + "_" + CLASS_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0);
+        final Integer num = CLASS_SUFFIX_COUNTER.computeIfAbsent(name, k -> 0);
+        return getClassPackage(num) + "." + name;
+    }
+
+    private static String getPrevClassName(@NotNull Marker marker) {
+        final String originClassName = getClassNameFromPackage(marker.getRoot());
+        final int num = CLASS_SUFFIX_COUNTER.computeIfAbsent(originClassName, k -> 1) - 1;
+        return getClassPackage(num) + "." + originClassName;
     }
 
     private static String getClassNameFromPackage(@NotNull String source) {
         final int lastIndexOf = source.lastIndexOf('.', source.length() - 6);
         return source.substring(lastIndexOf + 1, source.length() - 5);
+    }
+
+    private static String getClassPackage(int num) {
+        return "io.dummymapper.dummies_" + num;
     }
 }

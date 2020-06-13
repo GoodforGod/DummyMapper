@@ -23,7 +23,6 @@ import javax.swing.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.StringJoiner;
 
 /**
@@ -73,15 +72,17 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
             final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
                     .orElseThrow(JavaFileException::new);
 
-            final T config = Optional.ofNullable(getConfig()).map(c -> {
+            final T config = getConfig();
+            if (config != null) {
                 final Project project = event.getProject();
-                final Collection<JComponent> components = c.getComponents();
+                final Collection<JComponent> components = config.getComponents();
                 final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
                 dialog.show();
-                dialog.close(0);
+                if (dialog.getExitCode() == 1)
+                    return;
+
                 dialog.disposeIfNeeded();
-                return c;
-            }).orElse(null);
+            }
 
             final String json = getMapper().map(file, config);
             if (StringUtils.isEmpty(json)) {
