@@ -27,14 +27,9 @@ public class JsonArrayAction extends MapperAction<JsonArrayConfig> {
         return config;
     }
 
-    @Override
-    protected String configDialogTitle() {
-        return "JSON Array Options";
-    }
-
     @NotNull
     @Override
     protected String format() {
-        return "JSON array";
+        return "JSON Array";
     }
 }

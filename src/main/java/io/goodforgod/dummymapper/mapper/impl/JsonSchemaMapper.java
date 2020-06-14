@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper.mapper.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
 import com.intellij.psi.PsiJavaFile;
+import io.goodforgod.dummymapper.error.ExternalException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -26,20 +27,24 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
     @NotNull
     @Override
     public String map(@NotNull PsiJavaFile file, @Nullable JsonSchemaConfig config) {
-        final RawMarker marker = new PsiJavaFileScanner().scan(file);
-        if (marker.isEmpty())
-            return "";
+        try {
+            final RawMarker marker = new PsiJavaFileScanner().scan(file);
+            if (marker.isEmpty())
+                return "";
 
-        final Map<String, Marker> structure = marker.getStructure();
-        final Class<?> target = ClassFactory.build(structure);
+            final Map<String, Marker> structure = marker.getStructure();
+            final Class<?> target = ClassFactory.build(structure);
 
-        final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
-        final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)
-                .build();
+            final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
+            final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)
+                    .build();
 
-        final SchemaGenerator generator = new SchemaGenerator(generatorConfig);
+            final SchemaGenerator generator = new SchemaGenerator(generatorConfig);
 
-        final JsonNode schema = generator.generateSchema(target);
-        return schema.toPrettyString();
+            final JsonNode schema = generator.generateSchema(target);
+            return schema.toPrettyString();
+        } catch (Exception e) {
+            throw new ExternalException(e);
+        }
     }
 }

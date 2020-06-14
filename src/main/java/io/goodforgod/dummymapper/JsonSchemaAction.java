@@ -28,11 +28,6 @@ public class JsonSchemaAction extends MapperAction<JsonSchemaConfig> {
         return config;
     }
 
-    @Override
-    protected String configDialogTitle() {
-        return "Json Schema Options";
-    }
-
     @NotNull
     public String format() {
         return "JSON Schema";

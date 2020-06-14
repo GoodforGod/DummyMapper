@@ -13,7 +13,7 @@ import java.util.Collections;
  */
 public class JsonArrayConfig extends AbstractConfig {
 
-    public static final String AMOUNT_OPTION = "amount";
+    private static final String AMOUNT_OPTION = "amount";
 
     @NotNull
     @Override

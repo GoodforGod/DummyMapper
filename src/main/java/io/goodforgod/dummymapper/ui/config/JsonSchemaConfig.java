@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class JsonSchemaConfig extends AbstractConfig {
 
-    public static final String DRAFT_OPTION = "draft";
+    private static final String DRAFT_OPTION = "draft";
 
     @NotNull
     @Override

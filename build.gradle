@@ -56,8 +56,6 @@ dependencies {
     compile 'com.github.victools:jsonschema-generator:4.12.2'
     compile 'org.apache.avro:avro-compiler:1.9.2'
     compile 'io.leangen.graphql:spqr:0.10.1'
-
-    testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
 }
 
 test {

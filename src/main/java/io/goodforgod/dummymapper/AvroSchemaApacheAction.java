@@ -23,6 +23,6 @@ public class AvroSchemaApacheAction extends MapperAction {
     @NotNull
     @Override
     protected String format() {
-        return "AVRO Schema";
+        return "AVRO Schema (Apache)";
     }
 }

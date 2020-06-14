@@ -13,7 +13,7 @@ import java.util.Collections;
  */
 public class AvroJacksonConfig extends AbstractConfig {
 
-    public static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
+    private static final String REQUIRED_BY_DEFAULT_OPTION = "Required By Default";
 
     @NotNull
     @Override

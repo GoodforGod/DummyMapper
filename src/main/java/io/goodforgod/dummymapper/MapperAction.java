@@ -58,7 +58,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
     }
 
     protected String configDialogTitle() {
-        return "Options";
+        return format() + " Options";
     }
 
     @Nullable
@@ -106,7 +106,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
             joiner.add("Error message: " + e.getMessage());
             joiner.add("Stacktrace: " + getStackTrace(e));
 
-            Notifications.Bus.notify(new Notification("Mapping Error", title, joiner.toString(), NotificationType.ERROR));
+            Notifications.Bus.notify(new Notification("mapping-error", title, joiner.toString(), NotificationType.ERROR));
         }
     }
 

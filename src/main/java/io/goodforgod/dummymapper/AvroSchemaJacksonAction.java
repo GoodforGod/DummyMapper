@@ -29,14 +29,9 @@ public class AvroSchemaJacksonAction extends MapperAction<AvroJacksonConfig> {
         return config;
     }
 
-    @Override
-    protected String configDialogTitle() {
-        return "AVRO Jackson Options";
-    }
-
     @NotNull
     @Override
     protected String format() {
-        return "AVRO Schema";
+        return "AVRO Schema (Jackson)";
     }
 }
