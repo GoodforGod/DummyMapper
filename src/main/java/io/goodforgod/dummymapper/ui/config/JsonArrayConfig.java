@@ -13,12 +13,13 @@ import java.util.Collections;
  */
 public class JsonArrayConfig extends AbstractConfig {
 
+    private static final int MAX = 1000;
     private static final String AMOUNT_OPTION = "amount";
 
     @NotNull
     @Override
     public Collection<JComponent> getComponents() {
-        return Collections.singletonList(new SpinnerComponent(AMOUNT_OPTION, 1000).build(this));
+        return Collections.singletonList(new SpinnerComponent(AMOUNT_OPTION, MAX).build(this));
     }
 
     public int getAmount() {

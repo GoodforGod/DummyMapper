@@ -2,36 +2,37 @@
     <id>com.github.goodforgod.dummymapper</id>
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
+    <category>Code tools</category>
+    <version>0.9.12</version>
 
-    <version>0.9.11</version>
     <description><![CDATA[
         <h1>DummyMapper</h1>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
         <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
         <br/>
         <br/>
-        <b>DummyMapper</b> is a plugin for mapping Java POJO classes to supported formats such as JSON, JSON array, GraphQL, JSON Schema, AVRO Schema, etc.
+        <b>DummyMapper</b> is a plugin for mapping Java POJO to supported formats such as JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
         Plugin supports mapping to formats:
         <ul>
-            <li>JSON</li>
-            <li>JSON Array</li>
-            <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>,
+            <li>JSON (Example representation in JSON)</li>
+            <li>JSON Array (Array examples representation in JSON)</li>
+            <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
             <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
-            <li>AVRO Schema<a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
+            <li>AVRO Schema <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
     ]]></description>
     <change-notes><![CDATA[
         Snapshot release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.11</i>
+        <i>Features or changes in release 0.9.12</i>
         <ul>
-            <li>Support of JSON mapping option</li>
-            <li>Support of JSON Array mapping option</li>
-            <li>Support of <a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a> mapping option</li>,
+            <li>Support of JSON mapping option (Example representation in JSON)</li>
+            <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>
+            <li>Support of <a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a> mapping option</li>
             <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
@@ -54,19 +55,20 @@
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"
                text="Mapping Options.."
+               description="Map Java POJO to other format.."
                popup="true"
                icon="AllIcons.Actions.DiffWithClipboard">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="CompareClipboardWithSelection"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="CompareTwoFiles"/>
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
-                    description="Copy POJOs as JSON representation to clipboard">
+                    description="Copy Class as JSON representation to clipboard">
             </action>
             <action id="DummyMapper.JsonArrayExample"
                     class="io.goodforgod.dummymapper.JsonArrayAction"
                     text="Map as JSON Array"
-                    description="Copy POJOs as JSON array representation to clipboard">
+                    description="Copy Class as JSON Array representation to clipboard">
             </action>
             <action id="DummyMapper.GraphQLSchema"
                     class="io.goodforgod.dummymapper.GraphQLAction"

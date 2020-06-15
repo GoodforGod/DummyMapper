@@ -61,7 +61,8 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             return schema.toString(true);
         } catch (JsonMappingException e) {
             if (e.getMessage().startsWith("\"Any\" type (usually for `java.lang.Object`)"))
-                throw new MapperException("POJO field with type 'java.lang.Object' can not be mapped to AVRO Schema");
+                throw new MapperException(
+                        "Java Class field with type 'java.lang.Object' can not be mapped to AVRO Schema (Jackson) by this mapper");
 
             throw new ParseException(e.getMessage(), e);
         }

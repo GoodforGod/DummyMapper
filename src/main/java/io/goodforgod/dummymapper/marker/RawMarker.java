@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Marker for unknown Java type (custom POJO class)
+ * Marker for unknown Java type (custom class)
  *
  * @author Anton Kurako (GoodforGod)
  * @since 26.4.2020

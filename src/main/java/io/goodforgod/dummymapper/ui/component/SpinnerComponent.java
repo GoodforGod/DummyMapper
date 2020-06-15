@@ -32,7 +32,9 @@ public class SpinnerComponent implements IComponent {
         spinner.addChangeListener(e -> {
             if (e.getSource() instanceof JSpinner) {
                 final JSpinner source = (JSpinner) e.getSource();
-                config.set(source.getName(), source.getValue());
+                source.validate();
+                if (source.isValid())
+                    config.set(source.getName(), source.getValue());
             }
         });
 

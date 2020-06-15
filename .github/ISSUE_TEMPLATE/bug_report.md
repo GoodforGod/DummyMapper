@@ -15,8 +15,8 @@ Stack-trace from IDEA Event Log.
 A clear and concise description of what the bug is.
 
 
-**POJO examples \ Screenshots**
-POJO example (fields, annotations, method, type or what is applicable in a situation).
+**Java Class examples \ Screenshots**
+Java Class example (fields, annotations, method, type or what is applicable in a situation).
 
 
 **Expected Behavior**
