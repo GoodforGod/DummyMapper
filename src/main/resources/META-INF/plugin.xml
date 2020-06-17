@@ -3,7 +3,7 @@
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.12</version>
+    <version>0.9.13</version>
 
     <description><![CDATA[
         <h1>DummyMapper</h1>
@@ -26,9 +26,9 @@
         </ul>
     ]]></description>
     <change-notes><![CDATA[
-        Snapshot release of the plugin.
+        Release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.12</i>
+        <i>Features or changes in release 0.9.13</i>
         <ul>
             <li>Support of JSON mapping option (Example representation in JSON)</li>
             <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>

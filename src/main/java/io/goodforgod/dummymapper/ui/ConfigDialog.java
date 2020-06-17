@@ -21,6 +21,7 @@ public class ConfigDialog extends DialogWrapper {
         this.components = components;
         setTitle(title);
         init();
+        setResizable(false);
     }
 
     @Nullable

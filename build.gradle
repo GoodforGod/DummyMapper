@@ -34,13 +34,13 @@ spotless {
 configurations {
     all {
         resolutionStrategy {
-            force 'com.fasterxml.jackson.core:jackson-core:2.11.0'
-            force 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
-            force 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
-            force 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
-            force 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0'
-            force 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0'
-            force 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0'
+            force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+            force "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+            force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+            force "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"
+            force "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+            force "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+            force "com.fasterxml.jackson.module:jackson-module-parameter-names:$jacksonVersion"
         }
     }
 }
@@ -52,7 +52,7 @@ dependencies {
     compile 'com.github.goodforgod:dummymaker:2.2.0-SNAPSHOT'
     compile 'org.javassist:javassist:3.27.0-GA'
 
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-avro:2.11.0'
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"
     compile 'com.github.victools:jsonschema-generator:4.12.2'
     compile 'org.apache.avro:avro-compiler:1.9.2'
     compile 'io.leangen.graphql:spqr:0.10.1'

@@ -1,3 +1,3 @@
 # DummyMapper
 
-Idea JSON object mapper
+Intellij Idea Mapping Plugin.
