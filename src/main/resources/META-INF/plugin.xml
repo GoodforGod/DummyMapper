@@ -3,7 +3,7 @@
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.13</version>
+    <version>0.9.14</version>
 
     <description><![CDATA[
         <h1>DummyMapper</h1>
@@ -28,7 +28,7 @@
     <change-notes><![CDATA[
         Release of the plugin.
         <br/>
-        <i>Features or changes in release 0.9.13</i>
+        <i>Features or changes in current release</i>
         <ul>
             <li>Support of JSON mapping option (Example representation in JSON)</li>
             <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>
@@ -63,17 +63,17 @@
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
-                    description="Copy Class as JSON representation to clipboard">
+                    description="Copy class as JSON to clipboard">
             </action>
             <action id="DummyMapper.JsonArrayExample"
                     class="io.goodforgod.dummymapper.JsonArrayAction"
                     text="Map as JSON Array"
-                    description="Copy Class as JSON Array representation to clipboard">
+                    description="Copy class as JSON array to clipboard">
             </action>
             <action id="DummyMapper.GraphQLSchema"
                     class="io.goodforgod.dummymapper.GraphQLAction"
-                    text="Map as GraphQL Schema"
-                    description="Copy GraphQL Schema to clipboard">
+                    text="Map as GraphQL"
+                    description="Copy GraphQL query to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaAction"

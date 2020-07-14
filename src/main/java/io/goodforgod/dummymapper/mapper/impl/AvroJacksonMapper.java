@@ -58,7 +58,8 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             mapper.acceptJsonFormatVisitor(target, generator);
             final AvroSchema generatedSchema = generator.getGeneratedSchema();
             final Schema schema = generatedSchema.getAvroSchema();
-            return schema.toString(true);
+            final String schemaAsJson = schema.toString(true);
+            return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", "io.goodforgod.dummymapper");
         } catch (JsonMappingException e) {
             if (e.getMessage().startsWith("\"Any\" type (usually for `java.lang.Object`)"))
                 throw new MapperException(

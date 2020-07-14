@@ -45,6 +45,7 @@ public class AvroApacheMapper implements IMapper {
         final Class<?> target = ClassFactory.build(structure);
 
         final Schema schema = ReflectData.get().getSchema(target);
-        return schema.toString(true);
+        final String schemaAsJson = schema.toString(true);
+        return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", "io.goodforgod.dummymapper");
     }
 }

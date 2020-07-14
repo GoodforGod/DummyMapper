@@ -15,13 +15,13 @@ import java.util.Collection;
  */
 public class GraphQLConfig extends AbstractConfig {
 
-    private static final String QUERY_BY_DEFAULT = "Query By Default";
-    private static final String NON_NULL_BY_DEFAULT = "Non Null By Default";
+    private static final String QUERY_BY_DEFAULT = "Visible by Default";
+    private static final String NON_NULL_BY_DEFAULT = "Required by Default";
 
     @Override
     public @NotNull Collection<JComponent> getComponents() {
         return Arrays.asList(
-                new CheckBoxComponent(QUERY_BY_DEFAULT, false).build(this),
+                new CheckBoxComponent(QUERY_BY_DEFAULT, true).build(this),
                 new CheckBoxComponent(NON_NULL_BY_DEFAULT, false).build(this));
     }
 
