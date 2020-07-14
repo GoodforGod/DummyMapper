@@ -84,6 +84,10 @@ You can specify number of entries to generate in array.
 ]
 ```
 
+#### Annotations Support
+
+Annotation support
+
 ### Json Schema
 
 Allow mapping Java class as JSON Schema, 3 different drafts are available:
@@ -177,6 +181,14 @@ Mapping is under:
 }
 ```
 
+#### Jackson Annotation Support
+
+Annotation support
+
+#### Apache Annotation Support
+
+Annotation support
+
 ### GraphQL
 
 Allow mapping Java class as GraphQL query with [version v14](https://www.graphql-java.com/documentation/v14)
@@ -212,10 +224,12 @@ scalar UNREPRESENTABLE
 scalar UUID
 ```
 
+#### Annotation Support
+
 ## Limitations
 
 - Enums
-- Getters, Setters
+- Getters, Setters (annotations, setters and getters role)
 
 ## Version History
 
