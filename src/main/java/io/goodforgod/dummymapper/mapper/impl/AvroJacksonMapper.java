@@ -45,7 +45,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     public String map(@NotNull PsiJavaFile file, @Nullable AvroJacksonConfig config) {
         try {
             final RawMarker marker = new PsiJavaFileScanner().scan(file);
-            final RawMarker coreMarker = this.avroFilter.filter(marker);
+            final RawMarker coreMarker = avroFilter.filter(marker);
             if (coreMarker.isEmpty())
                 return "";
 

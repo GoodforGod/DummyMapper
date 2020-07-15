@@ -1,6 +1,8 @@
 # DummyMapper 🗎
 
-Intellij Idea plugin for mapping Java Classes to formats like JSON/AVRO/GraphQL and others.
+[Intellij Idea plugin](https://plugins.jetbrains.com/plugin/dummymapper) for mapping Java Classes to formats like JSON/AVRO/GraphQL/etc.
+
+(gif)
 
 ## Content
 - [Installation](#installation)
@@ -15,7 +17,7 @@ Intellij Idea plugin for mapping Java Classes to formats like JSON/AVRO/GraphQL 
 ## Installation
 
 - Install using IDEA Plugin site:
-  - Navigate to [site](https://plugins.jetbrains.com/plugin/6317-lombok) and click *install* button there.
+  - Navigate to [site](https://plugins.jetbrains.com/plugin/dummymapper) and click *install* button there.
 - Using IDE built-in plugin system on Windows:
   - <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
 - Using IDE built-in plugin system on MacOs:
@@ -30,7 +32,8 @@ Restart IDE.
 Plugin allow mapping Java POJO classes to different formats, 
 this section describes information about supported formats and their options.
 
-All format examples will be showed according to this class as exaple.
+All format examples will be showed according to this class as example.
+Keep in mind that mapping is always based on class **fields**, not its *getters\setters*.
 
 ```java
 public class User {
@@ -87,10 +90,10 @@ You can specify number of entries to generate in array.
 #### Annotations Support
 
 Annotations from [Jackson](https://www.baeldung.com/jackson-annotations) are supported when serializing to JSON, 
-but keep in mind that only *fields* used to deserialized, not *getters*. 
+but keep in mind that only *fields* used for serialization, not *getters*. 
 
-However, *getters* for responsible fields marked with [Jackson](https://www.baeldung.com/jackson-annotations)
-annotations will be applied also, but such behavior is not guarantied to be always correct.
+However, [Jackson annotations](https://www.baeldung.com/jackson-annotations) from respected fields *getters*
+will be applied during serialization if found, but such behavior is not guarantied to be always correct.
 
 Example for *User* class:
 ```java
@@ -110,7 +113,8 @@ public class User {
 }
 ```
 
-Mapping *User* class as JSON will result in (ignore and other [Jackson](https://www.baeldung.com/jackson-annotations) are supported):
+Mapping *User* class as JSON will result in (most of [Jackson annotations](https://www.baeldung.com/jackson-annotations)
+and their parameters are supported):
 ```json
 {
   "id": "975e80ed-b95d-46b2-9338-519ff7083dd3",
@@ -165,8 +169,8 @@ Mapping is under:
 Allow mapping Java class as AVRO Schema for [version 1.9.2](https://avro.apache.org/docs/1.9.2/)
 
 There is option for two different AVRO Schema builders like:
-- [Jackson]()
-- [Apache]()
+- [Jackson](https://github.com/FasterXML/jackson-dataformats-binary/tree/master/avro)
+- [Apache](https://avro.apache.org/docs/1.9.2/gettingstartedjava.html)
 
 Mapping is under:
 - <kbd>Mapping options..</kbd> > <kbd>Map as AVRO Schema</kbd>
@@ -213,11 +217,26 @@ Mapping is under:
 
 #### Jackson Annotation Support
 
-Annotation support
+[Jackson annotations](https://www.baeldung.com/jackson-annotations) are supported when serializing to AVRO Schema, 
+but keep in mind that only *fields* used for serialization, not *getters*. 
+
+Most of [Jackson annotations](https://www.baeldung.com/jackson-annotations)
+and their parameters are supported.
+
+Example on how to mark field as required (Option *Required By Default* apply such transformation for all fields if selected):
+```java
+public class User {
+    
+    @JsonProperty(required = true)
+    private UUID id;
+    private String name;
+    private String surname;
+}
+```
 
 #### Apache Annotation Support
 
-Annotation support
+Annotations from [Apache Avro](https://github.com/apache/avro/tree/master/lang/java/avro/src/main/java/org/apache/avro/reflect) library supported when serializing to AVRO Schema.
 
 ### GraphQL
 
@@ -256,10 +275,13 @@ scalar UUID
 
 #### Annotation Support
 
+Annotations from [GraphQL SPQR](https://github.com/leangen/graphql-spqr/tree/master/src/main/java/io/leangen/graphql/annotations) library supported when serializing to GraphQL.
+
 ## Limitations
 
-- Enums
-- Getters, Setters (annotations, setters and getters role)
+- Enums (except JSON)
+- Getters, Setters (except annotations)
+- Annotations (class params)
 
 ## Version History
 

@@ -9,6 +9,7 @@ import org.apache.avro.reflect.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -18,6 +19,8 @@ import java.util.function.Predicate;
  * @since 3.5.2020
  */
 public class AvroFilter extends FieldFilter {
+
+    private static final String REQUIRED_PROPERTY = "required";
 
     @Override
     protected Predicate<AnnotationMarker> predicate() {
@@ -30,11 +33,18 @@ public class AvroFilter extends FieldFilter {
         marker.getStructure().forEach((k, v) -> {
             final Collection<AnnotationMarker> annotations = v.getAnnotations();
             if (annotations.stream().anyMatch(a -> a.named(Nullable.class))) {
-                final AnnotationMarker isNotRequired = AnnotationMarkerBuilder.get().ofField()
-                        .withName(JsonProperty.class)
-                        .withAttribute("required", false)
-                        .build();
-                annotations.add(isNotRequired);
+                final Optional<AnnotationMarker> property = annotations.stream()
+                        .filter(a -> a.named(JsonProperty.class))
+                        .findFirst();
+                if (!property.isPresent()) {
+                    v.addAnnotation(AnnotationMarkerBuilder.get()
+                            .ofField()
+                            .withName(JsonProperty.class)
+                            .withAttribute(REQUIRED_PROPERTY, true)
+                            .build());
+                } else {
+                    property.get().getAttributes().put(REQUIRED_PROPERTY, true);
+                }
             }
         });
 
