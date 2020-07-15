@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class JsonMapper implements IMapper {
 
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
 
     @NotNull
     @Override
@@ -37,7 +40,8 @@ public class JsonMapper implements IMapper {
             if (marker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = marker.getStructure();
+            final RawMarker filtered = annotationFilter.filter(marker);
+            final Map<String, Marker> structure = filtered.getStructure();
             final Class<?> target = ClassFactory.build(structure);
 
             final GenFactory factory = GenFactoryProvider.get(structure);

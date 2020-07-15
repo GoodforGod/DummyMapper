@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper.mapper.impl;
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -25,7 +26,8 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class AvroApacheMapper implements IMapper {
 
-    private final IFilter filter = new AvroFilter();
+    private final IFilter avroFilter = new AvroFilter();
+    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
 
     @NotNull
     @Override
@@ -37,10 +39,11 @@ public class AvroApacheMapper implements IMapper {
     @Override
     public String map(@NotNull PsiJavaFile file) {
         final RawMarker marker = new PsiJavaFileScanner().scan(file);
-        final RawMarker filtered = this.filter.filter(marker);
-        if (filtered.isEmpty())
+        final RawMarker avroFiltered = avroFilter.filter(marker);
+        if (avroFiltered.isEmpty())
             return "";
 
+        final RawMarker filtered = annotationFilter.filter(avroFiltered);
         final Map<String, Marker> structure = filtered.getStructure();
         final Class<?> target = ClassFactory.build(structure);
 

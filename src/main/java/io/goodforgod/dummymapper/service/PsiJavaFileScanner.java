@@ -40,7 +40,7 @@ public class PsiJavaFileScanner {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
 
-    public RawMarker scan(@Nullable PsiJavaFile file) {
+    public @NotNull RawMarker scan(@Nullable PsiJavaFile file) {
         if (file == null || file.getClasses().length == 0)
             return RawMarker.EMPTY;
 
@@ -54,7 +54,7 @@ public class PsiJavaFileScanner {
         return new RawMarker(root, source, scanned);
     }
 
-    private Map<String, Marker> scanJavaFile(@Nullable PsiJavaFile file) {
+    private @NotNull Map<String, Marker> scanJavaFile(@Nullable PsiJavaFile file) {
         try {
             if (file == null || file.getClasses().length == 0)
                 return Collections.emptyMap();

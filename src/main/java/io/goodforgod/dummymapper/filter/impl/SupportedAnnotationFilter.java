@@ -37,7 +37,7 @@ public class SupportedAnnotationFilter extends AnnotationFilter {
             .collect(Collectors.toSet());
 
     @Override
-    protected Predicate<AnnotationMarker> predicate() {
+    protected Predicate<AnnotationMarker> allowed() {
         return a -> names.contains(a.getName());
     }
 }

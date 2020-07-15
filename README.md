@@ -86,7 +86,37 @@ You can specify number of entries to generate in array.
 
 #### Annotations Support
 
-Annotation support
+Annotations from [Jackson](https://www.baeldung.com/jackson-annotations) are supported when serializing to JSON, 
+but keep in mind that only *fields* used to deserialized, not *getters*. 
+
+However, *getters* for responsible fields marked with [Jackson](https://www.baeldung.com/jackson-annotations)
+annotations will be applied also, but such behavior is not guarantied to be always correct.
+
+Example for *User* class:
+```java
+public class User {
+    
+    private UUID id;
+    @JsonProperty(value = "firstName")
+    private String name;
+    private String surname;
+    @JsonIgnore
+    private List<String> roles;
+
+    @JsonIgnore
+    public String getSurname() {
+        return surname;
+    }
+}
+```
+
+Mapping *User* class as JSON will result in (ignore and other [Jackson](https://www.baeldung.com/jackson-annotations) are supported):
+```json
+{
+  "id": "975e80ed-b95d-46b2-9338-519ff7083dd3",
+  "firstName": "Alfred"
+}
+```
 
 ### Json Schema
 

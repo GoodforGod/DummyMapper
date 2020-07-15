@@ -10,6 +10,7 @@ import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.JacksonPropertyFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
@@ -36,6 +37,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
     private final IFilter avroFilter = new AvroFilter();
     private final IFilter propertyFilter = new JacksonPropertyFilter();
+    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
     private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
 
     @NotNull
@@ -47,10 +49,11 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             if (coreMarker.isEmpty())
                 return "";
 
-            final RawMarker filtered = (config != null && config.isRequiredByDefault())
+            final RawMarker propFiltered = (config != null && config.isRequiredByDefault())
                     ? propertyFilter.filter(coreMarker)
                     : coreMarker;
 
+            final RawMarker filtered = annotationFilter.filter(propFiltered);
             final Map<String, Marker> structure = filtered.getStructure();
             final Class<?> target = ClassFactory.build(structure);
 
