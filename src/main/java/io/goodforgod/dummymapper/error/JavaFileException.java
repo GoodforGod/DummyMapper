@@ -7,6 +7,6 @@ package io.goodforgod.dummymapper.error;
 public class JavaFileException extends RuntimeException {
 
     public JavaFileException() {
-        super("File is not Java File!");
+        super("This is not Java File!");
     }
 }

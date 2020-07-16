@@ -99,13 +99,13 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
             PopupUtil.showBalloonForActiveFrame(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
             e.printStackTrace();
-            final String title = "Failed mapping to " + format();
             final StringJoiner joiner = new StringJoiner("\n");
             joiner.add("There was an error mapping file to " + format() + ".\n");
             joiner.add("Please report <a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here</a>.\n");
             joiner.add("Error message: " + e.getMessage());
             joiner.add("Stacktrace: " + getStackTrace(e));
 
+            final String title = "Failed mapping to " + format();
             Notifications.Bus.notify(new Notification("mapping-error", title, joiner.toString(), NotificationType.ERROR));
         }
     }

@@ -3,7 +3,7 @@
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.15</version>
+    <version>0.9.16</version>
 
     <description><![CDATA[
         <h1>DummyMapper</h1>
@@ -57,8 +57,9 @@
                text="Mapping Options.."
                description="Map Java POJO to other format.."
                popup="true"
-               icon="AllIcons.Actions.DiffWithClipboard">
-            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="CompareClipboardWithSelection"/>
+               icon="/icon/map.svg">
+            <add-to-group group-id="EditorPopupMenu" anchor="before"
+                          relative-to-action="CompareClipboardWithSelection"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="CompareTwoFiles"/>
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
