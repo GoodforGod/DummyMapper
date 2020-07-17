@@ -1,6 +1,7 @@
 # DummyMapper 🗎
 
-[Intellij Idea plugin](https://plugins.jetbrains.com/plugin/dummymapper) for mapping Java Classes to formats like JSON/AVRO/GraphQL/etc.
+[Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/dummymapper) 
+for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 
 (gif)
 
@@ -16,20 +17,17 @@
 
 ## Installation
 
-- Install using IDEA Plugin site:
+- Install using [Intellij Plugin marketplace](https://plugins.jetbrains.com/plugin/dummymapper):
   - Navigate to [site](https://plugins.jetbrains.com/plugin/dummymapper) and click *install* button there.
-- Using IDE built-in plugin system on Windows:
-  - <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
-- Using IDE built-in plugin system on MacOs:
-  - <kbd>Preferences</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
+- Using IDE built-in plugin system on:
+  - **[Windows]** <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
+  - **[MacOS]** <kbd>Preferences</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
 - Manually:
-  - Download the [latest release](https://github.com/goodforgod/DummyMapper/releases/latest) and install it manually using <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
-
-Restart IDE.
+  - Download the [latest release](https://github.com/goodforgod/DummyMapper/releases/latest), compile with *gradle buildPlugin* and install it manually using <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
 
 ## Format Support
 
-Plugin allow mapping Java POJO classes to different formats, 
+Plugin allow mapping Java Classes to different formats, 
 this section describes information about supported formats and their options.
 
 All format examples will be showed according to this class as example.
@@ -279,9 +277,12 @@ Annotations from [GraphQL SPQR](https://github.com/leangen/graphql-spqr/tree/mas
 
 ## Limitations
 
-- Enums (except JSON)
-- Getters, Setters (except annotations)
-- Annotations (class params)
+There some limitations for plugin when mapping classes:
+- *Enums* are not supported and thus will be displayed as *String* fields, except for *Map as JSON* where enum values will be generated correctly.
+This issue is due to framework used in plugin been not able to [create Java Enums](https://www.javassist.org/tutorial/tutorial2.html#limit).
+- Getters, Setters not used for any mapping, *only annotations from getters* are used for mapping (depends on operation)
+if found. Standard Java naming convention is expected from *getters* to be found.
+- Annotations Class Params are not supported. Thus, most of annotation parameters like String, Boolean, etc. are supported, but Class or other complex parameters not supported.
 
 ## Version History
 

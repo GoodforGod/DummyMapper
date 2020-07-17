@@ -11,7 +11,7 @@
         <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
         <br/>
         <br/>
-        <b>DummyMapper</b> is a plugin for mapping Java POJO to supported formats such as JSON, GraphQL, JSON Schema, AVRO Schema.
+        <b>DummyMapper</b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
         Plugin supports mapping to formats:
@@ -26,9 +26,7 @@
         </ul>
     ]]></description>
     <change-notes><![CDATA[
-        Release of the plugin.
-        <br/>
-        <i>Features or changes in current release</i>
+        <i>Features or changes in this release</i>
         <ul>
             <li>Support of JSON mapping option (Example representation in JSON)</li>
             <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>
@@ -55,7 +53,7 @@
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"
                text="Mapping Options.."
-               description="Map Java POJO to other format.."
+               description="Map Java Class to other format.."
                popup="true"
                icon="/icon/map.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="before"
@@ -73,7 +71,7 @@
             </action>
             <action id="DummyMapper.GraphQLSchema"
                     class="io.goodforgod.dummymapper.GraphQLAction"
-                    text="Map as GraphQL"
+                    text="Map as GraphQL Schema"
                     description="Copy GraphQL query to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
