@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.mapper;
 
 import com.intellij.psi.PsiJavaFile;
+import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,16 +15,16 @@ import org.jetbrains.annotations.Nullable;
 public interface IMapper<T extends IConfig> {
 
     @NotNull
-    default String map(@NotNull PsiJavaFile file) {
-        return map(file, null);
+    default String map(@NotNull RawMarker marker) {
+        return map(marker, null);
     }
 
     /**
-     * @param file to map
+     * @param marker to map
      * @param config for specific mapper
      * @return file mapped to its type as string value
      * @throws io.goodforgod.dummymapper.error.MapperException in case of map exception
      */
     @NotNull
-    String map(@NotNull PsiJavaFile file, @Nullable T config);
+    String map(@NotNull RawMarker marker, @Nullable T config);
 }

@@ -31,14 +31,13 @@ public class AvroApacheMapper implements IMapper {
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
-        return map(file);
+    public String map(@NotNull RawMarker marker, @Nullable IConfig config) {
+        return map(marker);
     }
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file) {
-        final RawMarker marker = new PsiJavaFileScanner().scan(file);
+    public String map(@NotNull RawMarker marker) {
         final RawMarker avroFiltered = avroFilter.filter(marker);
         if (avroFiltered.isEmpty())
             return "";

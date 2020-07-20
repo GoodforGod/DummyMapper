@@ -34,9 +34,8 @@ public class JsonMapper implements IMapper {
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file) {
+    public String map(@NotNull RawMarker marker) {
         try {
-            final RawMarker marker = new PsiJavaFileScanner().scan(file);
             if (marker.isEmpty())
                 return "";
 
@@ -55,7 +54,7 @@ public class JsonMapper implements IMapper {
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file, @Nullable IConfig config) {
-        return map(file);
+    public String map(@NotNull RawMarker marker, @Nullable IConfig config) {
+        return map(marker);
     }
 }

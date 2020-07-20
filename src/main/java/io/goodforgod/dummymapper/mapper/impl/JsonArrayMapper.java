@@ -35,15 +35,14 @@ public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file) {
-        return map(file, null);
+    public String map(@NotNull RawMarker marker) {
+        return map(marker, null);
     }
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file, @Nullable JsonArrayConfig config) {
+    public String map(@NotNull RawMarker marker, @Nullable JsonArrayConfig config) {
         try {
-            final RawMarker marker = new PsiJavaFileScanner().scan(file);
             if (marker.isEmpty())
                 return "";
 

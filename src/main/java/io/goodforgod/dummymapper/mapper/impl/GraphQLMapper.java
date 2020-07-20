@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-import com.intellij.psi.PsiJavaFile;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaPrinter;
 import io.goodforgod.dummymapper.external.JacksonValueMapperCustomFactory;
@@ -28,8 +27,7 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
     private final GraphQLQueryFilter queryFilter = new GraphQLQueryFilter();
 
     @Override
-    public @NotNull String map(@NotNull PsiJavaFile file, @Nullable GraphQLConfig config) {
-        final RawMarker marker = new PsiJavaFileScanner().scan(file);
+    public @NotNull String map(@NotNull RawMarker marker, @Nullable GraphQLConfig config) {
         if (marker.isEmpty())
             return "";
 

@@ -20,10 +20,10 @@ for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[Gra
 - Install using [Intellij Plugin marketplace](https://plugins.jetbrains.com/plugin/dummymapper):
   - Navigate to [site](https://plugins.jetbrains.com/plugin/dummymapper) and click *install* button there.
 - Using IDE built-in plugin system on:
-  - **[Windows]** <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
-  - **[MacOS]** <kbd>Preferences</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install Plugin</kbd>
+  - **[Windows]** <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install</kbd>
+  - **[MacOS]** <kbd>Preferences</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install</kbd>
 - Manually:
-  - Download the [latest release](https://github.com/goodforgod/DummyMapper/releases/latest), compile with *gradle buildPlugin* and install it manually using <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
+  - Download the [latest release](https://github.com/goodforgod/DummyMapper/releases/latest), compile with *./gradlew buildPlugin* and install it manually using <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install Plugin from Disk...</kbd>
 
 ## Format Support
 

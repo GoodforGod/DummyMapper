@@ -26,9 +26,8 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
     @NotNull
     @Override
-    public String map(@NotNull PsiJavaFile file, @Nullable JsonSchemaConfig config) {
+    public String map(@NotNull RawMarker marker, @Nullable JsonSchemaConfig config) {
         try {
-            final RawMarker marker = new PsiJavaFileScanner().scan(file);
             if (marker.isEmpty())
                 return "";
 

@@ -13,6 +13,8 @@ import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.marker.RawMarker;
+import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
@@ -84,7 +86,8 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                 dialog.disposeIfNeeded();
             }
 
-            final String json = getMapper().map(file, config);
+            final RawMarker marker = new PsiJavaFileScanner().scan(file);
+            final String json = getMapper().map(marker, config);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveFrame(emptyResultMessage(), MessageType.WARNING);
                 return;
