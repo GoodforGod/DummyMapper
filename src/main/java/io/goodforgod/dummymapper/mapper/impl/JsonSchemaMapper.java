@@ -8,7 +8,6 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
-import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

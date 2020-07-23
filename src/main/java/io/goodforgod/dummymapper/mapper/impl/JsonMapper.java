@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
@@ -15,12 +13,10 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
-import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
