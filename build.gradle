@@ -20,7 +20,7 @@ targetCompatibility = 1.8
 
 intellij {
     plugins 'java'
-    version '2020.1.2'
+    version '2020.1.4'
 }
 
 spotless {

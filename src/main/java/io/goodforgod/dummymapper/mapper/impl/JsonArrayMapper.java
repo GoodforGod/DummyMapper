@@ -18,6 +18,7 @@ import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,14 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
 
-    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
+    private final ObjectMapper mapper;
+    private final IFilter annotationFilter;
+
+    public JsonArrayMapper() {
+        this.annotationFilter = new ExcludeSetterAnnotationFilter();
+        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        this.mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
+    }
 
     @NotNull
     @Override

@@ -1,7 +1,9 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
@@ -18,6 +20,8 @@ import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
@@ -29,8 +33,14 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonMapper implements IMapper {
 
-    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
+    private final ObjectMapper mapper;
+    private final IFilter annotationFilter;
+
+    public JsonMapper() {
+        this.annotationFilter = new ExcludeSetterAnnotationFilter();
+        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        this.mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
+    }
 
     @NotNull
     @Override
