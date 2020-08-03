@@ -50,6 +50,8 @@ public class User {
 
 ### Json
 
+Plugin uses [DummyMaker library](https://github.com/GoodforGod/dummymaker) for producing Java Classes and then converting them in JSON format.
+
 Allow mapping Java class as JSON example with fields filled with
 random values as if class example was serialized to JSON format.
 - <kbd>Mapping options..</kbd> > <kbd>Map as JSON</kbd>
