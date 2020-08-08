@@ -3,7 +3,7 @@
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.19</version>
+    <version>0.9.20</version>
 
     <description><![CDATA[
         <h1>DummyMapper</h1>
