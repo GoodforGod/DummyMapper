@@ -94,11 +94,19 @@ public class PsiJavaFileScanner {
                     .filter(e -> !isTypeSimple(e.getValue().getPresentableText()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-            unknownParentTypes.forEach((k, v) -> {
-                final PsiType type = parentTypes.get(v.getPresentableText());
+            int valueCounter = 0;
+            for (Map.Entry<String, PsiType> entry : unknownParentTypes.entrySet()) {
+                final String key = entry.getKey();
+                final PsiType v = entry.getValue();
+                final int index = valueCounter;
+
+                final PsiType type = Optional.ofNullable(parentTypes.get(v.getPresentableText()))
+                        .orElseGet(() -> (v.getSuperTypes().length > index) ? v.getSuperTypes()[index] : null);
                 if (type != null)
-                    types.put(k, type);
-            });
+                    types.put(key, type);
+
+                valueCounter++;
+            }
 
             final Map<String, Marker> superScan = scanJavaClass(rootClass, superTarget, types);
             structure.putAll(superScan);
