@@ -6,7 +6,9 @@ import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Add {@link JsonProperty#required()} true if such annotation is not present on field
@@ -22,18 +24,20 @@ public class JacksonPropertyFilter extends BaseFilter {
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
         marker.getStructure().forEach((k, v) -> {
-            final Optional<AnnotationMarker> property = v.getAnnotations().stream()
+            final Map<String, Object> annotationAttrs = v.getAnnotations().stream()
                     .filter(a -> a.named(JsonProperty.class))
-                    .findFirst();
-            if (!property.isPresent()) {
-                v.addAnnotation(AnnotationMarkerBuilder.get()
-                        .ofField()
-                        .withName(JsonProperty.class)
-                        .withAttribute(REQUIRED_PROPERTY, true)
-                        .build());
-            } else {
-                property.get().getAttributes().put(REQUIRED_PROPERTY, true);
-            }
+                    .map(AnnotationMarker::getAttributes)
+                    .findFirst()
+                    .orElseGet(Collections::emptyMap);
+
+            final Map<String, Object> attrs = new HashMap<>(annotationAttrs);
+            attrs.put(REQUIRED_PROPERTY, true);
+
+            v.addAnnotation(AnnotationMarkerBuilder.get()
+                    .ofField()
+                    .withName(JsonProperty.class)
+                    .withAttributes(attrs)
+                    .build());
         });
 
         return filterRecursive(marker);

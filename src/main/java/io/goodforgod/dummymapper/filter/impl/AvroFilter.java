@@ -8,8 +8,7 @@ import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -31,20 +30,21 @@ public class AvroFilter extends FieldFilter {
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
         marker.getStructure().forEach((k, v) -> {
-            final Collection<AnnotationMarker> annotations = v.getAnnotations();
-            if (annotations.stream().anyMatch(a -> a.named(Nullable.class))) {
-                final Optional<AnnotationMarker> property = annotations.stream()
+            if (v.getAnnotations().stream().anyMatch(a -> a.named(Nullable.class))) {
+                final Map<String, Object> annotationAttrs = v.getAnnotations().stream()
                         .filter(a -> a.named(JsonProperty.class))
-                        .findFirst();
-                if (!property.isPresent()) {
-                    v.addAnnotation(AnnotationMarkerBuilder.get()
-                            .ofField()
-                            .withName(JsonProperty.class)
-                            .withAttribute(REQUIRED_PROPERTY, true)
-                            .build());
-                } else {
-                    property.get().getAttributes().put(REQUIRED_PROPERTY, true);
-                }
+                        .map(AnnotationMarker::getAttributes)
+                        .findFirst()
+                        .orElseGet(Collections::emptyMap);
+
+                final Map<String, Object> attrs = new HashMap<>(annotationAttrs);
+                attrs.put(REQUIRED_PROPERTY, false);
+
+                v.addAnnotation(AnnotationMarkerBuilder.get()
+                        .ofField()
+                        .withName(JsonProperty.class)
+                        .withAttributes(attrs)
+                        .build());
             }
         });
 
