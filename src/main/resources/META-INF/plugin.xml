@@ -79,15 +79,15 @@
                     text="Map as JSON Schema"
                     description="Copy JSON Schema to clipboard">
             </action>
-            <action id="DummyMapper.AvroSchemaJackson"
-                    class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
-                    text="Map as AVRO Schema (Jackson)"
-                    description="Copy AVRO Schema to clipboard produced by Jackson mapper">
-            </action>
             <action id="DummyMapper.AvroSchemaApache"
                     class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
                     description="Copy AVRO Schema to clipboard produced by Apache builder">
+            </action>
+            <action id="DummyMapper.AvroSchemaJackson"
+                    class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
+                    text="Map as AVRO Schema (Jackson)"
+                    description="Copy AVRO Schema to clipboard produced by Jackson mapper">
             </action>
         </group>
     </actions>
