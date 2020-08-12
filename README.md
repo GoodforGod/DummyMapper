@@ -3,7 +3,7 @@
 [Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/dummymapper) 
 for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 
-(gif)
+![](https://media.giphy.com/media/L1W2twkGRQWPfR8myz/giphy.gif)
 
 ## Content
 - [Installation](#installation)
@@ -87,6 +87,8 @@ You can specify number of entries to generate in array.
 ]
 ```
 
+![](https://media.giphy.com/media/L1W2twkGRQWPfR8myz/giphy.gif)
+
 #### Annotations Support
 
 Annotations from [Jackson](https://www.baeldung.com/jackson-annotations) are supported when serializing to JSON, 
@@ -163,6 +165,8 @@ Mapping is under:
   }
 }
 ```
+
+![](https://media.giphy.com/media/YMY6Rd9fxUkIU4BoKF/giphy.gif)
 
 ### Avro Schema
 
@@ -281,9 +285,9 @@ Annotations from [GraphQL SPQR](https://github.com/leangen/graphql-spqr/tree/mas
 
 There some limitations for plugin when mapping classes:
 - *Enums* are not supported and thus will be displayed as *String* fields, except for *Map as JSON* where enum values will be generated correctly.
-This issue is due to framework used in plugin been not able to [create Java Enums](https://www.javassist.org/tutorial/tutorial2.html#limit).
+This issue is due to library used in plugin unable to create Java Enums.
 - Getters, Setters not used for any mapping, *only annotations from getters* are used for mapping (depends on operation)
-if found. Standard Java naming convention is expected from *getters* to be found.
+if found. Standard Java naming convention expected from *getters* to be found.
 - Annotations Class Params are not supported. Thus, most of annotation parameters like String, Boolean, etc. are supported, but Class or other complex parameters not supported.
 
 ## Version History
