@@ -7,6 +7,7 @@ import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
@@ -30,11 +31,14 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
 
+    private final IFilter emptyFilter;
     private final ObjectMapper mapper;
     private final IFilter annotationFilter;
 
     public JsonArrayMapper() {
         this.annotationFilter = new ExcludeSetterAnnotationFilter();
+        this.emptyFilter = new EmptyMarkerFilter();
+
         this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         this.mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
     }
@@ -49,10 +53,11 @@ public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable JsonArrayConfig config) {
         try {
-            if (marker.isEmpty())
+            final RawMarker filteredMarker = emptyFilter.filter(marker);
+            if (filteredMarker.isEmpty())
                 return "";
 
-            final RawMarker filtered = annotationFilter.filter(marker);
+            final RawMarker filtered = annotationFilter.filter(filteredMarker);
             final Map<String, Marker> structure = filtered.getStructure();
             final Class<?> target = ClassFactory.build(structure);
 

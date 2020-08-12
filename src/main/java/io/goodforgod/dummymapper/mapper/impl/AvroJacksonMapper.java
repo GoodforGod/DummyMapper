@@ -10,6 +10,7 @@ import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.JacksonPropertyFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
@@ -34,6 +35,7 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
+    private final IFilter emptyFilter = new EmptyMarkerFilter();
     private final IFilter avroFilter = new AvroFilter();
     private final IFilter propertyFilter = new JacksonPropertyFilter();
     private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
@@ -43,7 +45,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable AvroJacksonConfig config) {
         try {
-            final RawMarker coreMarker = avroFilter.filter(marker);
+            final RawMarker coreMarker = emptyFilter.filter(avroFilter.filter(marker));
             if (coreMarker.isEmpty())
                 return "";
 

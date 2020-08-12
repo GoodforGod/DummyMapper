@@ -1,10 +1,12 @@
 package io.goodforgod.dummymapper.service;
 
+import io.dummymaker.annotation.special.GenEmbedded;
 import io.dummymaker.factory.impl.GenFactory;
 import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
+import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
@@ -46,12 +48,13 @@ public class GenFactoryProvider {
             return Collections.emptyList();
 
         final String mapped = structure.values().stream()
-                .map(m -> mappedClasses.get(m.getRoot()))
+                .map(m -> mappedClasses.getOrDefault(m.getRoot(), ""))
+                .filter(StringUtils::isNotEmpty)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Class scanned but is not registered by ClassFactory"));
 
         try {
-            final GenRule rule = GenRule.auto(Class.forName(mapped), 2);
+            final GenRule rule = GenRule.auto(Class.forName(mapped), GenEmbedded.MAX);
             structure.forEach((k, v) -> {
                 if (v instanceof EnumMarker) {
                     final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());

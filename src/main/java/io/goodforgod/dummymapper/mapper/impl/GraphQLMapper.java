@@ -3,6 +3,8 @@ package io.goodforgod.dummymapper.mapper.impl;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaPrinter;
 import io.goodforgod.dummymapper.external.JacksonValueMapperCustomFactory;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.GraphQLNonNullFilter;
 import io.goodforgod.dummymapper.filter.impl.GraphQLQueryFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
@@ -22,17 +24,19 @@ import java.util.Map;
  */
 public class GraphQLMapper implements IMapper<GraphQLConfig> {
 
+    private final IFilter emptyFilter = new EmptyMarkerFilter();
     private final GraphQLNonNullFilter nonNullFilter = new GraphQLNonNullFilter();
     private final GraphQLQueryFilter queryFilter = new GraphQLQueryFilter();
 
     @Override
     public @NotNull String map(@NotNull RawMarker marker, @Nullable GraphQLConfig config) {
-        if (marker.isEmpty())
+        final RawMarker filteredMarker = emptyFilter.filter(marker);
+        if (filteredMarker.isEmpty())
             return "";
 
         final RawMarker queryMarker = (config != null && config.isQueryByDefault())
-                ? queryFilter.filter(marker)
-                : marker;
+                ? queryFilter.filter(filteredMarker)
+                : filteredMarker;
 
         final RawMarker nonNullMarker = (config != null && config.isQueryNonNullByDefault())
                 ? nonNullFilter.filter(queryMarker)

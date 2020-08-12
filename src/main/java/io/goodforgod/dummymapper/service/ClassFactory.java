@@ -42,7 +42,9 @@ public class ClassFactory {
     public static Map<String, String> getMappedClasses(@NotNull Map<String, Marker> structure) {
         final Map<String, String> mapped = new HashMap<>();
         MarkerUtils.streamRawMarkers(structure)
-                .map(m -> getMappedClasses(m.getStructure()))
+                .map(m -> {
+                    return getMappedClasses(m.getStructure());
+                })
                 .forEach(mapped::putAll);
 
         MarkerUtils.streamArrayRawMarkers(structure)
@@ -69,7 +71,7 @@ public class ClassFactory {
                 .forEach(mapped::putAll);
 
         structure.values().stream()
-                .filter(m -> m instanceof TypedMarker)
+                .filter(m -> m instanceof TypedMarker || m instanceof RawMarker)
                 .findFirst()
                 .ifPresent(m -> {
                     final String currentClassName = getPrevClassName(m);
@@ -355,7 +357,7 @@ public class ClassFactory {
 
     private static String getClassName(@NotNull Map<?, ?> structure) {
         return structure.values().stream()
-                .filter(v -> v instanceof TypedMarker)
+                .filter(v -> v instanceof Marker)
                 .map(m -> getClassName((Marker) m))
                 .findFirst()
                 .orElseThrow(() -> new ClassBuildException("Can not find Class Name while construction!"));
@@ -363,8 +365,8 @@ public class ClassFactory {
 
     private static String getOriginClassName(@NotNull Map<?, ?> structure) {
         return structure.values().stream()
-                .filter(v -> v instanceof TypedMarker)
-                .map(m -> getClassNameFromPackage(((TypedMarker) m).getRoot()))
+                .filter(v -> v instanceof Marker)
+                .map(m -> getClassNameFromPackage(((Marker) m).getRoot()))
                 .findFirst()
                 .orElseThrow(() -> new ClassBuildException("Can not find origin Class Name while construction!"));
     }

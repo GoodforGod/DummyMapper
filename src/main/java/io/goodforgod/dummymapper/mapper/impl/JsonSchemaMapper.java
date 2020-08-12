@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ExternalException;
+import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -23,14 +25,17 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
+    private final IFilter emptyFilter = new EmptyMarkerFilter();
+
     @NotNull
     @Override
     public String map(@NotNull RawMarker marker, @Nullable JsonSchemaConfig config) {
         try {
-            if (marker.isEmpty())
+            final RawMarker filteredMarker = emptyFilter.filter(marker);
+            if (filteredMarker.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = marker.getStructure();
+            final Map<String, Marker> structure = filteredMarker.getStructure();
             final Class<?> target = ClassFactory.build(structure);
 
             final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
