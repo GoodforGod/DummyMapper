@@ -13,6 +13,6 @@ public class ClassBuildException extends RuntimeException {
     }
 
     public ClassBuildException(Throwable cause) {
-        super(cause.getMessage(), cause);
+        super("Error building Java Class", cause);
     }
 }

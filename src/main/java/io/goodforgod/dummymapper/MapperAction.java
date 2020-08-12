@@ -11,6 +11,7 @@ import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.JavaFileException;
+import io.goodforgod.dummymapper.error.JavaKindException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -34,6 +35,10 @@ import java.util.StringJoiner;
  * @since 1.5.2020
  */
 public abstract class MapperAction<T extends IConfig> extends AnAction {
+
+    private static final String DISPLAY_GROUP_INFO = "DummyMapping Plugin Information";
+    private static final String DISPLAY_GROUP_WARN = "DummyMapping Plugin Warning";
+    private static final String DISPLAY_GROUP_ERROR = "DummyMapping Plugin Errors";
 
     public MapperAction() {
         super();
@@ -95,21 +100,19 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
 
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveFrame(successMessage(), MessageType.INFO);
-        } catch (MapperException | JavaFileException e) {
+        } catch (MapperException | JavaFileException | JavaKindException e) {
             if (StringUtils.isEmpty(e.getMessage()))
                 throw new IllegalArgumentException("Unknown error occurred", e);
 
             PopupUtil.showBalloonForActiveFrame(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {
-            e.printStackTrace();
             final StringJoiner joiner = new StringJoiner("\n");
-            joiner.add("There was an error mapping file to " + format() + ".\n");
-            joiner.add("Please report <a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here</a>.\n");
-            joiner.add("Error message: " + e.getMessage());
+            joiner.add("There was an error mapping file to " + format() + ".");
+            joiner.add("Please report <b><a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here</a></b>.");
             joiner.add("Stacktrace: " + getStackTrace(e));
 
             final String title = "Failed mapping to " + format();
-            Notifications.Bus.notify(new Notification("mapping-error", title, joiner.toString(), NotificationType.ERROR));
+            Notifications.Bus.notify(new Notification(DISPLAY_GROUP_ERROR, title, joiner.toString(), NotificationType.ERROR));
         }
     }
 

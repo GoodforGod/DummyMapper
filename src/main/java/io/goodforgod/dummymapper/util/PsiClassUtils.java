@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
- * Class utils for class scanner
+ * Class utils for {@link io.goodforgod.dummymapper.service.PsiJavaFileScanner}
  *
  * @author GoodforGod
  * @since 1.12.2019

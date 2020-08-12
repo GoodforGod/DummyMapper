@@ -6,7 +6,7 @@ import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Entry-point for JSON mapper plugin
+ * Entry-point for {@link JsonArrayMapper}
  *
  * @author GoodforGod
  * @since 17.11.2019

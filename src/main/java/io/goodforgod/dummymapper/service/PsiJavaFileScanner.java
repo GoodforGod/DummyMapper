@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.service;
 
+import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
@@ -10,6 +11,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymapper.error.JavaKindException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
@@ -35,6 +37,7 @@ import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
  * @author GoodforGod
  * @since 27.11.2019
  */
+@SuppressWarnings("UnstableApiUsage")
 public class PsiJavaFileScanner {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,11 +47,16 @@ public class PsiJavaFileScanner {
         if (file == null || file.getClasses().length == 0)
             return RawMarker.EMPTY;
 
+        final PsiClass target = file.getClasses()[0];
+        if (JvmClassKind.ENUM.equals(target.getClassKind())
+                || JvmClassKind.ANNOTATION.equals(target.getClassKind())
+                || JvmClassKind.INTERFACE.equals(target.getClassKind()))
+            throw new JavaKindException(target.getClassKind());
+
         final Map<String, Marker> scanned = scanJavaFile(file);
         if (scanned.isEmpty())
             return RawMarker.EMPTY;
 
-        final PsiClass target = file.getClasses()[0];
         final String source = getFileFullName(target);
         final String root = getFileFullName(file);
         return new RawMarker(root, source, scanned);

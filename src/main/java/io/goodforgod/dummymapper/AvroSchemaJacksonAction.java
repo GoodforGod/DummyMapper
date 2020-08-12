@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Entry-point for AVRO Schema Jackson Mapper
+ * Entry-point for {@link AvroJacksonMapper}
  *
  * @author GoodforGod
  * @since 17.11.2019

@@ -86,6 +86,8 @@ public class ClassFactory {
         try {
             final CtClass ctClass = buildInternal(structure, new HashMap<>());
             return Class.forName(ctClass.getName());
+        } catch (ClassBuildException e) {
+            throw e;
         } catch (Exception e) {
             throw new ClassBuildException(e);
         }
@@ -93,24 +95,24 @@ public class ClassFactory {
 
     private static CtClass buildInternal(@NotNull Map<String, Marker> structure,
                                          @NotNull Map<String, CtClass> scanned) {
+        final String className = getClassName(structure);
+        final String originClassName = getOriginClassName(structure);
+
+        // final int structureHash = structure.hashCode();
+        // final Integer hash = CLASS_CACHE.computeIfAbsent(originClassName, k -> -1);
+        // if (hash.equals(structureHash)) {
+        // final String prevClassName = getPrevClassName(structure);
+        // logger.debug("Retrieving CACHED class '{}' with generated name '{}' and structure hash '{}'",
+        // originClassName, prevClassName, structureHash);
+        // return CLASS_POOL.get(prevClassName);
+        // }
+        // logger.debug("CACHING class with name '{}' and structure hash '{}'", originClassName, structureHash);
+        // CLASS_CACHE.put(originClassName, structureHash);
+
+        final CtClass ownClass = getOrCreateCtClass(className);
+        scanned.put(originClassName, ownClass);
+
         try {
-            final String className = getClassName(structure);
-            final String originClassName = getOriginClassName(structure);
-
-            // final int structureHash = structure.hashCode();
-            // final Integer hash = CLASS_CACHE.computeIfAbsent(originClassName, k -> -1);
-            // if (hash.equals(structureHash)) {
-            // final String prevClassName = getPrevClassName(structure);
-            // logger.debug("Retrieving CACHED class '{}' with generated name '{}' and structure hash '{}'",
-            // originClassName, prevClassName, structureHash);
-            // return CLASS_POOL.get(prevClassName);
-            // }
-            // logger.debug("CACHING class with name '{}' and structure hash '{}'", originClassName, structureHash);
-            // CLASS_CACHE.put(originClassName, structureHash);
-
-            final CtClass ownClass = getOrCreateCtClass(className);
-            scanned.put(originClassName, ownClass);
-
             for (Map.Entry<String, Marker> entry : structure.entrySet()) {
                 final String fieldName = entry.getKey();
                 if (entry.getValue() instanceof ArrayMarker) {
@@ -158,6 +160,8 @@ public class ClassFactory {
                 CLASS_SUFFIX_COUNTER.computeIfPresent(originClassName, (k, v) -> v + 1);
                 return ownClass;
             }
+        } catch (ClassBuildException e) {
+            throw e;
         } catch (Exception e) {
             throw new ClassBuildException(e);
         }
