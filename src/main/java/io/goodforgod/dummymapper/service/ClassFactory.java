@@ -5,6 +5,7 @@ import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;

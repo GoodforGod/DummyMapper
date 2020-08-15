@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.service;
+package io.goodforgod.dummymapper.scanner.impl;
 
 import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
@@ -16,6 +16,7 @@ import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
+import io.goodforgod.dummymapper.scanner.IFileScanner;
 import io.goodforgod.dummymapper.util.PsiClassUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -38,27 +39,33 @@ import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
  * @since 27.11.2019
  */
 @SuppressWarnings("UnstableApiUsage")
-public class PsiJavaFileScanner {
+public class PsiJavaFileScanner implements IFileScanner {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
 
-    public @NotNull RawMarker scan(@Nullable PsiJavaFile file) {
-        if (file == null || file.getClasses().length == 0)
+    public @NotNull RawMarker scan(@Nullable PsiFile file) {
+        if (!(file instanceof PsiJavaFile)) {
+            logger.debug("File is not PsiJavaFile type");
+            return RawMarker.EMPTY;
+        }
+
+        final PsiJavaFile javaFile = (PsiJavaFile) file;
+        if (javaFile.getClasses().length == 0)
             return RawMarker.EMPTY;
 
-        final PsiClass target = file.getClasses()[0];
+        final PsiClass target = javaFile.getClasses()[0];
         if (JvmClassKind.ENUM.equals(target.getClassKind())
                 || JvmClassKind.ANNOTATION.equals(target.getClassKind())
                 || JvmClassKind.INTERFACE.equals(target.getClassKind()))
             throw new JavaKindException(target.getClassKind());
 
-        final Map<String, Marker> scanned = scanJavaFile(file);
+        final Map<String, Marker> scanned = scanJavaFile(javaFile);
         if (scanned.isEmpty())
             return RawMarker.EMPTY;
 
         final String source = getFileFullName(target);
-        final String root = getFileFullName(file);
+        final String root = getFileFullName(javaFile);
         return new RawMarker(root, source, scanned);
     }
 

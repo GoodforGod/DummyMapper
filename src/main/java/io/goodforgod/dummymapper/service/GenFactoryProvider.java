@@ -8,6 +8,7 @@ import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

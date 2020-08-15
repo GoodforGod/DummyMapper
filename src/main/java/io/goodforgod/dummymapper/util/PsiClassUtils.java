@@ -7,6 +7,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
 import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
- * Class utils for {@link io.goodforgod.dummymapper.service.PsiJavaFileScanner}
+ * Class utils for {@link PsiJavaFileScanner}
  *
  * @author GoodforGod
  * @since 1.12.2019

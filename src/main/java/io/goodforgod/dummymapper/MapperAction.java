@@ -15,7 +15,7 @@ import io.goodforgod.dummymapper.error.JavaKindException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.service.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
@@ -51,6 +51,9 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
     @NotNull
     public abstract IMapper<T> getMapper();
 
+    /**
+     * @return format as string in which mapper is converting (like JSON)
+     */
     @NotNull
     protected abstract String format();
 
@@ -68,11 +71,18 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
         return format() + " Options";
     }
 
+    /**
+     * @return configuration for mapper
+     */
     @Nullable
     protected T getConfig() {
         return null;
     }
 
+    /**
+     * Performs mapping action for override mapper
+     * @param event from IDE
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         try {
