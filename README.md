@@ -3,7 +3,7 @@
 [Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/dummymapper) 
 for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 
-![](https://media.giphy.com/media/L1W2twkGRQWPfR8myz/giphy.gif)
+![](https://media.giphy.com/media/VelLohLlWETYZBNWlt/giphy.gif)
 
 ## Content
 - [Installation](#installation)
@@ -87,7 +87,7 @@ You can specify number of entries to generate in array.
 ]
 ```
 
-![](https://media.giphy.com/media/L1W2twkGRQWPfR8myz/giphy.gif)
+![](https://media.giphy.com/media/VelLohLlWETYZBNWlt/giphy.gif)
 
 #### Annotations Support
 
