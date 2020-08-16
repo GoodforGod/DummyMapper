@@ -16,7 +16,7 @@ public class EmptyMarkerFilter extends BaseFilter {
     @NotNull
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
-        if(marker.isEmpty())
+        if (marker.isEmpty())
             return RawMarker.EMPTY;
 
         final HashMap<String, Marker> structure = new HashMap<>(marker.getStructure());

@@ -10,7 +10,6 @@ import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -63,9 +61,6 @@ public class JsonMapper implements IMapper {
             return mapper.writeValueAsString(instance);
         } catch (JsonProcessingException e) {
             throw new ParseException(e.getMessage(), e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 

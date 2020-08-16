@@ -56,7 +56,7 @@ public class GenFactoryProvider {
         if (marker.isEmpty())
             return Collections.emptyList();
 
-        if(IS_VISITED.test(marker))
+        if (IS_VISITED.test(marker))
             return Collections.emptyList();
 
         marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(VISITED).build());
@@ -67,7 +67,7 @@ public class GenFactoryProvider {
                 .filter(StringUtils::isNotEmpty)
                 .findFirst();
 
-        if(!mapped.isPresent())
+        if (!mapped.isPresent())
             return Collections.emptyList();
 
         try {

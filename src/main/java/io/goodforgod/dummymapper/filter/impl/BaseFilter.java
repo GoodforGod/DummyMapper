@@ -25,14 +25,15 @@ public abstract class BaseFilter implements IFilter {
 
     @NotNull
     public RawMarker filterRecursive(@NotNull RawMarker marker) {
-        if(IS_VISITED.test(marker))
+        if (IS_VISITED.test(marker))
             return marker;
 
         marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(VISITED).build());
         final Map<String, Marker> structure = marker.getStructure();
 
         MarkerUtils.streamRawMarkers(structure).filter(m -> !IS_VISITED.test(m)).forEach(this::filter);
-        MarkerUtils.streamCollectionRawMarkers(structure).filter(m -> !IS_VISITED.test((RawMarker) m.getErasure())).forEach(m -> filter((RawMarker) m.getErasure()));
+        MarkerUtils.streamCollectionRawMarkers(structure).filter(m -> !IS_VISITED.test((RawMarker) m.getErasure()))
+                .forEach(m -> filter((RawMarker) m.getErasure()));
         MarkerUtils.streamMapRawMarkers(structure).forEach(m -> {
             if (m.getKeyErasure() instanceof RawMarker && !IS_VISITED.test(((RawMarker) m.getKeyErasure())))
                 filter((RawMarker) m.getKeyErasure());

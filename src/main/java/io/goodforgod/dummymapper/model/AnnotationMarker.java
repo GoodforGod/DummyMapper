@@ -21,7 +21,7 @@ public class AnnotationMarker {
     private final Map<String, Object> attributes;
 
     protected AnnotationMarker(@NotNull String name,
-        boolean isInternal,
+                               boolean isInternal,
                                boolean isFieldMarked,
                                boolean isGetterMarked,
                                boolean isSetterMarked,

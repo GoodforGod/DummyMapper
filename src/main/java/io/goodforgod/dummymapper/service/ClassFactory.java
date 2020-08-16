@@ -50,7 +50,7 @@ public class ClassFactory {
     // private static final Map<String, Integer> CLASS_CACHE = new HashMap<>();
 
     public static Map<String, String> getMappedClasses(@NotNull RawMarker marker) {
-        if(IS_VISITED.test(marker))
+        if (IS_VISITED.test(marker))
             return Collections.emptyMap();
 
         marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(MAPPED_VISITED).build());
@@ -136,7 +136,7 @@ public class ClassFactory {
         try {
             for (Map.Entry<String, Marker> entry : structure.entrySet()) {
                 final Marker m = entry.getValue();
-                if(m.isEmpty())
+                if (m.isEmpty())
                     continue;
 
                 final String fieldName = entry.getKey();
@@ -329,7 +329,7 @@ public class ClassFactory {
 
         final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
         for (AnnotationMarker annotationMarker : marker.getAnnotations()) {
-            if(annotationMarker.isInternal())
+            if (annotationMarker.isInternal())
                 continue;
 
             final Annotation a = new Annotation(annotationMarker.getName(), constPool);

@@ -7,8 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static io.dummymaker.util.CollectionUtils.isEmpty;
-
 /**
  * Marker that contains information about class information
  *
