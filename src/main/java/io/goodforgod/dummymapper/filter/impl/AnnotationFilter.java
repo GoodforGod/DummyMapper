@@ -32,7 +32,7 @@ public abstract class AnnotationFilter extends BaseFilter {
         final Map<String, Marker> structure = new HashMap<>(marker.getStructure());
         structure.forEach((k, v) -> {
             final Set<AnnotationMarker> left = v.getAnnotations().stream()
-                    .filter(allowed)
+                    .filter(a -> allowed.test(a) || a.isInternal())
                     .collect(Collectors.toSet());
             v.setAnnotations(left);
         });

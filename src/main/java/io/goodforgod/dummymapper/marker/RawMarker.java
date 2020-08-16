@@ -23,9 +23,10 @@ public class RawMarker extends Marker {
                      @NotNull String source,
                      @Nullable Map<String, Marker> structure) {
         super(root, source);
-        this.structure = (structure == null) ? Collections.emptyMap() : structure;
+        this.structure = (structure == null || structure.isEmpty()) ? Collections.emptyMap() : structure;
     }
 
+    @Override
     public boolean isEmpty() {
         return structure.isEmpty();
     }

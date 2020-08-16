@@ -3,8 +3,11 @@ package io.goodforgod.dummymapper.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
+import io.goodforgod.dummymapper.error.ClassEmptyException;
+import io.goodforgod.dummymapper.error.ClassNameException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import javassist.*;
@@ -18,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Class factory that creates Java Class from recreated java class map
@@ -35,35 +39,49 @@ public class ClassFactory {
     // TODO create own classloader that could be GC so old classes can be unloaded from memory
     private static final Map<String, Integer> CLASS_SUFFIX_COUNTER = new HashMap<>();
 
+    private static final String MAPPED_VISITED = "_class_mapped_visited";
+    private static final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()
+            .filter(AnnotationMarker::isInternal)
+            .anyMatch(a -> a.getName().equals(MAPPED_VISITED));
+
     // /**
     // * Contains class cache via className and its hash for structure
     // */
     // private static final Map<String, Integer> CLASS_CACHE = new HashMap<>();
 
-    public static Map<String, String> getMappedClasses(@NotNull Map<String, Marker> structure) {
+    public static Map<String, String> getMappedClasses(@NotNull RawMarker marker) {
+        if(IS_VISITED.test(marker))
+            return Collections.emptyMap();
+
+        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(MAPPED_VISITED).build());
+
         final Map<String, String> mapped = new HashMap<>();
+        final Map<String, Marker> structure = marker.getStructure();
+
         MarkerUtils.streamRawMarkers(structure)
-                .map(m -> {
-                    return getMappedClasses(m.getStructure());
-                })
+                .filter(m -> !m.isEmpty())
+                .map(ClassFactory::getMappedClasses)
                 .forEach(mapped::putAll);
 
         MarkerUtils.streamArrayRawMarkers(structure)
-                .map(m -> getMappedClasses(((RawMarker) m.getErasure()).getStructure()))
+                .filter(m -> !m.isEmpty())
+                .map(m -> getMappedClasses(((RawMarker) m.getErasure())))
                 .forEach(mapped::putAll);
 
         MarkerUtils.streamCollectionRawMarkers(structure)
-                .map(m -> getMappedClasses(((RawMarker) m.getErasure()).getStructure()))
+                .filter(m -> !m.isEmpty())
+                .map(m -> getMappedClasses(((RawMarker) m.getErasure())))
                 .forEach(mapped::putAll);
 
         MarkerUtils.streamMapRawMarkers(structure)
+                .filter(m -> !m.isEmpty())
                 .map(m -> {
                     final Map<String, String> mapped1 = m.getKeyErasure() instanceof RawMarker
-                            ? getMappedClasses(((RawMarker) m.getKeyErasure()).getStructure())
+                            ? getMappedClasses(((RawMarker) m.getKeyErasure()))
                             : new HashMap<>(1);
 
                     final Map<String, String> mapped2 = m.getKeyErasure() instanceof RawMarker
-                            ? getMappedClasses(((RawMarker) m.getKeyErasure()).getStructure())
+                            ? getMappedClasses(((RawMarker) m.getKeyErasure()))
                             : Collections.emptyMap();
 
                     mapped1.putAll(mapped2);
@@ -82,12 +100,12 @@ public class ClassFactory {
         return mapped;
     }
 
-    public static Class<?> build(@NotNull Map<String, Marker> structure) {
-        if (structure.isEmpty())
-            throw new IllegalArgumentException("Scanned map for Class construction is empty!");
+    public static Class<?> build(@NotNull RawMarker rawMarker) {
+        if (rawMarker.isEmpty())
+            throw new ClassEmptyException();
 
         try {
-            final CtClass ctClass = buildInternal(structure, new HashMap<>());
+            final CtClass ctClass = buildInternal(rawMarker.getStructure(), new HashMap<>());
             return Class.forName(ctClass.getName());
         } catch (ClassBuildException e) {
             throw e;
@@ -117,32 +135,36 @@ public class ClassFactory {
 
         try {
             for (Map.Entry<String, Marker> entry : structure.entrySet()) {
+                final Marker m = entry.getValue();
+                if(m.isEmpty())
+                    continue;
+
                 final String fieldName = entry.getKey();
-                if (entry.getValue() instanceof ArrayMarker) {
-                    final Marker erasure = ((ArrayMarker) entry.getValue()).getErasure();
+                if (m instanceof ArrayMarker) {
+                    final Marker erasure = ((ArrayMarker) m).getErasure();
                     final Class<?> type = getErasureType(erasure, scanned);
-                    final CtField field = getArrayField(fieldName, (ArrayMarker) entry.getValue(), type, ownClass);
+                    final CtField field = getArrayField(fieldName, (ArrayMarker) m, type, ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof CollectionMarker) {
-                    final Marker erasure = ((CollectionMarker) entry.getValue()).getErasure();
+                } else if (m instanceof CollectionMarker) {
+                    final Marker erasure = ((CollectionMarker) m).getErasure();
                     final Class<?> type = getErasureType(erasure, scanned);
-                    final CtField field = getCollectionField(fieldName, (CollectionMarker) entry.getValue(), type, ownClass);
+                    final CtField field = getCollectionField(fieldName, (CollectionMarker) m, type, ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof MapMarker) {
-                    final Marker keyErasure = ((MapMarker) entry.getValue()).getKeyErasure();
-                    final Marker valueErasure = ((MapMarker) entry.getValue()).getValueErasure();
+                } else if (m instanceof MapMarker) {
+                    final Marker keyErasure = ((MapMarker) m).getKeyErasure();
+                    final Marker valueErasure = ((MapMarker) m).getValueErasure();
                     final Class<?> keyType = getErasureType(keyErasure, scanned);
                     final Class<?> valueType = getErasureType(valueErasure, scanned);
-                    final CtField field = getMapField(fieldName, (MapMarker) entry.getValue(), keyType, valueType, ownClass);
+                    final CtField field = getMapField(fieldName, (MapMarker) m, keyType, valueType, ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof TypedMarker) {
-                    final CtField field = getTypedField(fieldName, (TypedMarker) entry.getValue(), ownClass);
+                } else if (m instanceof TypedMarker) {
+                    final CtField field = getTypedField(fieldName, (TypedMarker) m, ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof EnumMarker) {
-                    final CtField field = getEnumField(fieldName, (EnumMarker) entry.getValue(), ownClass);
+                } else if (m instanceof EnumMarker) {
+                    final CtField field = getEnumField(fieldName, (EnumMarker) m, ownClass);
                     ownClass.addField(field);
-                } else if (entry.getValue() instanceof RawMarker) {
-                    final RawMarker marker = (RawMarker) entry.getValue();
+                } else if (m instanceof RawMarker) {
+                    final RawMarker marker = (RawMarker) m;
                     final Map<String, Marker> innerStructure = marker.getStructure();
                     final String innerClassName = getOriginClassName(innerStructure);
                     CtClass innerClass = scanned.get(innerClassName);
@@ -307,6 +329,9 @@ public class ClassFactory {
 
         final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
         for (AnnotationMarker annotationMarker : marker.getAnnotations()) {
+            if(annotationMarker.isInternal())
+                continue;
+
             final Annotation a = new Annotation(annotationMarker.getName(), constPool);
             annotationMarker.getAttributes()
                     .forEach((n, v) -> getMember(v, constPool)
@@ -361,7 +386,7 @@ public class ClassFactory {
                 .filter(v -> v instanceof Marker)
                 .map(m -> getClassName((Marker) m))
                 .findFirst()
-                .orElseThrow(() -> new ClassBuildException("Can not find Class Name while construction!"));
+                .orElseThrow(ClassNameException::new);
     }
 
     private static String getOriginClassName(@NotNull Map<?, ?> structure) {
@@ -369,7 +394,7 @@ public class ClassFactory {
                 .filter(v -> v instanceof Marker)
                 .map(m -> getClassNameFromPackage(((Marker) m).getRoot()))
                 .findFirst()
-                .orElseThrow(() -> new ClassBuildException("Can not find origin Class Name while construction!"));
+                .orElseThrow(ClassNameException::new);
     }
 
     private static String getClassName(@NotNull Marker marker) {

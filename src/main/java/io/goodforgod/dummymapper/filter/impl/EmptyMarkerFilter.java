@@ -1,9 +1,6 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-import io.goodforgod.dummymapper.marker.CollectionMarker;
-import io.goodforgod.dummymapper.marker.MapMarker;
-import io.goodforgod.dummymapper.marker.Marker;
-import io.goodforgod.dummymapper.marker.RawMarker;
+import io.goodforgod.dummymapper.marker.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,6 +16,9 @@ public class EmptyMarkerFilter extends BaseFilter {
     @NotNull
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
+        if(marker.isEmpty())
+            return RawMarker.EMPTY;
+
         final HashMap<String, Marker> structure = new HashMap<>(marker.getStructure());
         structure.forEach((k, v) -> {
             if (v instanceof RawMarker && ((RawMarker) v).getStructure().isEmpty()) {
@@ -26,6 +26,10 @@ public class EmptyMarkerFilter extends BaseFilter {
             } else if (v instanceof CollectionMarker
                     && ((CollectionMarker) v).isRaw()
                     && ((RawMarker) ((CollectionMarker) v).getErasure()).getStructure().isEmpty()) {
+                marker.getStructure().remove(k);
+            } else if (v instanceof ArrayMarker
+                    && ((ArrayMarker) v).isRaw()
+                    && ((RawMarker) ((ArrayMarker) v).getErasure()).getStructure().isEmpty()) {
                 marker.getStructure().remove(k);
             } else if (v instanceof MapMarker && ((MapMarker) v).isRaw()) {
                 if (((MapMarker) v).getKeyErasure() instanceof RawMarker

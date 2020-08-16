@@ -1,14 +1,14 @@
 <idea-plugin url="https://goodforgod.github.io/DummyMapper/">
     <id>com.github.goodforgod.dummymapper</id>
     <name>DummyMapper (Json,Avro,GraphQL)</name>
-    <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
+    <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod/DummyMapper">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.26</version>
+    <version>0.9.27</version>
 
     <description><![CDATA[
-        <h1>DummyMapper</h1>
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
-        <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a>
+        <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a> |
+        <a href="https://goodforgod.github.io/DummyMapper/">Pages</a>
         <br/>
         <br/>
         <b>DummyMapper</b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.

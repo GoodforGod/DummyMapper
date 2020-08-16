@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.marker;
 
+import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,17 +39,19 @@ public abstract class Marker {
 
     @SuppressWarnings("unchecked")
     public <T extends Marker> T setAnnotations(@Nullable Collection<AnnotationMarker> annotations) {
-        this.annotations = isEmpty(annotations) ? Collections.emptySet() : new HashSet<>(annotations);
+        this.annotations = CollectionUtils.isEmpty(annotations) ? Collections.emptySet() : new HashSet<>(annotations);
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Marker> T addAnnotation(@NotNull AnnotationMarker annotation) {
-        if (isEmpty(annotations))
+        if (CollectionUtils.isEmpty(annotations))
             this.annotations = new HashSet<>();
         this.annotations.add(annotation);
         return (T) this;
     }
+
+    public abstract boolean isEmpty();
 
     public @NotNull String getSource() {
         return source;

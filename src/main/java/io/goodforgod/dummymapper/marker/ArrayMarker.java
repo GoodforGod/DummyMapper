@@ -19,6 +19,11 @@ public class ArrayMarker extends Marker {
         this.erasure = erasure;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return erasure.isEmpty();
+    }
+
     public boolean isRaw() {
         return erasure instanceof RawMarker;
     }

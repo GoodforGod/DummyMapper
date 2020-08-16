@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to {@link JsonNode} JSON Schema format
@@ -31,12 +32,14 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable JsonSchemaConfig config) {
         try {
-            final RawMarker filteredMarker = emptyFilter.filter(marker);
-            if (filteredMarker.isEmpty())
+            final RawMarker filtered = Optional.of(marker)
+                    .map(emptyFilter::filter)
+                    .get();
+
+            if (filtered.isEmpty())
                 return "";
 
-            final Map<String, Marker> structure = filteredMarker.getStructure();
-            final Class<?> target = ClassFactory.build(structure);
+            final Class<?> target = ClassFactory.build(filtered);
 
             final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
             final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)

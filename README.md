@@ -31,7 +31,7 @@ Plugin allow mapping Java Classes to different formats,
 this section describes information about supported formats and their options.
 
 All format examples will be showed according to this class as example.
-Keep in mind that mapping is always based on class **fields**, not its *getters\setters*.
+Keep in mind that mapping is based on class **fields**, not *getters\setters*.
 
 ```java
 public class User {

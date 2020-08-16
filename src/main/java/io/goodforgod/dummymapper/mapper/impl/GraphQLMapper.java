@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -30,20 +31,16 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
 
     @Override
     public @NotNull String map(@NotNull RawMarker marker, @Nullable GraphQLConfig config) {
-        final RawMarker filteredMarker = emptyFilter.filter(marker);
-        if (filteredMarker.isEmpty())
+        final RawMarker filtered = Optional.of(marker)
+                .map(queryFilter::filter)
+                .map(nonNullFilter::filter)
+                .map(emptyFilter::filter)
+                .get();
+
+        if (filtered.isEmpty())
             return "";
 
-        final RawMarker queryMarker = (config != null && config.isQueryByDefault())
-                ? queryFilter.filter(filteredMarker)
-                : filteredMarker;
-
-        final RawMarker nonNullMarker = (config != null && config.isQueryNonNullByDefault())
-                ? nonNullFilter.filter(queryMarker)
-                : queryMarker;
-
-        final Map<String, Marker> structure = nonNullMarker.getStructure();
-        final Class<?> target = ClassFactory.build(structure);
+        final Class<?> target = ClassFactory.build(filtered);
 
         final GraphQLSchema schema = new GraphQLSchemaGenerator()
                 .withValueMapperFactory(new JacksonValueMapperCustomFactory())

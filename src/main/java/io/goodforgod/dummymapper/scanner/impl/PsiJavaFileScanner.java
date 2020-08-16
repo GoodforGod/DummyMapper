@@ -263,7 +263,7 @@ public class PsiJavaFileScanner implements IFileScanner {
     private Optional<Marker> scanJavaFileClass(@NotNull String root,
                                                @NotNull PsiType type) {
         return getJavaFile(type).map(f -> {
-            final String fullName = getFileFullName(f);
+            final String fullName = getClassFullName(f);
             final Map<String, Marker> cached = scanned.get(fullName);
             final Map<String, Marker> structure = (cached == null) ? scanJavaFile(f) : cached;
 
@@ -458,6 +458,15 @@ public class PsiJavaFileScanner implements IFileScanner {
                 .filter(f -> f instanceof PsiJavaFile)
                 .map(f -> ((PsiJavaFile) f))
                 .filter(f -> getFileFullName(f).startsWith(fileName));
+    }
+
+    private String getClassFullName(@NotNull PsiJavaFile file) {
+        final String fileFullName = getFileFullName(file);
+        if (file.getClasses().length == 0)
+            throw new ScanException("Can not find class full name for file:" + fileFullName);
+
+        final PsiClass target = file.getClasses()[0];
+        return getFileFullName(target);
     }
 
     private String getFileFullName(@NotNull PsiJavaFile file) {

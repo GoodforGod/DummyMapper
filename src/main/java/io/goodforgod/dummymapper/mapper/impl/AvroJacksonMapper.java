@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format
@@ -45,17 +46,17 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable AvroJacksonConfig config) {
         try {
-            final RawMarker coreMarker = emptyFilter.filter(avroFilter.filter(marker));
-            if (coreMarker.isEmpty())
+            final RawMarker filtered = Optional.of(marker)
+                    .map(avroFilter::filter)
+                    .map(annotationFilter::filter)
+                    .map(propertyFilter::filter)
+                    .map(emptyFilter::filter)
+                    .get();
+
+            if (filtered.isEmpty())
                 return "";
 
-            final RawMarker propFiltered = (config != null && config.isRequiredByDefault())
-                    ? propertyFilter.filter(coreMarker)
-                    : coreMarker;
-
-            final RawMarker filtered = annotationFilter.filter(propFiltered);
-            final Map<String, Marker> structure = filtered.getStructure();
-            final Class<?> target = ClassFactory.build(structure);
+            final Class<?> target = ClassFactory.build(filtered);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();
             mapper.acceptJsonFormatVisitor(target, generator);

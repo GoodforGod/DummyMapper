@@ -25,6 +25,11 @@ public class MapMarker extends TypedMarker {
         this.valueErasure = valueErasure;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return keyErasure.isEmpty() || valueErasure.isEmpty();
+    }
+
     public boolean isRaw() {
         return keyErasure instanceof RawMarker || valueErasure instanceof RawMarker;
     }

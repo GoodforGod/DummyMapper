@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format as example
@@ -53,15 +54,16 @@ public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable JsonArrayConfig config) {
         try {
-            final RawMarker filteredMarker = emptyFilter.filter(marker);
-            if (filteredMarker.isEmpty())
+            final RawMarker filtered = Optional.of(marker)
+                    .map(annotationFilter::filter)
+                    .map(emptyFilter::filter)
+                    .get();
+
+            if (filtered.isEmpty())
                 return "";
 
-            final RawMarker filtered = annotationFilter.filter(filteredMarker);
-            final Map<String, Marker> structure = filtered.getStructure();
-            final Class<?> target = ClassFactory.build(structure);
-
-            final GenFactory factory = GenFactoryProvider.get(structure);
+            final Class<?> target = ClassFactory.build(filtered);
+            final GenFactory factory = GenFactoryProvider.get(filtered);
 
             final int amount = (config == null) ? 1 : config.getAmount();
             final List<?> list = factory.build(target, amount);
