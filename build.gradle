@@ -25,6 +25,10 @@ intellij {
     version '2020.2'
 }
 
+patchPluginXml {
+    sinceBuild '193'
+}
+
 spotless {
     java {
         encoding 'UTF-8'
@@ -51,7 +55,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.30'
     compile 'ch.qos.logback:logback-classic:1.2.3'
 
-    compile 'com.github.goodforgod:dummymaker:3.0.1-SNAPSHOT'
+    compile 'com.github.goodforgod:dummymaker:3.0.1'
     compile 'org.javassist:javassist:3.27.0-GA'
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"

@@ -3,7 +3,7 @@
     <name>DummyMapper (Json,Avro,GraphQL)</name>
     <vendor email="goodforgod.dev@gmail.com" url="https://goodforgod.github.io/DummyMapper/">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.29</version>
+    <version>0.9.30</version>
 
     <description><![CDATA[
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
@@ -49,9 +49,10 @@
         <!-- Add your extensions here -->
     </extensions>
 
+    <idea-version since-build="193"/>
+
     <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.platform</depends>
-    <!--    <idea-version since-build="183" until-build="183.*"/>-->
 
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"
