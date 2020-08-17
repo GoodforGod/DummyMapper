@@ -1,9 +1,9 @@
 <idea-plugin url="https://goodforgod.github.io/DummyMapper/">
     <id>com.github.goodforgod.dummymapper</id>
     <name>DummyMapper (Json,Avro,GraphQL)</name>
-    <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod/DummyMapper">Anton Kurako</vendor>
+    <vendor email="goodforgod.dev@gmail.com" url="https://goodforgod.github.io/DummyMapper/">Anton Kurako</vendor>
     <category>Code tools</category>
-    <version>0.9.28</version>
+    <version>0.9.29</version>
 
     <description><![CDATA[
         <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
@@ -14,14 +14,17 @@
         <b>DummyMapper</b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
+        <img width="520" height="270" src="https://i.ibb.co/S7XJv6W/dummyjson.gif" />
+        <br/>
+        <br/>
         Plugin supports mapping to formats:
         <ul>
             <li>JSON (Example representation in JSON)</li>
             <li>JSON Array (Array examples representation in JSON)</li>
-            <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(Draft 2019)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
+            <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
             <li>AVRO Schema <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
     ]]></description>
@@ -62,32 +65,32 @@
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
-                    description="Copy class as JSON to clipboard">
+                    description="Map Class as JSON and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonArrayExample"
                     class="io.goodforgod.dummymapper.JsonArrayAction"
                     text="Map as JSON Array"
-                    description="Copy class as JSON array to clipboard">
-            </action>
-            <action id="DummyMapper.GraphQLSchema"
-                    class="io.goodforgod.dummymapper.GraphQLAction"
-                    text="Map as GraphQL Schema"
-                    description="Copy GraphQL query to clipboard">
+                    description="Map Class as JSON Array and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
-                    description="Copy JSON Schema to clipboard">
+                    description="Map Class as JSON Schema and copy to clipboard">
+            </action>
+            <action id="DummyMapper.GraphQLSchema"
+                    class="io.goodforgod.dummymapper.GraphQLAction"
+                    text="Map as GraphQL Schema"
+                    description="Map Class as GraphQL and copy to clipboard">
             </action>
             <action id="DummyMapper.AvroSchemaApache"
                     class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
-                    description="Copy AVRO Schema to clipboard produced by Apache builder">
+                    description="Map Class as AVRO Schema and copy to clipboard (uses Apache Schema)">
             </action>
             <action id="DummyMapper.AvroSchemaJackson"
                     class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
                     text="Map as AVRO Schema (Jackson)"
-                    description="Copy AVRO Schema to clipboard produced by Jackson mapper">
+                    description="Map Class as AVRO Schema and copy to clipboard (uses Jackson Avro Mapper)">
             </action>
         </group>
     </actions>

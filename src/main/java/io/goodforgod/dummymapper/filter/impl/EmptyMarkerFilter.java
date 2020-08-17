@@ -19,29 +19,30 @@ public class EmptyMarkerFilter extends BaseFilter {
         if (marker.isEmpty())
             return RawMarker.EMPTY;
 
-        final HashMap<String, Marker> structure = new HashMap<>(marker.getStructure());
+        final RawMarker recursive = filterRecursive(marker);
+        final HashMap<String, Marker> structure = new HashMap<>(recursive.getStructure());
         structure.forEach((k, v) -> {
             if (v instanceof RawMarker && ((RawMarker) v).getStructure().isEmpty()) {
-                marker.getStructure().remove(k);
+                recursive.getStructure().remove(k);
             } else if (v instanceof CollectionMarker
                     && ((CollectionMarker) v).isRaw()
                     && ((RawMarker) ((CollectionMarker) v).getErasure()).getStructure().isEmpty()) {
-                marker.getStructure().remove(k);
+                recursive.getStructure().remove(k);
             } else if (v instanceof ArrayMarker
                     && ((ArrayMarker) v).isRaw()
                     && ((RawMarker) ((ArrayMarker) v).getErasure()).getStructure().isEmpty()) {
-                marker.getStructure().remove(k);
+                recursive.getStructure().remove(k);
             } else if (v instanceof MapMarker && ((MapMarker) v).isRaw()) {
                 if (((MapMarker) v).getKeyErasure() instanceof RawMarker
                         && ((RawMarker) ((MapMarker) v).getKeyErasure()).getStructure().isEmpty())
-                    marker.getStructure().remove(k);
+                    recursive.getStructure().remove(k);
 
                 if (((MapMarker) v).getValueErasure() instanceof RawMarker
                         && ((RawMarker) ((MapMarker) v).getValueErasure()).getStructure().isEmpty())
-                    marker.getStructure().remove(k);
+                    recursive.getStructure().remove(k);
             }
         });
 
-        return filterRecursive(marker);
+        return recursive;
     }
 }

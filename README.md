@@ -296,4 +296,4 @@ if found. Standard Java naming convention expected from *getters* to be found.
 
 ## Licence
 
-This project licensed under the MIT - see the [LICENSE](LICENSE) file for details.
+This project licensed under the Apache 2.0 - see the [LICENSE](LICENSE) file for details.
