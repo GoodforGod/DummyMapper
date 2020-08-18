@@ -48,7 +48,7 @@ public class JsonMapper implements IMapper {
             final RawMarker filtered = Optional.of(marker)
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElse(RawMarker.EMPTY);
 
             if (filtered.isEmpty())
                 return "";

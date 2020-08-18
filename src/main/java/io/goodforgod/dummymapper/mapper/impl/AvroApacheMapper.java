@@ -42,7 +42,7 @@ public class AvroApacheMapper implements IMapper {
                 .map(avroFilter::filter)
                 .map(annotationFilter::filter)
                 .map(emptyFilter::filter)
-                .get();
+                .orElse(RawMarker.EMPTY);
 
         if (filtered.isEmpty())
             return "";

@@ -59,13 +59,13 @@ public class PsiJavaFileScanner implements IFileScanner {
                 || JvmClassKind.INTERFACE.equals(target.getClassKind()))
             throw new JavaKindException(target.getClassKind());
 
-        final Map<String, Marker> scanned = scanJavaFile(javaFile);
-        if (scanned.isEmpty())
+        final Map<String, Marker> scannedFile = scanJavaFile(javaFile);
+        if (scannedFile.isEmpty())
             return RawMarker.EMPTY;
 
         final String source = getFileFullName(target);
         final String root = getFileFullName(javaFile);
-        return new RawMarker(root, source, scanned);
+        return new RawMarker(root, source, scannedFile);
     }
 
     private @NotNull Map<String, Marker> scanJavaFile(@Nullable PsiJavaFile file) {

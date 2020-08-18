@@ -13,8 +13,6 @@ import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -29,8 +27,6 @@ import java.util.stream.Stream;
  * @since 19.4.2020
  */
 public class GenFactoryProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(GenFactoryProvider.class);
 
     private static final String VISITED = "_rules_visited";
     private static final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()

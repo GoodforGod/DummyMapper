@@ -13,6 +13,8 @@ import java.util.stream.Stream;
  */
 public class MarkerUtils {
 
+    private MarkerUtils() {}
+
     public static Stream<RawMarker> streamRawMarkers(Map<String, Marker> structure) {
         return structure.values().stream()
                 .filter(m -> m instanceof RawMarker)

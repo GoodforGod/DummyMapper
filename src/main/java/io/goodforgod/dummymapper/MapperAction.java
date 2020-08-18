@@ -36,8 +36,6 @@ import java.util.StringJoiner;
  */
 public abstract class MapperAction<T extends IConfig> extends AnAction {
 
-    private static final String DISPLAY_GROUP_INFO = "DummyMapping Plugin Information";
-    private static final String DISPLAY_GROUP_WARN = "DummyMapping Plugin Warning";
     private static final String DISPLAY_GROUP_ERROR = "DummyMapping Plugin Errors";
 
     public MapperAction() {

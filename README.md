@@ -1,5 +1,9 @@
 # DummyMapper 🗎
 
+![Java CI](https://github.com/GoodforGod/DummyMapper/workflows/Java%20CI/badge.svg)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
+
 [Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/dummymapper) 
 for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 

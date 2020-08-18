@@ -55,7 +55,7 @@ public class JsonArrayMapper implements IMapper<JsonArrayConfig> {
             final RawMarker filtered = Optional.of(marker)
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElse(RawMarker.EMPTY);
 
             if (filtered.isEmpty())
                 return "";

@@ -33,7 +33,7 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
                 .map(queryFilter::filter)
                 .map(nonNullFilter::filter)
                 .map(emptyFilter::filter)
-                .get();
+                .orElse(RawMarker.EMPTY);
 
         if (filtered.isEmpty())
             return "";

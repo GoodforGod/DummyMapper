@@ -49,7 +49,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
                     .map(annotationFilter::filter)
                     .map(propertyFilter::filter)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElse(RawMarker.EMPTY);
 
             if (filtered.isEmpty())
                 return "";
