@@ -5,7 +5,7 @@ import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Entry-point for AVRO Schema Apache Mapper
+ * Entry-point for {@link AvroApacheMapper}
  *
  * @author GoodforGod
  * @since 17.11.2019

@@ -22,6 +22,11 @@ public class CollectionMarker extends TypedMarker {
         this.erasure = erasure;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return erasure.isEmpty();
+    }
+
     public boolean isRaw() {
         return erasure instanceof RawMarker;
     }

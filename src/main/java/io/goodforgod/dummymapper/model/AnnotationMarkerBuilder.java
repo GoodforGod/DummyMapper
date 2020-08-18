@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public final class AnnotationMarkerBuilder {
 
+    private boolean isInternal = false;
     private String name;
     private boolean isFieldMarked = false;
     private boolean isGetterMarked = false;
@@ -38,22 +39,21 @@ public final class AnnotationMarkerBuilder {
 
     public AnnotationMarkerBuilder ofField() {
         this.isFieldMarked = true;
-        this.isGetterMarked = false;
-        this.isSetterMarked = false;
         return this;
     }
 
     public AnnotationMarkerBuilder ofGetter() {
-        this.isFieldMarked = false;
         this.isGetterMarked = true;
-        this.isSetterMarked = false;
         return this;
     }
 
     public AnnotationMarkerBuilder ofSetter() {
-        this.isFieldMarked = false;
-        this.isGetterMarked = false;
         this.isSetterMarked = true;
+        return this;
+    }
+
+    public AnnotationMarkerBuilder ofInternal() {
+        this.isInternal = true;
         return this;
     }
 
@@ -70,6 +70,6 @@ public final class AnnotationMarkerBuilder {
     }
 
     public AnnotationMarker build() {
-        return new AnnotationMarker(name, isFieldMarked, isGetterMarked, isSetterMarked, attributes);
+        return new AnnotationMarker(name, isInternal, isFieldMarked, isGetterMarked, isSetterMarked, attributes);
     }
 }

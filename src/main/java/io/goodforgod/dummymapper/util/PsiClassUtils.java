@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.lang.jvm.JvmModifier;
 import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiField;
@@ -7,6 +8,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
 import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 /**
- * Class utils for class scanner
+ * Class utils for {@link PsiJavaFileScanner}
  *
  * @author GoodforGod
  * @since 1.12.2019
@@ -34,6 +36,7 @@ public class PsiClassUtils {
     private static final Map<String, Class<?>> SIMPLE_FIELD_TYPES = new HashMap<>(70);
     private static final Map<String, Class<?>> COLLECTION_FIELD_TYPES = new HashMap<>(30);
     private static final Map<String, Class<?>> MAP_FIELD_TYPES = new HashMap<>(10);
+    private static final Set<String> FORBIDDEN_TYPES = new HashSet<>(20);
 
     static {
         Stream.of(Enum.class,
@@ -96,10 +99,13 @@ public class PsiClassUtils {
                     MAP_FIELD_TYPES.put(c.getName(), c);
                     MAP_FIELD_TYPES.put(c.getSimpleName(), c);
                 });
-    }
 
-    public static boolean isTypeArray(@NotNull PsiType type) {
-        return type instanceof PsiArrayType;
+        Stream.of(
+                Class.class,
+                ObjectMapper.class).forEach(c -> {
+                    FORBIDDEN_TYPES.add(c.getName());
+                    FORBIDDEN_TYPES.add(c.getSimpleName());
+                });
     }
 
     public static boolean isTypeEnum(@NotNull PsiType type) {
@@ -113,8 +119,19 @@ public class PsiClassUtils {
         return "java.lang.Enum".equals(type);
     }
 
+    public static boolean isTypeForbidden(@NotNull PsiType type) {
+        final String name = type.getCanonicalText();
+        return name.startsWith("sun.reflect")
+                || name.startsWith("java.lang")
+                || FORBIDDEN_TYPES.contains(name);
+    }
+
     public static boolean isTypeSimple(@NotNull PsiType type) {
         return getSimpleTypeByName(type) != null;
+    }
+
+    public static boolean isTypeArray(@NotNull PsiType type) {
+        return type instanceof PsiArrayType;
     }
 
     public static boolean isTypeCollection(@NotNull PsiType type) {

@@ -14,16 +14,19 @@ import java.util.Objects;
 public class AnnotationMarker {
 
     private final String name;
+    private final boolean isInternal;
     private final boolean isFieldMarked;
     private final boolean isGetterMarked;
     private final boolean isSetterMarked;
     private final Map<String, Object> attributes;
 
     protected AnnotationMarker(@NotNull String name,
+                               boolean isInternal,
                                boolean isFieldMarked,
                                boolean isGetterMarked,
                                boolean isSetterMarked,
                                @NotNull Map<String, Object> attributes) {
+        this.isInternal = isInternal;
         this.name = name;
         this.isFieldMarked = isFieldMarked;
         this.isGetterMarked = isGetterMarked;
@@ -45,6 +48,10 @@ public class AnnotationMarker {
 
     public boolean isSetterMarked() {
         return isSetterMarked;
+    }
+
+    public boolean isInternal() {
+        return isInternal;
     }
 
     public @NotNull Map<String, Object> getAttributes() {

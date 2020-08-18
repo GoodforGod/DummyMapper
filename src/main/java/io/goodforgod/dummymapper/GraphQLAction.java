@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Entry-point for JSON mapper plugin
+ * Entry-point for {@link GraphQLMapper}
  *
  * @author GoodforGod
  * @since 17.11.2019

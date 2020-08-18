@@ -1,5 +1,6 @@
-package io.goodforgod.dummymapper.service;
+package io.goodforgod.dummymapper.scanner.impl;
 
+import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
@@ -10,11 +11,12 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymapper.error.JavaKindException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import io.goodforgod.dummymapper.util.PsiClassUtils;
+import io.goodforgod.dummymapper.scanner.IFileScanner;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,22 +37,34 @@ import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
  * @author GoodforGod
  * @since 27.11.2019
  */
-public class PsiJavaFileScanner {
+@SuppressWarnings("UnstableApiUsage")
+public class PsiJavaFileScanner implements IFileScanner {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
 
-    public @NotNull RawMarker scan(@Nullable PsiJavaFile file) {
-        if (file == null || file.getClasses().length == 0)
+    public @NotNull RawMarker scan(@Nullable PsiFile file) {
+        if (!(file instanceof PsiJavaFile)) {
+            logger.debug("File is not PsiJavaFile type");
+            return RawMarker.EMPTY;
+        }
+
+        final PsiJavaFile javaFile = (PsiJavaFile) file;
+        if (javaFile.getClasses().length == 0)
             return RawMarker.EMPTY;
 
-        final Map<String, Marker> scanned = scanJavaFile(file);
+        final PsiClass target = javaFile.getClasses()[0];
+        if (JvmClassKind.ENUM.equals(target.getClassKind())
+                || JvmClassKind.ANNOTATION.equals(target.getClassKind())
+                || JvmClassKind.INTERFACE.equals(target.getClassKind()))
+            throw new JavaKindException(target.getClassKind());
+
+        final Map<String, Marker> scanned = scanJavaFile(javaFile);
         if (scanned.isEmpty())
             return RawMarker.EMPTY;
 
-        final PsiClass target = file.getClasses()[0];
         final String source = getFileFullName(target);
-        final String root = getFileFullName(file);
+        final String root = getFileFullName(javaFile);
         return new RawMarker(root, source, scanned);
     }
 
@@ -170,7 +184,7 @@ public class PsiJavaFileScanner {
                                 fieldName, marker.getType().getSimpleName());
                     }
 
-                } else { // COMPLEX CLASS SCAN
+                } else if (!isTypeForbidden(type)) { // COMPLEX CLASS SCAN IF NOT FORBIDDEN ONE
                     logger.debug("Scanning field '{}' for Java Class '{}'", fieldName, typeName);
                     final Optional<Marker> marker = scanJavaFileClass(root, type);
                     if (marker.isPresent()) {
@@ -248,7 +262,7 @@ public class PsiJavaFileScanner {
     private Optional<Marker> scanJavaFileClass(@NotNull String root,
                                                @NotNull PsiType type) {
         return getJavaFile(type).map(f -> {
-            final String fullName = getFileFullName(f);
+            final String fullName = getClassFullName(f);
             final Map<String, Marker> cached = scanned.get(fullName);
             final Map<String, Marker> structure = (cached == null) ? scanJavaFile(f) : cached;
 
@@ -285,17 +299,8 @@ public class PsiJavaFileScanner {
                                         @NotNull PsiClass rootClass,
                                         @NotNull PsiType type) {
         final Marker marker = Optional.of(((PsiArrayType) type).getComponentType())
-                .map(PsiClassUtils::getSimpleTypeByName)
-                .filter(Objects::nonNull)
-                .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
-                .orElseGet(() -> Optional.of(((PsiArrayType) type).getComponentType())
-                        .flatMap(t -> {
-                            final Optional<Marker> javaFile = scanJavaFileClass(rootName, t);
-                            return javaFile.isPresent()
-                                    ? javaFile
-                                    : scanJavaInnerClass(rootClass, t);
-                        })
-                        .orElseGet(() -> new TypedMarker(rootName, source, String.class)));
+                .map(p -> getMarkerFromPsiType(source, rootName, rootClass, p))
+                .orElseGet(() -> new TypedMarker(rootName, source, String.class));
 
         return new ArrayMarker(rootName, source, marker);
     }
@@ -306,19 +311,8 @@ public class PsiJavaFileScanner {
                                                   @NotNull PsiType type) {
         final Marker marker = Optional.of(((PsiClassReferenceType) type).getParameters())
                 .filter(p -> p.length == 1)
-                .map(p -> getSimpleTypeByName(p[0]))
-                .filter(Objects::nonNull)
-                .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
-                .orElseGet(() -> Optional.of(((PsiClassReferenceType) type).getParameters())
-                        .filter(p -> p.length == 1)
-                        .map(p -> p[0])
-                        .flatMap(t -> {
-                            final Optional<Marker> javaFile = scanJavaFileClass(rootName, t);
-                            return javaFile.isPresent()
-                                    ? javaFile
-                                    : scanJavaInnerClass(rootClass, t);
-                        })
-                        .orElseGet(() -> new TypedMarker(rootName, source, String.class)));
+                .map(p -> getMarkerFromPsiType(source, rootName, rootClass, p[0]))
+                .orElseGet(() -> new TypedMarker(rootName, source, String.class));
 
         // noinspection ConstantConditions
         return new CollectionMarker(rootName, source, getCollectionType(type), marker);
@@ -330,37 +324,28 @@ public class PsiJavaFileScanner {
                                     @NotNull PsiType type) {
         final Pair<Marker, Marker> pair = Optional.of(((PsiClassReferenceType) type).getParameters())
                 .filter(p -> p.length == 2)
-                .map(p -> Pair.create(getSimpleTypeByName(p[0]), getSimpleTypeByName(p[1])))
+                .map(p -> {
+                    final Marker keyMarker = getMarkerFromPsiType(source, rootName, rootClass, p[0]);
+                    final Marker valueMarker = getMarkerFromPsiType(source, rootName, rootClass, p[1]);
+                    return Pair.create(keyMarker, valueMarker);
+                })
                 .filter(p -> p.getFirst() != null && p.getSecond() != null)
-                .map(p -> Pair.create(((Marker) new TypedMarker(source, rootName, p.getFirst())),
-                        (Marker) new TypedMarker(source, rootName, p.getSecond())))
-                .orElseGet(() -> Optional.of(((PsiClassReferenceType) type).getParameters())
-                        .filter(p -> p.length == 2)
-                        .map(p -> {
-                            final Optional<Marker> javaFile1 = scanJavaFileClass(rootName, p[0]);
-                            final Optional<Marker> m1 = javaFile1.isPresent()
-                                    ? javaFile1
-                                    : scanJavaInnerClass(rootClass, p[0]);
-
-                            final Optional<Marker> javaFile2 = scanJavaFileClass(rootName, p[1]);
-                            final Optional<Marker> m2 = javaFile2.isPresent()
-                                    ? javaFile2
-                                    : scanJavaInnerClass(rootClass, p[1]);
-
-                            return Pair.create(
-                                    m1.orElseGet(() -> Optional.ofNullable(getSimpleTypeByName(p[0]))
-                                            .map(t -> new TypedMarker(source, rootName, t))
-                                            .orElseGet(() -> new TypedMarker(rootName, source, String.class))),
-                                    m2.orElseGet(() -> Optional.ofNullable(getSimpleTypeByName(p[1]))
-                                            .map(t -> new TypedMarker(source, rootName, t))
-                                            .orElseGet(() -> new TypedMarker(rootName, source, String.class))));
-                        })
-                        .filter(p -> p.getFirst() != null && p.getSecond() != null)
-                        .orElseGet(() -> Pair.create(new TypedMarker(rootName, source, String.class),
-                                new TypedMarker(rootName, source, String.class))));
+                .orElseGet(() -> Pair.create(new TypedMarker(rootName, source, String.class),
+                        new TypedMarker(rootName, source, String.class)));
 
         // noinspection ConstantConditions
         return new MapMarker(rootName, source, getMapType(type), pair.getFirst(), pair.getSecond());
+    }
+
+    private Marker getMarkerFromPsiType(@NotNull String source,
+                                        @NotNull String rootName,
+                                        @NotNull PsiClass rootClass,
+                                        @NotNull PsiType type) {
+        return Optional.ofNullable(getSimpleTypeByName(type))
+                .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
+                .orElseGet(() -> scanJavaFileClass(rootName, type)
+                        .orElseGet(() -> scanJavaInnerClass(rootClass, type)
+                                .orElseGet(() -> new TypedMarker(rootName, source, String.class))));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -443,6 +428,15 @@ public class PsiJavaFileScanner {
                 .filter(f -> f instanceof PsiJavaFile)
                 .map(f -> ((PsiJavaFile) f))
                 .filter(f -> getFileFullName(f).startsWith(fileName));
+    }
+
+    private String getClassFullName(@NotNull PsiJavaFile file) {
+        final String fileFullName = getFileFullName(file);
+        if (file.getClasses().length == 0)
+            throw new ScanException("Can not find class full name for file:" + fileFullName);
+
+        final PsiClass target = file.getClasses()[0];
+        return getFileFullName(target);
     }
 
     private String getFileFullName(@NotNull PsiJavaFile file) {

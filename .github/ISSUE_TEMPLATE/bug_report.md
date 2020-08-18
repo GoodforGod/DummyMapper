@@ -10,6 +10,9 @@ assignees: GoodforGod
 **Stack-trace**
 Stack-trace from IDEA Event Log.
 
+```log
+
+```
 
 **Describe the bug**
 A clear and concise description of what the bug is.

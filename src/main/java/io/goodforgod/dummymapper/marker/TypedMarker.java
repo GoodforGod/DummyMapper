@@ -19,6 +19,11 @@ public class TypedMarker extends Marker {
         this.type = type;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
     public @NotNull Class<?> getType() {
         return type;
     }

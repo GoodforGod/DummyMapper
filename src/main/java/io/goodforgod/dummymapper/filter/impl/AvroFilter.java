@@ -17,7 +17,7 @@ import java.util.function.Predicate;
  * @author Anton Kurako (GoodforGod)
  * @since 3.5.2020
  */
-public class AvroFilter extends FieldFilter {
+public class AvroFilter extends MarkerAnnotationFilter {
 
     private static final String REQUIRED_PROPERTY = "required";
 

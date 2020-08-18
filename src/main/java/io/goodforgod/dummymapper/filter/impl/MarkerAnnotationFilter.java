@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
  */
-public abstract class FieldFilter extends BaseFilter {
+public abstract class MarkerAnnotationFilter extends BaseFilter {
 
     /**
      * @return predicate for fields that will be ignored if qualified

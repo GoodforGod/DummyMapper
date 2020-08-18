@@ -7,9 +7,9 @@ import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format as example
@@ -29,11 +29,14 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class JsonMapper implements IMapper {
 
+    private final IFilter emptyFilter;
     private final ObjectMapper mapper;
     private final IFilter annotationFilter;
 
     public JsonMapper() {
         this.annotationFilter = new ExcludeSetterAnnotationFilter();
+        this.emptyFilter = new EmptyMarkerFilter();
+
         this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         this.mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
     }
@@ -42,14 +45,17 @@ public class JsonMapper implements IMapper {
     @Override
     public String map(@NotNull RawMarker marker) {
         try {
-            if (marker.isEmpty())
+            final RawMarker filtered = Optional.of(marker)
+                    .map(annotationFilter::filter)
+                    .map(emptyFilter::filter)
+                    .get();
+
+            if (filtered.isEmpty())
                 return "";
 
-            final RawMarker filtered = annotationFilter.filter(marker);
-            final Map<String, Marker> structure = filtered.getStructure();
-            final Class<?> target = ClassFactory.build(structure);
+            final Class<?> target = ClassFactory.build(filtered);
+            final GenFactory factory = GenFactoryProvider.get(filtered);
 
-            final GenFactory factory = GenFactoryProvider.get(structure);
             final Object instance = factory.build(target);
 
             return mapper.writeValueAsString(instance);

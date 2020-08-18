@@ -10,10 +10,10 @@ import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.JacksonPropertyFilter;
 import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
@@ -21,7 +21,7 @@ import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format
@@ -34,6 +34,7 @@ import java.util.Map;
 @SuppressWarnings("DuplicatedCode")
 public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
+    private final IFilter emptyFilter = new EmptyMarkerFilter();
     private final IFilter avroFilter = new AvroFilter();
     private final IFilter propertyFilter = new JacksonPropertyFilter();
     private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
@@ -43,17 +44,17 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     @Override
     public String map(@NotNull RawMarker marker, @Nullable AvroJacksonConfig config) {
         try {
-            final RawMarker coreMarker = avroFilter.filter(marker);
-            if (coreMarker.isEmpty())
+            final RawMarker filtered = Optional.of(marker)
+                    .map(avroFilter::filter)
+                    .map(annotationFilter::filter)
+                    .map(propertyFilter::filter)
+                    .map(emptyFilter::filter)
+                    .get();
+
+            if (filtered.isEmpty())
                 return "";
 
-            final RawMarker propFiltered = (config != null && config.isRequiredByDefault())
-                    ? propertyFilter.filter(coreMarker)
-                    : coreMarker;
-
-            final RawMarker filtered = annotationFilter.filter(propFiltered);
-            final Map<String, Marker> structure = filtered.getStructure();
-            final Class<?> target = ClassFactory.build(structure);
+            final Class<?> target = ClassFactory.build(filtered);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();
             mapper.acceptJsonFormatVisitor(target, generator);

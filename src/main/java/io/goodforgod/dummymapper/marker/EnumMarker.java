@@ -23,6 +23,11 @@ public class EnumMarker extends Marker {
         this.values = CollectionUtils.isEmpty(values) ? Collections.emptyList() : new ArrayList<>(values);
     }
 
+    @Override
+    public boolean isEmpty() {
+        return CollectionUtils.isEmpty(values);
+    }
+
     public @NotNull List<String> getValues() {
         return values;
     }

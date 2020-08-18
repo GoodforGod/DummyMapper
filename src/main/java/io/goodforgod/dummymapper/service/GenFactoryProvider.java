@@ -1,17 +1,23 @@
 package io.goodforgod.dummymapper.service;
 
+import io.dummymaker.annotation.special.GenEmbedded;
 import io.dummymaker.factory.impl.GenFactory;
 import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
 import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
+import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
+import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -26,32 +32,46 @@ public class GenFactoryProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(GenFactoryProvider.class);
 
+    private static final String VISITED = "_rules_visited";
+    private static final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()
+            .filter(AnnotationMarker::isInternal)
+            .anyMatch(a -> a.getName().equals(VISITED));
+
     private GenFactoryProvider() {}
 
     /**
-     * @param scanned data from JavaFileScanner
+     * @param rawMarker data from JavaFileScanner
      * @return builds GenFactory based on scanned data from java file scanner
      * @see PsiJavaFileScanner
      * @see ClassFactory
      */
-    public static GenFactory get(@NotNull Map<String, Marker> scanned) {
-        final Map<String, String> mappedClasses = ClassFactory.getMappedClasses(scanned);
-        final List<GenRule> rules = getRules(scanned, mappedClasses);
+    public static GenFactory get(@NotNull RawMarker rawMarker) {
+        final Map<String, String> mappedClasses = ClassFactory.getMappedClasses(rawMarker);
+        final List<GenRule> rules = getRules(rawMarker, mappedClasses);
         return new GenFactory(GenRules.of(rules));
     }
 
-    private static List<GenRule> getRules(@NotNull Map<String, Marker> structure,
+    private static List<GenRule> getRules(@NotNull RawMarker marker,
                                           @NotNull Map<String, String> mappedClasses) {
-        if (structure.isEmpty())
+        if (marker.isEmpty())
             return Collections.emptyList();
 
-        final String mapped = structure.values().stream()
+        if (IS_VISITED.test(marker))
+            return Collections.emptyList();
+
+        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(VISITED).build());
+
+        final Map<String, Marker> structure = marker.getStructure();
+        final Optional<String> mapped = structure.values().stream()
                 .map(m -> mappedClasses.get(m.getRoot()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Class scanned but is not registered by ClassFactory"));
+                .filter(StringUtils::isNotEmpty)
+                .findFirst();
+
+        if (!mapped.isPresent())
+            return Collections.emptyList();
 
         try {
-            final GenRule rule = GenRule.auto(Class.forName(mapped), 2);
+            final GenRule rule = GenRule.auto(Class.forName(mapped.get()), GenEmbedded.MAX);
             structure.forEach((k, v) -> {
                 if (v instanceof EnumMarker) {
                     final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
@@ -76,25 +96,25 @@ public class GenFactoryProvider {
             });
 
             final List<GenRule> rawRules = MarkerUtils.streamRawMarkers(structure)
-                    .flatMap(m -> getRules(m.getStructure(), mappedClasses).stream())
+                    .flatMap(m -> getRules(m, mappedClasses).stream())
                     .collect(Collectors.toList());
 
             final List<GenRule> arrayRules = MarkerUtils.streamArrayRawMarkers(structure)
-                    .flatMap(m -> getRules(((RawMarker) m.getErasure()).getStructure(), mappedClasses).stream())
+                    .flatMap(m -> getRules(((RawMarker) m.getErasure()), mappedClasses).stream())
                     .collect(Collectors.toList());
 
             final List<GenRule> collectionRules = MarkerUtils.streamCollectionRawMarkers(structure)
-                    .flatMap(m -> getRules(((RawMarker) m.getErasure()).getStructure(), mappedClasses).stream())
+                    .flatMap(m -> getRules(((RawMarker) m.getErasure()), mappedClasses).stream())
                     .collect(Collectors.toList());
 
             final List<GenRule> mapRules = MarkerUtils.streamMapRawMarkers(structure)
                     .flatMap(m -> {
                         final Stream<GenRule> stream1 = m.getKeyErasure() instanceof RawMarker
-                                ? getRules(((RawMarker) m.getKeyErasure()).getStructure(), mappedClasses).stream()
+                                ? getRules(((RawMarker) m.getKeyErasure()), mappedClasses).stream()
                                 : Stream.empty();
 
                         final Stream<GenRule> stream2 = m.getValueErasure() instanceof RawMarker
-                                ? getRules(((RawMarker) m.getValueErasure()).getStructure(), mappedClasses).stream()
+                                ? getRules(((RawMarker) m.getValueErasure()), mappedClasses).stream()
                                 : Stream.empty();
 
                         return Stream.concat(stream1, stream2);

@@ -10,8 +10,6 @@ import java.awt.datatransfer.StringSelection;
 import java.util.Optional;
 
 /**
- * Description in progress
- *
  * @author Anton Kurako (GoodforGod)
  * @since 19.4.2020
  */
