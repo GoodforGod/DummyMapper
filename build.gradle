@@ -37,6 +37,14 @@ spotless {
     }
 }
 
+sonarqube {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'goodforgod'
+        property 'sonar.projectKey', 'GoodforGod_DummyMapper'
+    }
+}
+
 configurations {
     all {
         resolutionStrategy {
@@ -87,4 +95,7 @@ tasks.withType(JavaCompile) {
 
 javadoc {
     options.encoding = "UTF-8"
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
