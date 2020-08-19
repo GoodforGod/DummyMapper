@@ -1,7 +1,7 @@
 <idea-plugin url="https://goodforgod.github.io/DummyMapper/">
     <id>com.github.goodforgod.dummymapper</id>
     <name>DummyMapper (Json,Avro,GraphQL)</name>
-    <vendor email="goodforgod.dev@gmail.com" url="https://goodforgod.github.io/DummyMapper/">Anton Kurako</vendor>
+    <vendor email="goodforgod.dev@gmail.com" url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
     <version>1.0.0</version>
 
