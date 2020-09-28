@@ -32,7 +32,7 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
         try {
             final RawMarker filtered = Optional.of(marker)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
             if (filtered.isEmpty())
                 return "";

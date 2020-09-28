@@ -48,7 +48,7 @@ public class JsonMapper implements IMapper {
             final RawMarker filtered = Optional.of(marker)
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
             if (filtered.isEmpty())
                 return "";
@@ -60,7 +60,7 @@ public class JsonMapper implements IMapper {
 
             return mapper.writeValueAsString(instance);
         } catch (JsonProcessingException e) {
-            throw new ParseException(e.getMessage(), e);
+            throw new ParseException(e.getMessage());
         }
     }
 

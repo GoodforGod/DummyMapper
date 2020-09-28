@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.avro.AvroFactory;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
 import com.intellij.psi.PsiJavaFile;
+import io.goodforgod.dummymapper.error.ExternalException;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
@@ -49,7 +50,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
                     .map(annotationFilter::filter)
                     .map(propertyFilter::filter)
                     .map(emptyFilter::filter)
-                    .get();
+                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
             if (filtered.isEmpty())
                 return "";
@@ -61,13 +62,15 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             final AvroSchema generatedSchema = generator.getGeneratedSchema();
             final Schema schema = generatedSchema.getAvroSchema();
             final String schemaAsJson = schema.toString(true);
-            return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", "io.goodforgod.dummymapper");
+
+            final String markerPackage = marker.getSourcePackage();
+            return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", markerPackage);
         } catch (JsonMappingException e) {
             if (e.getMessage().startsWith("\"Any\" type (usually for `java.lang.Object`)"))
                 throw new MapperException(
                         "Java Class field with type 'java.lang.Object' can not be mapped to AVRO Schema (Jackson) by this mapper");
 
-            throw new ParseException(e.getMessage(), e);
+            throw new ExternalException(e.getMessage());
         }
     }
 

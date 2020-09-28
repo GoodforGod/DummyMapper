@@ -42,7 +42,7 @@ public class AvroApacheMapper implements IMapper {
                 .map(avroFilter::filter)
                 .map(annotationFilter::filter)
                 .map(emptyFilter::filter)
-                .get();
+                .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
         if (filtered.isEmpty())
             return "";
@@ -51,6 +51,7 @@ public class AvroApacheMapper implements IMapper {
         final Schema schema = ReflectData.get().getSchema(target);
 
         final String schemaAsJson = schema.toString(true);
-        return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", "io.goodforgod.dummymapper");
+        final String markerPackage = marker.getSourcePackage();
+        return schemaAsJson.replaceAll("io\\.goodforgod\\.dummymapper\\.dummies_\\d+", markerPackage);
     }
 }
