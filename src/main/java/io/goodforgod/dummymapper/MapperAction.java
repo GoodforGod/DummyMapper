@@ -36,9 +36,8 @@ import java.util.StringJoiner;
  */
 public abstract class MapperAction<T extends IConfig> extends AnAction {
 
-    private static final String DISPLAY_GROUP_INFO = "DummyMapping Plugin Information";
-    private static final String DISPLAY_GROUP_WARN = "DummyMapping Plugin Warning";
     private static final String DISPLAY_GROUP_ERROR = "DummyMapping Plugin Errors";
+    private static final String ISSUE_URL = "https://github.com/GoodforGod/DummyMapper/issues";
 
     public MapperAction() {
         super();
@@ -118,7 +117,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
         } catch (Exception e) {
             final StringJoiner joiner = new StringJoiner("\n");
             joiner.add("There was an error mapping file to " + format() + ".");
-            joiner.add("Please report <b><a href=\"https://github.com/GoodforGod/DummyMapper/issues\">this issue here</a></b>.");
+            joiner.add("Please report this issue here: <b><a href=\"" + ISSUE_URL + "\">" + ISSUE_URL + "</a></b>");
             joiner.add("Stacktrace: " + getStackTrace(e));
 
             final String title = "Failed mapping to " + format();

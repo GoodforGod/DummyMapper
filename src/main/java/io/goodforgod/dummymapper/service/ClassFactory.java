@@ -17,8 +17,6 @@ import javassist.bytecode.FieldInfo;
 import javassist.bytecode.SignatureAttribute;
 import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -32,8 +30,6 @@ import java.util.function.Predicate;
  */
 public class ClassFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClassFactory.class);
-
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
 
     // TODO create own classloader that could be GC so old classes can be unloaded from memory
@@ -43,6 +39,8 @@ public class ClassFactory {
     private static final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()
             .filter(AnnotationMarker::isInternal)
             .anyMatch(a -> a.getName().equals(MAPPED_VISITED));
+
+    private ClassFactory() {}
 
     // /**
     // * Contains class cache via className and its hash for structure

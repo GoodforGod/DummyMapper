@@ -18,26 +18,26 @@ import java.util.function.Predicate;
  */
 public abstract class BaseFilter implements IFilter {
 
-    private final String VISITED = "_filter" + getClass().getSimpleName().toLowerCase() + "_visited";
-    private final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()
+    private final String visited = "_filter_" + getClass().getSimpleName().toLowerCase() + "_visited";
+    private final Predicate<RawMarker> isVisited = m -> m.getAnnotations().stream()
             .filter(AnnotationMarker::isInternal)
-            .anyMatch(a -> a.getName().equals(VISITED));
+            .anyMatch(a -> a.getName().equals(visited));
 
     @NotNull
     public RawMarker filterRecursive(@NotNull RawMarker marker) {
-        if (IS_VISITED.test(marker))
+        if (isVisited.test(marker))
             return marker;
 
-        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(VISITED).build());
+        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(visited).build());
         final Map<String, Marker> structure = marker.getStructure();
 
-        MarkerUtils.streamRawMarkers(structure).filter(m -> !IS_VISITED.test(m)).forEach(this::filter);
-        MarkerUtils.streamCollectionRawMarkers(structure).filter(m -> !IS_VISITED.test((RawMarker) m.getErasure()))
+        MarkerUtils.streamRawMarkers(structure).filter(m -> !isVisited.test(m)).forEach(this::filter);
+        MarkerUtils.streamCollectionRawMarkers(structure).filter(m -> !isVisited.test((RawMarker) m.getErasure()))
                 .forEach(m -> filter((RawMarker) m.getErasure()));
         MarkerUtils.streamMapRawMarkers(structure).forEach(m -> {
-            if (m.getKeyErasure() instanceof RawMarker && !IS_VISITED.test(((RawMarker) m.getKeyErasure())))
+            if (m.getKeyErasure() instanceof RawMarker && !isVisited.test(((RawMarker) m.getKeyErasure())))
                 filter((RawMarker) m.getKeyErasure());
-            if (m.getValueErasure() instanceof RawMarker && !IS_VISITED.test(((RawMarker) m.getValueErasure())))
+            if (m.getValueErasure() instanceof RawMarker && !isVisited.test(((RawMarker) m.getValueErasure())))
                 filter((RawMarker) m.getValueErasure());
         });
 

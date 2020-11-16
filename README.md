@@ -1,6 +1,11 @@
 # DummyMapper 🗎
 
-[Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/dummymapper) 
+![Java CI](https://github.com/GoodforGod/DummyMapper/workflows/Java%20CI/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
+
+[Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/14911-dummymapper-json-avro-graphql-/) 
 for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 
 ![](https://media.giphy.com/media/VelLohLlWETYZBNWlt/giphy.gif)
@@ -17,8 +22,8 @@ for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[Gra
 
 ## Installation
 
-- Install using [Intellij Plugin marketplace](https://plugins.jetbrains.com/plugin/dummymapper):
-  - Navigate to [site](https://plugins.jetbrains.com/plugin/dummymapper) and click *install* button there.
+- Install using [Intellij Plugin marketplace](https://plugins.jetbrains.com/plugin/14911-dummymapper-json-avro-graphql-/):
+  - Navigate to [site](https://plugins.jetbrains.com/plugin/14911-dummymapper-json-avro-graphql-/) and click *install* button there.
 - Using IDE built-in plugin system on:
   - **[Windows]** <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install</kbd>
   - **[MacOS]** <kbd>Preferences</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "DummyMapper"</kbd> > <kbd>Install</kbd>

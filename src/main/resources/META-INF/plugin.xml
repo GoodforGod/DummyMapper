@@ -1,32 +1,25 @@
 <idea-plugin url="https://goodforgod.github.io/DummyMapper/">
     <id>com.github.goodforgod.dummymapper</id>
     <name>DummyMapper (Json,Avro,GraphQL)</name>
-    <vendor email="goodforgod.dev@gmail.com" url="https://goodforgod.github.io/DummyMapper/">Anton Kurako</vendor>
+    <vendor url="https://github.com/GoodforGod">Anton Kurako</vendor>
     <category>Code tools</category>
     <version>1.0.0</version>
 
     <description><![CDATA[
-        <a href="https://github.com/GoodforGod/DummyMapper">GitHub</a> |
-        <a href="https://github.com/GoodforGod/DummyMapper/issues">Issues</a> |
-        <a href="https://goodforgod.github.io/DummyMapper/">Pages</a>
-        <br/>
-        <br/>
-        <b>DummyMapper</b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
-        <br/>
-        <br/>
-        <img width="520" height="270" src="https://i.ibb.co/S7XJv6W/dummyjson.gif" />
+        <b><a href="https://goodforgod.github.io/DummyMapper/">DummyMapper</a></b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
         Plugin supports mapping to formats:
         <ul>
             <li>JSON (Example representation in JSON)</li>
             <li>JSON Array (Array examples representation in JSON)</li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/schema">(Draft 2019)</a>,
+            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/release-notes.html">(Draft 2019)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
             <li>AVRO Schema <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
         </ul>
+        <img width="520" height="270" src="https://i.ibb.co/S7XJv6W/dummyjson.gif" />
     ]]></description>
     <change-notes><![CDATA[
         <i>Features or changes in this release</i>
@@ -34,7 +27,7 @@
             <li>Support of JSON mapping option (Example representation in JSON)</li>
             <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>
             <li>Support of <a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a> mapping option</li>
-            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/schema">(draft 2019)</a>,
+            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/release-notes.html">(draft 2019)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li>Support of AVRO Schema (Jackson) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
