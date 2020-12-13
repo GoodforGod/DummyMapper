@@ -1,6 +1,9 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.marker.CollectionMarker;
+import io.goodforgod.dummymapper.marker.MapMarker;
+import io.goodforgod.dummymapper.marker.Marker;
+import io.goodforgod.dummymapper.marker.RawMarker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

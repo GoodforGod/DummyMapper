@@ -24,16 +24,8 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release</i>
         <ul>
-            <li>Support of JSON mapping option (Example representation in JSON)</li>
-            <li>Support of JSON Array mapping option (Array examples representation in JSON)</li>
-            <li>Support of <a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a> mapping option</li>
-            <li>Support of JSON Schema mapping option <a href="https://json-schema.org/draft/2019-09/release-notes.html">(draft 2019)</a>,
-            <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
-            <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
-            <li>Support of AVRO Schema (Jackson) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
-            <li>Support of AVRO Schema (Apache) mapping option <a href="https://avro.apache.org/docs/1.9.2/">(1.9.2)</a></li>
-            <li>Support all basic Java types, collections, maps and more</li>
-            <li>Jackson annotations support for fields \ methods handling when mapping to AVRO \ JSON</li>
+            <li>Fixed AVRO Schema namespace generation.</li>
+            <li>Fixed path scanning on OSX.</li>
             <li>Compatibility with IDEA 2020.2+</li>
         </ul>
     ]]></change-notes>

@@ -22,7 +22,7 @@ targetCompatibility = 1.8
 
 intellij {
     plugins 'java'
-    version '2020.3'
+    version '2020.2'
     downloadSources = false
 }
 
@@ -52,6 +52,7 @@ sonarqube {
 
 configurations {
     all {
+        exclude module: 'slf4j-api'
         resolutionStrategy {
             force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
             force "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
@@ -65,9 +66,6 @@ configurations {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.30'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-
     compile 'com.github.goodforgod:dummymaker:3.0.2-SNAPSHOT'
     compile 'org.javassist:javassist:3.27.0-GA'
 

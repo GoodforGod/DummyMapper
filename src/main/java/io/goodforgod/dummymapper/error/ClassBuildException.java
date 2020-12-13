@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper.error;
 
 /**
- * Description in progress
+ * Error that occurs when Class Name is not presented while class construction
  *
  * @author Anton Kurako (GoodforGod)
  * @since 19.4.2020

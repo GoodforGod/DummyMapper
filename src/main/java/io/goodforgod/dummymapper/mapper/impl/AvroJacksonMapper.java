@@ -8,7 +8,6 @@ import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ExternalException;
 import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
