@@ -23,6 +23,6 @@ public class JsonArrayConfig extends AbstractConfig {
     }
 
     public int getAmount() {
-        return Integer.parseInt(config.getOrDefault(AMOUNT_OPTION, "1"));
+        return Integer.parseInt(config.getOrDefault(AMOUNT_OPTION, "10"));
     }
 }

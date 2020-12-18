@@ -24,8 +24,9 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release</i>
         <ul>
-            <li>Fixed AVRO Schema namespace generation.</li>
+            <li>Fixed AVRO namespace mapping.</li>
             <li>Fixed path scanning on OSX.</li>
+            <li>Fixed java.time.* package serialization in ISO8601 format when mapping to Json.</li>
             <li>Compatibility with IDEA 2020.2+</li>
         </ul>
     ]]></change-notes>

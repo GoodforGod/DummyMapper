@@ -66,7 +66,7 @@ configurations {
 }
 
 dependencies {
-    compile 'com.github.goodforgod:dummymaker:3.0.2-SNAPSHOT'
+    compile 'com.github.goodforgod:dummymaker:3.0.2'
     compile 'org.javassist:javassist:3.27.0-GA'
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"

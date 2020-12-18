@@ -334,7 +334,11 @@ public class ClassFactory {
             annotationMarker.getAttributes()
                     .forEach((n, v) -> getMember(v, constPool)
                             .ifPresent(member -> a.addMemberValue(n, member)));
-            attribute.addAnnotation(a);
+            try {
+                attribute.addAnnotation(a);
+            } catch (Exception e) {
+                // nothing we can do if javaassist fail
+            }
         }
 
         if (CollectionUtils.isNotEmpty(attribute.getAnnotations()))
