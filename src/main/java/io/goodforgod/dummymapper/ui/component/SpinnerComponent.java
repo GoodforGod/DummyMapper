@@ -23,7 +23,7 @@ public class SpinnerComponent implements IComponent {
 
     @Override
     public JComponent build(IConfig config) {
-        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 1, max, 1));
+        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(10, 1, max, 1));
         spinner.setName(name);
         spinner.setVisible(true);
         spinner.setEnabled(true);

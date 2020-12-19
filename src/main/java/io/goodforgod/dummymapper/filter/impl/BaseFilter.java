@@ -1,7 +1,9 @@
 package io.goodforgod.dummymapper.filter.impl;
 
 import io.goodforgod.dummymapper.filter.IFilter;
-import io.goodforgod.dummymapper.marker.*;
+import io.goodforgod.dummymapper.marker.CollectionMarker;
+import io.goodforgod.dummymapper.marker.Marker;
+import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.util.MarkerUtils;

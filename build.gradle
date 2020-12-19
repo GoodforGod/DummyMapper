@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
 
-    id 'org.jetbrains.intellij' version '0.4.21'
+    id 'org.jetbrains.intellij' version '0.6.5'
     id 'org.sonarqube' version '3.0'
     id 'com.diffplug.gradle.spotless' version '4.4.0'
 }
@@ -24,6 +24,10 @@ intellij {
     plugins 'java'
     version '2020.2'
     downloadSources = false
+}
+
+runIde {
+    autoReloadPlugins = true
 }
 
 patchPluginXml {
@@ -48,6 +52,7 @@ sonarqube {
 
 configurations {
     all {
+        exclude module: 'slf4j-api'
         resolutionStrategy {
             force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
             force "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
@@ -61,10 +66,7 @@ configurations {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.30'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-
-    compile 'com.github.goodforgod:dummymaker:3.0.1'
+    compile 'com.github.goodforgod:dummymaker:3.0.2'
     compile 'org.javassist:javassist:3.27.0-GA'
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"

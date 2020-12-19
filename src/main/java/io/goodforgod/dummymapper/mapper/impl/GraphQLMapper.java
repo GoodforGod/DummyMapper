@@ -33,7 +33,7 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
                 .map(queryFilter::filter)
                 .map(nonNullFilter::filter)
                 .map(emptyFilter::filter)
-                .orElse(RawMarker.EMPTY);
+                .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
         if (filtered.isEmpty())
             return "";
@@ -42,7 +42,7 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
 
         final GraphQLSchema schema = new GraphQLSchemaGenerator()
                 .withValueMapperFactory(new JacksonValueMapperCustomFactory())
-                .withBasePackages("io.goodforgod.dummymapper")
+                .withBasePackages(marker.getSourcePackage())
                 .withOperationsFromType(target)
                 .generate();
 
