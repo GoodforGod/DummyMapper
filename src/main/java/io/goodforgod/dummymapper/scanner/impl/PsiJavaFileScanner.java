@@ -259,7 +259,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                 .map(values -> new EnumMarker(rootName, fullName, values))
                 .orElseGet(() -> scanJavaInnerClass(rootClass, type)
                         .filter(m -> m instanceof EnumMarker)
-                        .map(m -> ((EnumMarker) m))
+                        .map(EnumMarker.class::cast)
                         .orElseGet(() -> new EnumMarker(rootName, fullName, Collections.emptyList())));
     }
 
@@ -395,7 +395,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                         p -> Optional.ofNullable(JavaPsiFacade.getInstance(p).findClass(fileName, GlobalSearchScope.allScope(p))))
                 .map(PsiElement::getContainingFile)
                 .filter(f -> f instanceof PsiJavaFile)
-                .map(f -> ((PsiJavaFile) f))
+                .map(PsiJavaFile.class::cast)
                 .filter(f -> getFileFullName(f).startsWith(fileName));
     }
 

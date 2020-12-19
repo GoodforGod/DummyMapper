@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
  */
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({ "DuplicatedCode", "rawtypes" })
 public class JsonMapper extends AbstractJsonJacksonMapper implements IMapper {
 
     @NotNull
@@ -30,7 +30,8 @@ public class JsonMapper extends AbstractJsonJacksonMapper implements IMapper {
             final RawMarker filtered = Optional.of(marker)
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
-                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                    .map(annotationEnumFilter::filter)
+                    .orElseThrow(() -> new IllegalArgumentException("Marker is not present after filter!"));
 
             if (filtered.isEmpty())
                 return "";

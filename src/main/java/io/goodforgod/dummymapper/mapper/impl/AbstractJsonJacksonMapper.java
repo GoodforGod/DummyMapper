@@ -9,6 +9,7 @@ import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
+import io.goodforgod.dummymapper.filter.impl.GenEnumAnnotationFilter;
 
 import java.text.SimpleDateFormat;
 
@@ -20,11 +21,14 @@ import java.text.SimpleDateFormat;
  */
 abstract class AbstractJsonJacksonMapper {
 
-    protected final IFilter emptyFilter;
     protected final ObjectMapper mapper;
-    protected final IFilter annotationFilter;
 
-    public AbstractJsonJacksonMapper() {
+    protected final IFilter emptyFilter;
+    protected final IFilter annotationFilter;
+    protected final IFilter annotationEnumFilter;
+
+    protected AbstractJsonJacksonMapper() {
+        this.annotationEnumFilter = new GenEnumAnnotationFilter();
         this.annotationFilter = new ExcludeSetterAnnotationFilter();
         this.emptyFilter = new EmptyMarkerFilter();
 

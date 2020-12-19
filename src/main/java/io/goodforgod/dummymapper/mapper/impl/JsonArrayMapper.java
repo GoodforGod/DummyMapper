@@ -37,6 +37,7 @@ public class JsonArrayMapper extends AbstractJsonJacksonMapper implements IMappe
             final RawMarker filtered = Optional.of(marker)
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
+                    .map(annotationEnumFilter::filter)
                     .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
             if (filtered.isEmpty())

@@ -88,7 +88,7 @@ public class ClassFactory {
                 .forEach(mapped::putAll);
 
         structure.values().stream()
-                .filter(m -> m instanceof TypedMarker || m instanceof RawMarker)
+                .filter(m -> m instanceof TypedMarker || m instanceof RawMarker || m instanceof EnumMarker)
                 .findFirst()
                 .ifPresent(m -> {
                     final String currentClassName = getPrevClassName(m);
