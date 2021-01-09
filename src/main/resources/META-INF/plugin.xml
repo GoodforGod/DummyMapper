@@ -22,12 +22,10 @@
         <img width="520" height="270" src="https://i.ibb.co/S7XJv6W/dummyjson.gif" />
     ]]></description>
     <change-notes><![CDATA[
-        <i>Features or changes in this release</i>
+        <i>Features or changes in this release:</i>
         <ul>
-            <li>Fixed AVRO namespace mapping.</li>
-            <li>Fixed path scanning on OSX.</li>
-            <li>Fixed java.time.* package serialization in ISO8601 format when mapping to Json.</li>
-            <li>Compatibility with IDEA 2020.2+</li>
+            <li>Map as Avro (Jackson) required by default fixed</li>
+            <li>Compatibility with IDEA 2020.3+</li>
         </ul>
     ]]></change-notes>
 
