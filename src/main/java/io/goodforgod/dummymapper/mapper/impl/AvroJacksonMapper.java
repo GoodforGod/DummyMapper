@@ -19,7 +19,6 @@ import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -36,18 +35,18 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
 
     private final IFilter emptyFilter = new EmptyMarkerFilter();
     private final IFilter avroFilter = new AvroFilter();
-    private final IFilter propertyFilter = new JacksonPropertyFilter();
+    private final IFilter requiredFieldFilter = new JacksonPropertyFilter();
     private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
     private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
 
     @NotNull
     @Override
-    public String map(@NotNull RawMarker marker, @Nullable AvroJacksonConfig config) {
+    public String map(@NotNull RawMarker marker, AvroJacksonConfig config) {
         try {
             final RawMarker filtered = Optional.of(marker)
                     .map(avroFilter::filter)
                     .map(annotationFilter::filter)
-                    .map(propertyFilter::filter)
+                    .map(r -> config.isRequiredByDefault() ? requiredFieldFilter.filter(r) : r)
                     .map(emptyFilter::filter)
                     .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 
