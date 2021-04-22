@@ -24,8 +24,7 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release:</i>
         <ul>
-            <li>Map as Avro (Jackson) required by default fixed</li>
-            <li>Compatibility with IDEA 2020.3+</li>
+            <li>Compatibility with IDEA 2021.1+</li>
         </ul>
     ]]></change-notes>
 
