@@ -6,7 +6,7 @@ import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Filters out empty {@link RawMarker} or if any {@link CollectionMarker} or {@link MapMarker} have empty {@link RawMarker}
@@ -23,11 +23,12 @@ public class EmptyMarkerFilter extends BaseFilter {
             return RawMarker.EMPTY;
 
         final RawMarker recursive = filterRecursive(marker);
-        final HashMap<String, Marker> structure = new HashMap<>(recursive.getStructure());
-        structure.forEach((k, v) -> {
-            if (v.isEmpty())
-                recursive.getStructure().remove(k);
-        });
+        final Map<String, Marker> structure = recursive.getStructure();
+
+        structure.entrySet().stream()
+                .filter(e -> e.getValue().isEmpty())
+                .map(Map.Entry::getKey)
+                .forEach(key -> marker.getStructure().remove(key));
 
         return recursive;
     }

@@ -20,7 +20,9 @@ public class EnumMarker extends Marker {
                       @NotNull String source,
                       @Nullable Collection<String> values) {
         super(root, source);
-        this.values = CollectionUtils.isEmpty(values) ? Collections.emptyList() : new ArrayList<>(values);
+        this.values = CollectionUtils.isEmpty(values)
+                ? Collections.emptyList()
+                : new ArrayList<>(values);
     }
 
     @Override

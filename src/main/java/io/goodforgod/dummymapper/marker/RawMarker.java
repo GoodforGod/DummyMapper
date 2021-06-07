@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Marker for unknown Java type (custom class)
@@ -23,7 +24,9 @@ public class RawMarker extends Marker {
                      @NotNull String source,
                      @Nullable Map<String, Marker> structure) {
         super(root, source);
-        this.structure = (structure == null || structure.isEmpty()) ? Collections.emptyMap() : structure;
+        this.structure = (structure == null || structure.isEmpty())
+                ? Collections.emptyMap()
+                : new ConcurrentHashMap<>(structure);
     }
 
     public String getSourcePackage() {
