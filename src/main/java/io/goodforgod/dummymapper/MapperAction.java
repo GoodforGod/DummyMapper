@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiClass;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.JavaFileException;
 import io.goodforgod.dummymapper.error.JavaKindException;
@@ -85,8 +85,11 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         try {
-            final PsiJavaFile file = IdeaUtils.getFileFromAction(event)
-                    .orElseThrow(JavaFileException::new);
+            final PsiClass psiClass = IdeaUtils.getPsiClassFromAction(event)
+                    .orElseGet(() -> IdeaUtils.getFileFromAction(event)
+                            .filter(file -> file.getClasses().length != 0)
+                            .map(file -> file.getClasses()[0])
+                            .orElseThrow(JavaFileException::new));
 
             final T config = getConfig();
             if (config != null) {
@@ -100,7 +103,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                 dialog.disposeIfNeeded();
             }
 
-            final RawMarker marker = new PsiJavaFileScanner().scan(file);
+            final RawMarker marker = new PsiJavaFileScanner().scan(psiClass);
             final String json = getMapper().map(marker, config);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveFrame(emptyResultMessage(), MessageType.WARNING);

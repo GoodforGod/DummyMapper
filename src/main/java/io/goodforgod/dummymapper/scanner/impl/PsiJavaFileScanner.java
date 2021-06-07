@@ -50,27 +50,30 @@ public class PsiJavaFileScanner implements IFileScanner {
             return RawMarker.EMPTY;
 
         final PsiClass target = javaFile.getClasses()[0];
+        return scan(target);
+    }
+
+    public @NotNull RawMarker scan(@Nullable PsiClass target) {
+        if (target == null)
+            return RawMarker.EMPTY;
+
         if (JvmClassKind.ENUM.equals(target.getClassKind())
                 || JvmClassKind.ANNOTATION.equals(target.getClassKind())
                 || JvmClassKind.INTERFACE.equals(target.getClassKind()))
             throw new JavaKindException(target.getClassKind());
 
-        final Map<String, Marker> scannedFile = scanJavaFile(javaFile);
+        final Map<String, Marker> scannedFile = scanJavaClass(target);
         if (scannedFile.isEmpty())
             return RawMarker.EMPTY;
 
         final String source = getFileFullName(target);
-        final String root = getFileFullName(javaFile);
+        final String root = getFileFullName(target);
         return new RawMarker(root, source, scannedFile);
     }
 
-    private @NotNull Map<String, Marker> scanJavaFile(@Nullable PsiJavaFile file) {
+    private @NotNull Map<String, Marker> scanJavaClass(@Nullable PsiClass target) {
         try {
-            if (file == null || file.getClasses().length == 0)
-                return Collections.emptyMap();
-
-            final PsiClass target = file.getClasses()[0];
-            if (isTypeSimple(getFileFullName(target)) || isTypeEnum(getFileFullName(target)))
+            if (target == null || isTypeSimple(getFileFullName(target)) || isTypeEnum(getFileFullName(target)))
                 return Collections.emptyMap();
 
             return scanJavaClass(target, target, Collections.emptyMap());
@@ -83,7 +86,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                                               @NotNull PsiClass targetClass,
                                               @NotNull Map<String, PsiType> parentTypes) {
         final String source = getFileFullName(targetClass);
-        final String root = getFileFullName(rootClass);
+        final String root = getFileFullName(targetClass);
 
         final PsiClass superTarget = targetClass.getSuperClass();
         final Map<String, Marker> structure = new LinkedHashMap<>();
@@ -93,7 +96,9 @@ public class PsiJavaFileScanner implements IFileScanner {
                     .filter(f -> f instanceof PsiEnumConstant)
                     .map(PsiField::getName)
                     .collect(Collectors.toList());
-            structure.put(targetClass.getName(), new EnumMarker(root, source, enumValues));
+
+            final EnumMarker marker = new EnumMarker(root, source, enumValues);
+            structure.put(targetClass.getName(), marker);
             scanned.put(source, structure);
             return structure;
         }
@@ -208,15 +213,15 @@ public class PsiJavaFileScanner implements IFileScanner {
     private Optional<Marker> scanJavaInnerClass(@NotNull PsiClass rootClass,
                                                 @NotNull PsiType type) {
         final String root = getFileFullName(rootClass);
-        return getParentJavaFile(type)
-                .filter(file -> file.getClasses().length == 1)
-                .flatMap(file -> Arrays.stream(file.getClasses()[0].getAllInnerClasses())
+        return getPsiJavaParentClass(type)
+                .flatMap(psiClass -> Arrays.stream(psiClass.getAllInnerClasses())
                         .filter(c -> type.getCanonicalText().equals(c.getQualifiedName()))
                         .findFirst()
                         .map(c -> {
                             final String fullName = getFileFullName(c);
                             final Map<String, Marker> cached = scanned.get(fullName);
-                            final Map<String, Marker> structure = (cached == null) ? scanJavaClass(c, c, new HashMap<>())
+                            final Map<String, Marker> structure = (cached == null)
+                                    ? scanJavaClass(c, c, new HashMap<>())
                                     : cached;
 
                             final Marker marker = structure.get(type.getPresentableText());
@@ -230,10 +235,10 @@ public class PsiJavaFileScanner implements IFileScanner {
 
     private Optional<Marker> scanJavaFileClass(@NotNull String root,
                                                @NotNull PsiType type) {
-        return getJavaFile(type).map(f -> {
-            final String fullName = getClassFullName(f);
+        return getPsiJavaClass(type).map(psiClass -> {
+            final String fullName = getClassFullName(psiClass);
             final Map<String, Marker> cached = scanned.get(fullName);
-            final Map<String, Marker> structure = (cached == null) ? scanJavaFile(f) : cached;
+            final Map<String, Marker> structure = (cached == null) ? scanJavaClass(psiClass) : cached;
 
             final Marker marker = structure.get(type.getPresentableText());
             if (marker instanceof EnumMarker) { // ENUM
@@ -249,10 +254,8 @@ public class PsiJavaFileScanner implements IFileScanner {
                                       @NotNull PsiClass rootClass,
                                       @NotNull PsiType type) {
         final String fullName = getFileFullName(type);
-        return getJavaFile(type)
-                .map(PsiClassOwner::getClasses)
-                .filter(c -> c.length > 0)
-                .map(c -> Arrays.stream(c[0].getFields())
+        return getPsiJavaClass(type)
+                .map(psiClass -> Arrays.stream(psiClass.getFields())
                         .filter(f -> f instanceof PsiEnumConstant)
                         .map(NavigationItem::getName)
                         .collect(Collectors.toList()))
@@ -372,44 +375,48 @@ public class PsiJavaFileScanner implements IFileScanner {
         return types;
     }
 
-    private Optional<PsiJavaFile> getParentJavaFile(@NotNull PsiType type) {
+    private Optional<PsiClass> getPsiJavaParentClass(@NotNull PsiType type) {
         final String fullName = getClassFullName(type);
         final int last = fullName.lastIndexOf('.');
         if (last == -1 || last == 0)
             return Optional.empty();
 
         final String parentName = fullName.substring(0, last);
-        return getJavaFile(parentName, type.getResolveScope());
+        final Optional<PsiClass> fileClass = getPsiJavaClassByType(type);
+        return (fileClass.isPresent())
+                ? fileClass
+                : getPsiJavaClass(parentName, type.getResolveScope());
     }
 
-    private Optional<PsiJavaFile> getJavaFile(@NotNull PsiType type) {
+    private Optional<PsiClass> getPsiJavaClass(@NotNull PsiType type) {
+        final Optional<PsiClass> fileClass = getPsiJavaClassByType(type);
+
         final String fullName = getClassFullName(type);
-        return getJavaFile(fullName, type.getResolveScope());
+        return (fileClass.isPresent())
+                ? fileClass
+                : getPsiJavaClass(fullName, type.getResolveScope());
     }
 
-    private Optional<PsiJavaFile> getJavaFile(@NotNull String fileName,
-                                              @Nullable GlobalSearchScope globalSearchScope) {
+    private Optional<PsiClass> getPsiJavaClassByType(@NotNull PsiType type) {
+        return Optional.ofNullable(((PsiClassReferenceType) type).getPsiContext())
+                .filter(context -> context.getContainingFile() instanceof PsiJavaFile)
+                .map(context -> ((PsiJavaFile) context.getContainingFile()))
+                .filter(psiJavaFile -> psiJavaFile.getClasses().length != 0)
+                .flatMap(psiJavaFile -> {
+                    final PsiClass rootClass = psiJavaFile.getClasses()[0];
+                    return Stream.concat(Stream.of(rootClass), Arrays.stream(rootClass.getAllInnerClasses()))
+                            .filter(psiClass -> type.getCanonicalText().equals(psiClass.getQualifiedName()))
+                            .findFirst();
+                });
+    }
+
+    private Optional<PsiClass> getPsiJavaClass(@NotNull String fileName,
+                                               @Nullable GlobalSearchScope globalSearchScope) {
         return Optional.ofNullable(globalSearchScope)
                 .map(GlobalSearchScope::getProject)
                 .flatMap(
                         p -> Optional.ofNullable(JavaPsiFacade.getInstance(p).findClass(fileName, GlobalSearchScope.allScope(p))))
-                .map(PsiElement::getContainingFile)
-                .filter(f -> f instanceof PsiJavaFile)
-                .map(PsiJavaFile.class::cast)
-                .filter(f -> getFileFullName(f).startsWith(fileName));
-    }
-
-    private String getClassFullName(@NotNull PsiJavaFile file) {
-        final String fileFullName = getFileFullName(file);
-        if (file.getClasses().length == 0)
-            throw new ScanException("Can not find class full name for file:" + fileFullName);
-
-        final PsiClass target = file.getClasses()[0];
-        return getFileFullName(target);
-    }
-
-    private String getFileFullName(@NotNull PsiJavaFile file) {
-        return file.getPackageName() + "." + file.getName();
+                .filter(psiClass -> psiClass.getContainingFile() instanceof PsiJavaFile);
     }
 
     private String getFileFullName(@NotNull PsiClass psiClass) {
@@ -422,5 +429,9 @@ public class PsiJavaFileScanner implements IFileScanner {
 
     private String getClassFullName(@NotNull PsiType type) {
         return type.getCanonicalText();
+    }
+
+    private String getClassFullName(@NotNull PsiClass psiClass) {
+        return psiClass.getQualifiedName();
     }
 }
