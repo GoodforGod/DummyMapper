@@ -398,7 +398,9 @@ public class PsiJavaFileScanner implements IFileScanner {
     }
 
     private Optional<PsiClass> getPsiJavaClassByType(@NotNull PsiType type) {
-        return Optional.ofNullable(((PsiClassReferenceType) type).getPsiContext())
+        return Optional.of(type)
+                .filter(t -> t instanceof PsiClassReferenceType)
+                .map(t -> ((PsiClassReferenceType) t).getPsiContext())
                 .filter(context -> context.getContainingFile() instanceof PsiJavaFile)
                 .map(context -> ((PsiJavaFile) context.getContainingFile()))
                 .filter(psiJavaFile -> psiJavaFile.getClasses().length != 0)
