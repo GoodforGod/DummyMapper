@@ -5,7 +5,6 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -26,8 +25,8 @@ public abstract class MarkerAnnotationFilter extends BaseFilter {
     @Override
     public RawMarker filter(@NotNull RawMarker marker) {
         final Predicate<AnnotationMarker> predicate = predicate();
+        final Map<String, Marker> structure = marker.getStructure();
 
-        final HashMap<String, Marker> structure = new HashMap<>(marker.getStructure());
         structure.entrySet().stream()
                 .filter(e -> e.getValue().getAnnotations().stream().anyMatch(predicate))
                 .map(Map.Entry::getKey)

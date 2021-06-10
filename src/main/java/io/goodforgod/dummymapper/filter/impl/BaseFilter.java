@@ -33,9 +33,14 @@ public abstract class BaseFilter implements IFilter {
         marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(visited).build());
         final Map<String, Marker> structure = marker.getStructure();
 
-        MarkerUtils.streamRawMarkers(structure).filter(m -> !isVisited.test(m)).forEach(this::filter);
-        MarkerUtils.streamCollectionRawMarkers(structure).filter(m -> !isVisited.test((RawMarker) m.getErasure()))
+        MarkerUtils.streamRawMarkers(structure)
+                .filter(m -> !isVisited.test(m))
+                .forEach(this::filter);
+
+        MarkerUtils.streamCollectionRawMarkers(structure)
+                .filter(m -> !isVisited.test((RawMarker) m.getErasure()))
                 .forEach(m -> filter((RawMarker) m.getErasure()));
+
         MarkerUtils.streamMapRawMarkers(structure).forEach(m -> {
             if (m.getKeyErasure() instanceof RawMarker && !isVisited.test(((RawMarker) m.getKeyErasure())))
                 filter((RawMarker) m.getKeyErasure());
