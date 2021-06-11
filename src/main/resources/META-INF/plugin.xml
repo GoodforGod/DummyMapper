@@ -25,7 +25,6 @@
         <i>Features or changes in this release:</i>
         <ul>
             <li>Fixed concurrent modification when filters try to clean structure</li>
-            <li>Ability select inner static class and map only that class</li>
         </ul>
     ]]></change-notes>
 
