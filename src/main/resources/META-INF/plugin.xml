@@ -33,7 +33,7 @@
         <!-- Add your extensions here -->
     </extensions>
 
-    <idea-version since-build="193"/>
+    <idea-version since-build="202"/>
 
     <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.platform</depends>
