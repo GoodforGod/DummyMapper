@@ -31,7 +31,7 @@ runIde {
 }
 
 patchPluginXml {
-    sinceBuild '193'
+    sinceBuild '202'
 }
 
 spotless {
