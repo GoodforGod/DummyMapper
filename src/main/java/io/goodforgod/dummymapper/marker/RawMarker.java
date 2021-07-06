@@ -29,14 +29,6 @@ public class RawMarker extends Marker {
                 : new ConcurrentHashMap<>(structure);
     }
 
-    public String getSourcePackage() {
-        return getSource().substring(0, getSource().lastIndexOf('.'));
-    }
-
-    public String getRootPackage() {
-        return getRoot().substring(0, getRoot().lastIndexOf('.'));
-    }
-
     @Override
     public boolean isEmpty() {
         return structure.isEmpty();

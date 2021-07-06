@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
 import io.dummymaker.util.CollectionUtils;
+import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,6 +58,46 @@ public abstract class Marker {
 
     public @NotNull String getRoot() {
         return root;
+    }
+
+    public @NotNull String getSourcePackage() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanSource = getCleanSource();
+        return cleanSource.substring(0, cleanSource.lastIndexOf('.'));
+    }
+
+    public @NotNull String getRootPackage() {
+        if (StringUtils.isEmpty(root))
+            return "";
+
+        final String cleanRoot = getCleanRoot();
+        return cleanRoot.substring(0, cleanRoot.lastIndexOf('.'));
+    }
+
+    public @NotNull String getSourceSimpleName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanSource = getCleanSource();
+        return cleanSource.substring(cleanSource.lastIndexOf('.') + 1);
+    }
+
+    public @NotNull String getRootSimpleName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanRoot = getCleanRoot();
+        return cleanRoot.substring(cleanRoot.lastIndexOf('.') + 1);
+    }
+
+    private String getCleanRoot() {
+        return root.replace(".java", "");
+    }
+
+    private String getCleanSource() {
+        return source.replace(".java", "");
     }
 
     public @NotNull Collection<AnnotationMarker> getAnnotations() {
