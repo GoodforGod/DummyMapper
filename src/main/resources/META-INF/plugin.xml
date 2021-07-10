@@ -24,7 +24,8 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release:</i>
         <ul>
-            <li>Ability select inner static class and map only that class</li>
+            <li>GraphQL correct type name set fixed</li>
+            <li>Complex cases for mapping classes with inheritance caused recursion errors fixed</li>
         </ul>
     ]]></change-notes>
 

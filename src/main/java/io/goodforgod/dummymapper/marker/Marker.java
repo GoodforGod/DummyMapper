@@ -38,7 +38,9 @@ public abstract class Marker {
 
     @SuppressWarnings("unchecked")
     public <T extends Marker> T setAnnotations(@Nullable Collection<AnnotationMarker> annotations) {
-        this.annotations = CollectionUtils.isEmpty(annotations) ? Collections.emptySet() : new HashSet<>(annotations);
+        this.annotations = CollectionUtils.isEmpty(annotations)
+                ? Collections.emptySet()
+                : new HashSet<>(annotations);
         return (T) this;
     }
 
