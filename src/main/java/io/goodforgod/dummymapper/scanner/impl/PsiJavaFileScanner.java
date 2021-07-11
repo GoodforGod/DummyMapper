@@ -472,8 +472,4 @@ public class PsiJavaFileScanner implements IFileScanner {
     private String getClassFullName(@NotNull PsiType type) {
         return type.getCanonicalText();
     }
-
-    private String getClassFullName(@NotNull PsiClass psiClass) {
-        return psiClass.getQualifiedName();
-    }
 }
