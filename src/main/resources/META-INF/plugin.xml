@@ -26,6 +26,7 @@
         <ul>
             <li>GraphQL correct type name set fixed</li>
             <li>Complex cases for mapping classes with inheritance caused recursion errors fixed</li>
+            <li>Default value of 10 for mapping to JSON array fixed</li>
         </ul>
     ]]></change-notes>
 

@@ -13,6 +13,8 @@ import javax.swing.*;
  */
 public class SpinnerComponent implements IComponent {
 
+    public static final int DEFAULT_VALUE = 10;
+
     private final String name;
     private final int max;
 
@@ -23,12 +25,12 @@ public class SpinnerComponent implements IComponent {
 
     @Override
     public JComponent build(IConfig config) {
-        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(10, 1, max, 1));
+        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(DEFAULT_VALUE, 1, max, 1));
         spinner.setName(name);
         spinner.setVisible(true);
         spinner.setEnabled(true);
 
-        config.set(name, 1);
+        config.set(name, DEFAULT_VALUE);
         spinner.addChangeListener(e -> {
             if (e.getSource() instanceof JSpinner) {
                 final JSpinner source = (JSpinner) e.getSource();
