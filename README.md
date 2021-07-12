@@ -295,14 +295,6 @@ This issue is due to library used in plugin unable to create Java Enums.
 if found. Standard Java naming convention expected from *getters* to be found.
 - Annotations Class Params are not supported. Thus, most of annotation parameters like String, Boolean, etc. are supported, but Class or other complex parameters not supported.
 
-## Version History
-
-**1.0.2** - Compatibility with 2020.3, AVRO Jackson options fixed.
-
-**1.0.1** - Fixed AVRO namespace mapping, fixed path scanning on OSX, fixed java.time.* package serialization in ISO8601 format when mapping to Json.
-
-**1.0.0** - Initial project with support for Json, Json array, Json Schema, Avro Schema, GraphQL formats.
-
 ## Licence
 
 This project licensed under the Apache 2.0 - see the [LICENSE](LICENSE) file for details.

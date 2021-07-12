@@ -38,7 +38,41 @@ import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 @SuppressWarnings("UnstableApiUsage")
 public class PsiJavaFileScanner implements IFileScanner {
 
-    private final Map<String, Map<String, Marker>> scanned = new HashMap<>();
+    private static class Target {
+
+        private final String root;
+        private final String source;
+
+        public Target(String root, String source) {
+            this.root = root;
+            this.source = source;
+        }
+
+        public String getRoot() {
+            return root;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Target target = (Target) o;
+            return Objects.equals(root, target.root) && Objects.equals(source, target.source);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(root, source);
+        }
+    }
+
+    private final Map<Target, Map<String, Marker>> scanned = new HashMap<>();
 
     public @NotNull RawMarker scan(@Nullable PsiFile file) {
         if (!(file instanceof PsiJavaFile)) {
@@ -85,8 +119,11 @@ public class PsiJavaFileScanner implements IFileScanner {
     private Map<String, Marker> scanJavaClass(@NotNull PsiClass rootClass,
                                               @NotNull PsiClass targetClass,
                                               @NotNull Map<String, PsiType> parentTypes) {
+        if (isTypeSimple(getFileFullName(targetClass)) || isTypeEnum(getFileFullName(targetClass)))
+            return Collections.emptyMap();
+
+        final String root = getFileFullName(rootClass);
         final String source = getFileFullName(targetClass);
-        final String root = getFileFullName(targetClass);
 
         final PsiClass superTarget = targetClass.getSuperClass();
         final Map<String, Marker> structure = new LinkedHashMap<>();
@@ -99,7 +136,7 @@ public class PsiJavaFileScanner implements IFileScanner {
 
             final EnumMarker marker = new EnumMarker(root, source, enumValues);
             structure.put(targetClass.getName(), marker);
-            scanned.put(source, structure);
+            scanned.put(new Target(root, source), structure);
             return structure;
         }
 
@@ -138,7 +175,7 @@ public class PsiJavaFileScanner implements IFileScanner {
         // return cached;
         // }
 
-        scanned.put(source, structure);
+        scanned.put(new Target(root, source), structure);
         final PsiField[] fields = targetClass.getFields();
 
         for (PsiField field : fields) {
@@ -170,7 +207,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                     }
 
                 } else if (!isTypeForbidden(type)) { // COMPLEX CLASS SCAN IF NOT FORBIDDEN ONE
-                    final Optional<Marker> marker = scanJavaFileClass(root, type);
+                    final Optional<Marker> marker = scanJavaFileClass(targetClass, type);
                     if (marker.isPresent()) {
                         structure.put(fieldName, marker.get());
                     } else {
@@ -217,34 +254,37 @@ public class PsiJavaFileScanner implements IFileScanner {
                 .flatMap(psiClass -> Arrays.stream(psiClass.getAllInnerClasses())
                         .filter(c -> type.getCanonicalText().equals(c.getQualifiedName()))
                         .findFirst()
-                        .map(c -> {
-                            final String fullName = getFileFullName(c);
-                            final Map<String, Marker> cached = scanned.get(fullName);
+                        .map(sourceClass -> {
+                            final String source = getFileFullName(sourceClass);
+                            final Map<String, Marker> cached = scanned.get(new Target(root, source));
                             final Map<String, Marker> structure = (cached == null)
-                                    ? scanJavaClass(c, c, new HashMap<>())
+                                    ? scanJavaClass(sourceClass, sourceClass, new HashMap<>())
                                     : cached;
 
                             final Marker marker = structure.get(type.getPresentableText());
                             if (marker instanceof EnumMarker) { // ENUM
                                 return new EnumMarker(root, marker.getSource(), ((EnumMarker) marker).getValues());
                             } else {
-                                return new RawMarker(root, fullName, structure);
+                                return new RawMarker(root, source, structure);
                             }
                         }));
     }
 
-    private Optional<Marker> scanJavaFileClass(@NotNull String root,
+    private Optional<Marker> scanJavaFileClass(@NotNull PsiClass rootClass,
                                                @NotNull PsiType type) {
         return getPsiJavaClass(type).map(psiClass -> {
-            final String fullName = getClassFullName(psiClass);
-            final Map<String, Marker> cached = scanned.get(fullName);
-            final Map<String, Marker> structure = (cached == null) ? scanJavaClass(psiClass) : cached;
+            final String root = getFileFullName(rootClass);
+            final String source = getFileFullName(psiClass);
+            final Map<String, Marker> cached = scanned.get(new Target(source, source));
+            final Map<String, Marker> structure = (cached == null)
+                    ? scanJavaClass(psiClass)
+                    : cached;
 
             final Marker marker = structure.get(type.getPresentableText());
             if (marker instanceof EnumMarker) { // ENUM
                 return new EnumMarker(root, marker.getSource(), ((EnumMarker) marker).getValues());
             } else {
-                return new RawMarker(root, fullName, structure);
+                return new RawMarker(root, source, structure);
             }
         });
     }
@@ -315,7 +355,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                                         @NotNull PsiType type) {
         return Optional.ofNullable(getSimpleTypeByName(type))
                 .map(t -> ((Marker) new TypedMarker(source, rootName, t)))
-                .orElseGet(() -> scanJavaFileClass(rootName, type)
+                .orElseGet(() -> scanJavaFileClass(rootClass, type)
                         .orElseGet(() -> scanJavaInnerClass(rootClass, type)
                                 .orElseGet(() -> new TypedMarker(rootName, source, String.class))));
     }
@@ -431,9 +471,5 @@ public class PsiJavaFileScanner implements IFileScanner {
 
     private String getClassFullName(@NotNull PsiType type) {
         return type.getCanonicalText();
-    }
-
-    private String getClassFullName(@NotNull PsiClass psiClass) {
-        return psiClass.getQualifiedName();
     }
 }

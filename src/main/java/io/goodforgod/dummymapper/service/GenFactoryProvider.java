@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.service;
 
-import io.dummymaker.annotation.special.GenEmbedded;
 import io.dummymaker.factory.impl.GenFactory;
 import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
@@ -67,7 +66,7 @@ public class GenFactoryProvider {
             return Collections.emptyList();
 
         try {
-            final GenRule rule = GenRule.auto(Class.forName(mapped.get()), GenEmbedded.MAX);
+            final GenRule rule = GenRule.auto(Class.forName(mapped.get()), 10);
             structure.forEach((k, v) -> {
                 if (v instanceof EnumMarker) {
                     final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());

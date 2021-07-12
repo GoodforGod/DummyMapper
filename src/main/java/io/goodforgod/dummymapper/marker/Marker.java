@@ -1,6 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
 import io.dummymaker.util.CollectionUtils;
+import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,9 @@ public abstract class Marker {
 
     @SuppressWarnings("unchecked")
     public <T extends Marker> T setAnnotations(@Nullable Collection<AnnotationMarker> annotations) {
-        this.annotations = CollectionUtils.isEmpty(annotations) ? Collections.emptySet() : new HashSet<>(annotations);
+        this.annotations = CollectionUtils.isEmpty(annotations)
+                ? Collections.emptySet()
+                : new HashSet<>(annotations);
         return (T) this;
     }
 
@@ -51,12 +54,52 @@ public abstract class Marker {
 
     public abstract boolean isEmpty();
 
+    public @NotNull String getRoot() {
+        return root;
+    }
+
+    public @NotNull String getRootPackage() {
+        if (StringUtils.isEmpty(root))
+            return "";
+
+        final String cleanRoot = getCleanRoot();
+        return cleanRoot.substring(0, cleanRoot.lastIndexOf('.'));
+    }
+
+    public @NotNull String getRootSimpleName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanRoot = getCleanRoot();
+        return cleanRoot.substring(cleanRoot.lastIndexOf('.') + 1);
+    }
+
     public @NotNull String getSource() {
         return source;
     }
 
-    public @NotNull String getRoot() {
-        return root;
+    public @NotNull String getSourcePackage() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanSource = getCleanSource();
+        return cleanSource.substring(0, cleanSource.lastIndexOf('.'));
+    }
+
+    public @NotNull String getSourceSimpleName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String cleanSource = getCleanSource();
+        return cleanSource.substring(cleanSource.lastIndexOf('.') + 1);
+    }
+
+    private String getCleanRoot() {
+        return root.replaceFirst("\\.java$", "");
+    }
+
+    private String getCleanSource() {
+        return source.replaceFirst("\\.java$", "");
     }
 
     public @NotNull Collection<AnnotationMarker> getAnnotations() {
