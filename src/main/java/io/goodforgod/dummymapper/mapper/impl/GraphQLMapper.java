@@ -49,8 +49,7 @@ public class GraphQLMapper implements IMapper<GraphQLConfig> {
         final SchemaPrinter.Options options = SchemaPrinter.Options.defaultOptions()
                 .includeDirectives(false)
                 .includeScalarTypes(true)
-                .includeExtendedScalarTypes(false)
-                .includeSchemaDefintion(false);
+                .includeSchemaDefinition(false);
 
         final String result = new SchemaPrinter(options).print(schema);
         return result.replace("type Query", "type " + marker.getSourceSimpleName());
