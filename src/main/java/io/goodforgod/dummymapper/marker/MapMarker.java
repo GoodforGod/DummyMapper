@@ -1,8 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Marker for {@link java.util.Map} java type

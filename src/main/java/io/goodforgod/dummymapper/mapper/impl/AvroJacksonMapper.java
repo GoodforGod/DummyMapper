@@ -17,10 +17,9 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
+import java.util.Optional;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format

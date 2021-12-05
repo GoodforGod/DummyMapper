@@ -5,7 +5,6 @@ import io.goodforgod.dummymapper.error.ExternalException;
 import io.leangen.graphql.execution.GlobalEnvironment;
 import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapper;
 import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapperFactory;
-
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;

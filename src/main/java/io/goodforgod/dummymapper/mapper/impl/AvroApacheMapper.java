@@ -9,12 +9,11 @@ import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.IConfig;
+import java.util.Optional;
 import org.apache.avro.Schema;
 import org.apache.avro.reflect.ReflectData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 /**
  * Maps instance of {@link PsiJavaFile} to apache {@link Schema} AVRO format

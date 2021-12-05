@@ -1,10 +1,9 @@
 package io.goodforgod.dummymapper.marker;
 
 import io.dummymaker.util.CollectionUtils;
+import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 /**
  * Marker for {@link Enum} java type
