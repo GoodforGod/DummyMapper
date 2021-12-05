@@ -1,8 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Marker for known Java type (like {@link Integer}, {@link java.util.Date}, etc)

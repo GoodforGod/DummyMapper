@@ -9,6 +9,8 @@ import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
+import java.util.*;
+import java.util.function.Predicate;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ConstPool;
@@ -16,9 +18,6 @@ import javassist.bytecode.FieldInfo;
 import javassist.bytecode.SignatureAttribute;
 import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Class factory that creates Java Class from recreated java class map

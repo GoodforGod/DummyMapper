@@ -10,7 +10,6 @@ import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.GenEnumAnnotationFilter;
-
 import java.text.SimpleDateFormat;
 
 /**

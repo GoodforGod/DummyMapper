@@ -11,13 +11,12 @@ import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * GenFactory Provider that builds GenFactory with special generators for ENUM or other complex values

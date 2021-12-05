@@ -1,5 +1,7 @@
 package io.goodforgod.dummymapper.scanner.impl;
 
+import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
+
 import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
@@ -17,15 +19,12 @@ import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.scanner.IFileScanner;
-import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations for such fields)

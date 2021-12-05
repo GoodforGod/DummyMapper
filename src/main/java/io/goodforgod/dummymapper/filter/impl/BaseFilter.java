@@ -7,10 +7,9 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.util.MarkerUtils;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Allow recursion filter for all {@link RawMarker} or {@link CollectionMarker} with such raw markers

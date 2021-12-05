@@ -12,10 +12,9 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.GraphQLConfig;
 import io.leangen.graphql.GraphQLSchemaGenerator;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 /**
  * @author Anton Kurako (GoodforGod)

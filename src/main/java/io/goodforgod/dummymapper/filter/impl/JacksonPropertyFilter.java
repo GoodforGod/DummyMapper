@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Add {@link JsonProperty#required()} true if such annotation is not present on field

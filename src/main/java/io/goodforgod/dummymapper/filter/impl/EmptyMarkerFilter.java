@@ -4,9 +4,8 @@ import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.MapMarker;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Filters out empty {@link RawMarker} or if any {@link CollectionMarker} or {@link MapMarker} have empty {@link RawMarker}

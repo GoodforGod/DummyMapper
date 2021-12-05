@@ -1,7 +1,6 @@
 package io.goodforgod.dummymapper.ui;
 
 import io.goodforgod.dummymapper.ui.config.IConfig;
-
 import javax.swing.*;
 
 /**
