@@ -16,9 +16,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
@@ -63,6 +61,8 @@ public class PsiClassUtils {
                 LocalTime.class,
                 LocalDate.class,
                 LocalDateTime.class,
+                OffsetTime.class,
+                OffsetDateTime.class,
                 Date.class,
                 java.sql.Date.class,
                 Time.class,

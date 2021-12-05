@@ -196,7 +196,7 @@ public class ClassFactory {
             return String.class;
         } else if (erasure instanceof RawMarker) {
             try {
-                final String className = getRootClassName((RawMarker) erasure);
+                final String className = getSourceClassName((RawMarker) erasure);
                 CtClass internal = scanned.get(className);
                 if (internal == null)
                     internal = buildInternal((RawMarker) erasure, scanned);
