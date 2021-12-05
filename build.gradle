@@ -21,7 +21,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 intellij {
     plugins = ["java"]
-    version = "2021.2"
+    version = "2021.3"
     downloadSources = false
 }
 
@@ -66,11 +66,11 @@ configurations {
 }
 
 dependencies {
-    implementation "com.github.goodforgod:dummymaker:3.1.0-SNAPSHOT"
-    implementation "org.javassist:javassist:3.27.0-GA"
+    implementation "com.github.goodforgod:dummymaker:3.1.0"
+    implementation "org.javassist:javassist:3.28.0-GA"
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"
-    implementation "com.github.victools:jsonschema-generator:4.12.2"
+    implementation "com.github.victools:jsonschema-generator:4.21.0"
     implementation "org.apache.avro:avro-compiler:1.9.2"
     implementation "io.leangen.graphql:spqr:0.11.2"
 }
