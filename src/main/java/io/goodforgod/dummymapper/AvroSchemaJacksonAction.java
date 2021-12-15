@@ -1,10 +1,12 @@
 package io.goodforgod.dummymapper;
 
+
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Entry-point for {@link AvroJacksonMapper}

@@ -1,9 +1,11 @@
 package io.goodforgod.dummymapper.ui.config;
 
+
 import java.util.Collection;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * @author Anton Kurako (GoodforGod)

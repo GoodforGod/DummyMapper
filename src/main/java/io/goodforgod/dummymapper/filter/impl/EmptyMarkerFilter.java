@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.filter.impl;
 
+
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.MapMarker;
 import io.goodforgod.dummymapper.marker.Marker;
@@ -7,8 +8,10 @@ import io.goodforgod.dummymapper.marker.RawMarker;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
+
 /**
- * Filters out empty {@link RawMarker} or if any {@link CollectionMarker} or {@link MapMarker} have empty {@link RawMarker}
+ * Filters out empty {@link RawMarker} or if any {@link CollectionMarker} or {@link MapMarker} have
+ * empty {@link RawMarker}
  *
  * @author Anton Kurako (GoodforGod)
  * @since 13.8.2020

@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.util;
 
+
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -9,6 +10,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import java.awt.datatransfer.StringSelection;
 import java.util.Optional;
+
 
 /**
  * @author Anton Kurako (GoodforGod)

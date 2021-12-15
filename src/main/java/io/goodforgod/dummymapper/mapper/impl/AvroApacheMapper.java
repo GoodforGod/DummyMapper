@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
@@ -14,6 +15,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.reflect.ReflectData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Maps instance of {@link PsiJavaFile} to apache {@link Schema} AVRO format

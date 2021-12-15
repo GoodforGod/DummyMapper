@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper;
 
+
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -26,6 +27,7 @@ import java.util.StringJoiner;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Mapper entry point base implementation class
@@ -79,6 +81,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
 
     /**
      * Performs mapping action for override mapper
+     * 
      * @param event from IDE
      */
     @Override

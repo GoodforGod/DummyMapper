@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.filter.impl;
 
+
 import com.fasterxml.jackson.annotation.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.lang.annotation.RetentionPolicy;
@@ -9,8 +10,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.avro.reflect.*;
 
+
 /**
- * Filters all unsupported {@link AnnotationMarker} from {@link io.goodforgod.dummymapper.marker.Marker}
+ * Filters all unsupported {@link AnnotationMarker} from
+ * {@link io.goodforgod.dummymapper.marker.Marker}
  * All supported annotations are {@link RetentionPolicy#RUNTIME} only
  *
  * @author Anton Kurako (GoodforGod)

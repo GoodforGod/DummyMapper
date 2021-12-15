@@ -1,11 +1,13 @@
 package io.goodforgod.dummymapper.marker;
 
+
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Marker that contains information about class information

@@ -1,11 +1,13 @@
 package io.goodforgod.dummymapper.filter.impl;
 
+
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.Map;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Filters out {@link Marker} from structure if any annotations is qualified by {@link #predicate()}

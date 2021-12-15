@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
 import com.intellij.psi.PsiJavaFile;
@@ -13,6 +14,7 @@ import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Maps instance of {@link PsiJavaFile} to {@link JsonNode} JSON Schema format
@@ -38,7 +40,9 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
             final Class<?> target = ClassFactory.build(filtered);
 
-            final SchemaVersion version = (config == null) ? SchemaVersion.DRAFT_2019_09 : config.getSchemaVersion();
+            final SchemaVersion version = (config == null)
+                    ? SchemaVersion.DRAFT_2019_09
+                    : config.getSchemaVersion();
             final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)
                     .build();
 

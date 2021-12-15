@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.scanner.impl;
 
+
 import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 
 import com.intellij.lang.jvm.JvmClassKind;
@@ -26,8 +27,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+
 /**
- * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations for such fields)
+ * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations
+ * for such fields)
  * <p>
  * https://intellij-support.jetbrains.com/hc/en-us/community/posts/360002746839-How-to-add-an-annotation-and-import-to-a-Java-class
  *
@@ -152,7 +155,9 @@ public class PsiJavaFileScanner implements IFileScanner {
                 final int index = valueCounter;
 
                 final PsiType type = Optional.ofNullable(parentTypes.get(v.getPresentableText()))
-                        .orElseGet(() -> (v.getSuperTypes().length > index) ? v.getSuperTypes()[index] : null);
+                        .orElseGet(() -> (v.getSuperTypes().length > index)
+                                ? v.getSuperTypes()[index]
+                                : null);
                 if (type != null)
                     types.put(key, type);
 
@@ -168,7 +173,8 @@ public class PsiJavaFileScanner implements IFileScanner {
         // Get cached structure if file was not changed since last scan
         // final long modificationStamp = target.getContainingFile().getModificationStamp();
         // if (scannedModified.getOrDefault(source, -1L).equals(modificationStamp)) {
-        // logger.debug("Retrieving CACHED structure for '{}' with modifyStamp '{}'", source, modificationStamp);
+        // logger.debug("Retrieving CACHED structure for '{}' with modifyStamp '{}'", source,
+        // modificationStamp);
         // final Map<String, Marker> cached = scanned.get(source);
         // cached.putAll(structure); // put all parent scanned fields in case they changed
         // return cached;
@@ -237,7 +243,9 @@ public class PsiJavaFileScanner implements IFileScanner {
                 .filter(m -> m.getName().length() > 3)
                 .filter(m -> fieldName.equalsIgnoreCase(m.getName().substring(3)))
                 .flatMap(m -> scanAnnotations(m.getAnnotations())
-                        .map(b -> m.getName().startsWith("set") ? b.ofSetter() : b.ofGetter())
+                        .map(b -> m.getName().startsWith("set")
+                                ? b.ofSetter()
+                                : b.ofGetter())
                         .map(AnnotationMarkerBuilder::build))
                 .collect(Collectors.toList());
 

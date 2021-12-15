@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.ui.config;
 
+
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import io.goodforgod.dummymapper.ui.component.ComboBoxComponent;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * @author Anton Kurako (GoodforGod)

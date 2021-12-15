@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.filter.impl;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
@@ -11,6 +12,7 @@ import java.util.function.Predicate;
 import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.Nullable;
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Filter structure for fields that should be ignored during AVRO schema generation

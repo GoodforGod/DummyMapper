@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format as example
@@ -45,7 +47,9 @@ public class JsonArrayMapper extends AbstractJsonJacksonMapper implements IMappe
             final Class<?> target = ClassFactory.build(filtered);
             final GenFactory factory = GenFactoryProvider.get(filtered);
 
-            final int amount = (config == null) ? 1 : config.getAmount();
+            final int amount = (config == null)
+                    ? 1
+                    : config.getAmount();
             final List<?> list = factory.build(target, amount);
 
             return mapper.writeValueAsString(list);

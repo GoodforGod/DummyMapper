@@ -1,9 +1,11 @@
 package io.goodforgod.dummymapper;
 
+
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.mapper.impl.JsonArrayMapper;
 import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Entry-point for {@link JsonArrayMapper}
