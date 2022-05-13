@@ -1,11 +1,9 @@
 package io.goodforgod.dummymapper.model;
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Builder for {@link AnnotationMarker}

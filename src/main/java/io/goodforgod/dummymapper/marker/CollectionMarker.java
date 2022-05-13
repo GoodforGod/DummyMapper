@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
-
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Marker for {@link java.util.Collection} java type

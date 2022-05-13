@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.service;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
@@ -19,7 +18,6 @@ import javassist.bytecode.FieldInfo;
 import javassist.bytecode.SignatureAttribute;
 import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Class factory that creates Java Class from recreated java class map

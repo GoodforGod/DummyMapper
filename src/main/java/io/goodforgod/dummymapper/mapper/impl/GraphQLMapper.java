@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaPrinter;
 import io.goodforgod.dummymapper.external.JacksonValueMapperCustomFactory;
@@ -16,7 +15,6 @@ import io.leangen.graphql.GraphQLSchemaGenerator;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

@@ -1,12 +1,10 @@
 package io.goodforgod.dummymapper.ui.config;
 
-
 import io.goodforgod.dummymapper.ui.component.CheckBoxComponent;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * GraphQL Mapper config

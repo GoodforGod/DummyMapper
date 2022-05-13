@@ -1,8 +1,6 @@
 package io.goodforgod.dummymapper.error;
 
-
 import com.intellij.lang.jvm.JvmClassKind;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

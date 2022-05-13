@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
@@ -13,7 +12,6 @@ import io.goodforgod.dummymapper.ui.config.IConfig;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format as example

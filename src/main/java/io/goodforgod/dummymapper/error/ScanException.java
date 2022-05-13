@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.error;
 
-
 /**
  * Description in progress
  *

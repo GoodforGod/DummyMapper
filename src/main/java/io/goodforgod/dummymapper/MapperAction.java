@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper;
 
-
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -27,7 +26,6 @@ import java.util.StringJoiner;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Mapper entry point base implementation class

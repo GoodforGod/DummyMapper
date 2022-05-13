@@ -1,10 +1,8 @@
 package io.goodforgod.dummymapper.ui.config;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Description in progress

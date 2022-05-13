@@ -1,13 +1,11 @@
 package io.goodforgod.dummymapper.ui;
 
-
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import java.awt.*;
 import java.util.Collection;
 import javax.swing.*;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

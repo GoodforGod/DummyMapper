@@ -1,11 +1,9 @@
 package io.goodforgod.dummymapper.mapper;
 
-
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Map contract to map instance of {@link PsiJavaFile} to format as string value

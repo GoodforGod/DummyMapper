@@ -1,12 +1,10 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Add {@link GraphQLNonNull} if such annotation is not present on field

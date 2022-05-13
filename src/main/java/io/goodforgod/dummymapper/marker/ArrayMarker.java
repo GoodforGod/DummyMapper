@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.marker;
 
-
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Array marker for any array typed with {@link Marker}

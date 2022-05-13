@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -12,7 +11,6 @@ import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.GenEnumAnnotationFilter;
 import java.text.SimpleDateFormat;
-
 
 /**
  * Maps instance of {@link PsiJavaFile} to JSON format as example

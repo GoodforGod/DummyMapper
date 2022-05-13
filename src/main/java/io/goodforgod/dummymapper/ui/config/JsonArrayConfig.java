@@ -1,12 +1,10 @@
 package io.goodforgod.dummymapper.ui.config;
 
-
 import io.goodforgod.dummymapper.ui.component.SpinnerComponent;
 import java.util.Collection;
 import java.util.Collections;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

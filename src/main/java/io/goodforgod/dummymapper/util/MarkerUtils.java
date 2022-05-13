@@ -1,10 +1,8 @@
 package io.goodforgod.dummymapper.util;
 
-
 import io.goodforgod.dummymapper.marker.*;
 import java.util.Map;
 import java.util.stream.Stream;
-
 
 /**
  * {@link Marker} utils

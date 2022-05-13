@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-
 import com.fasterxml.jackson.annotation.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.lang.annotation.RetentionPolicy;
@@ -9,7 +8,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.avro.reflect.*;
-
 
 /**
  * Filters all unsupported {@link AnnotationMarker} from

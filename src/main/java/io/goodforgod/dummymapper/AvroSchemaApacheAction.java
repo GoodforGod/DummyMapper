@@ -1,10 +1,8 @@
 package io.goodforgod.dummymapper;
 
-
 import io.goodforgod.dummymapper.mapper.IMapper;
 import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Entry-point for {@link AvroApacheMapper}

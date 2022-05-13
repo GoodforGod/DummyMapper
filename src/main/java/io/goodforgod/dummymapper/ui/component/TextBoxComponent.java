@@ -1,10 +1,8 @@
 package io.goodforgod.dummymapper.ui.component;
 
-
 import io.goodforgod.dummymapper.ui.IComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import javax.swing.*;
-
 
 /**
  * {@link JTextField} component

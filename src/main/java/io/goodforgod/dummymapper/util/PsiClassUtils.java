@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.util;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.lang.jvm.JvmModifier;
 import com.intellij.psi.PsiArrayType;
@@ -20,7 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Class utils for {@link PsiJavaFileScanner}

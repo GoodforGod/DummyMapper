@@ -1,13 +1,11 @@
 package io.goodforgod.dummymapper.marker;
 
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Marker for unknown Java type (custom class)

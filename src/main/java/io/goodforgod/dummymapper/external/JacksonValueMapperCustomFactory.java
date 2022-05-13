@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.external;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.goodforgod.dummymapper.error.ExternalException;
 import io.leangen.graphql.execution.GlobalEnvironment;
@@ -9,7 +8,6 @@ import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapperFact
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

@@ -1,10 +1,8 @@
 package io.goodforgod.dummymapper.model;
 
-
 import java.util.Map;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Annotation marker

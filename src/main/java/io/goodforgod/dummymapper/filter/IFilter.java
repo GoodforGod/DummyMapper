@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.filter;
 
-
 import io.goodforgod.dummymapper.marker.RawMarker;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Filters all undesired fields from markers structure

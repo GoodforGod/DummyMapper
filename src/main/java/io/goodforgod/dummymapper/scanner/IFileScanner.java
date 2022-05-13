@@ -1,11 +1,9 @@
 package io.goodforgod.dummymapper.scanner;
 
-
 import com.intellij.psi.PsiFile;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * {@link PsiFile} scanner interface that scans class file and build tree structure of such class
@@ -18,5 +16,4 @@ public interface IFileScanner {
 
     @NotNull
     RawMarker scan(@Nullable PsiFile file);
-
 }

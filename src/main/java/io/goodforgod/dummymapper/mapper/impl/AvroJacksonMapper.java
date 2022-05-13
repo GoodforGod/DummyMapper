@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
-
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
@@ -21,7 +20,6 @@ import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
 import java.util.Optional;
 import org.apache.avro.Schema;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format

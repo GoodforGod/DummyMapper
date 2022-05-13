@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-
 import io.goodforgod.dummymapper.filter.IFilter;
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.Marker;
@@ -11,7 +10,6 @@ import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.Map;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Allow recursion filter for all {@link RawMarker} or {@link CollectionMarker} with such raw

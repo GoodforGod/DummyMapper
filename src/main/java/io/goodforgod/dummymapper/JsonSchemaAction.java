@@ -1,11 +1,9 @@
 package io.goodforgod.dummymapper;
 
-
 import io.goodforgod.dummymapper.mapper.impl.JsonSchemaMapper;
 import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Entry-point for {@link JsonSchemaMapper}

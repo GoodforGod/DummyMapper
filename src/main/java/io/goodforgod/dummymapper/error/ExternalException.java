@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.error;
 
-
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 13.6.2020

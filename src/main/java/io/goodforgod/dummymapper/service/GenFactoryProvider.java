@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.service;
 
-
 import io.dummymaker.factory.impl.GenFactory;
 import io.dummymaker.generator.IGenerator;
 import io.dummymaker.model.GenRule;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * GenFactory Provider that builds GenFactory with special generators for ENUM or other complex

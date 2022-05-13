@@ -1,6 +1,5 @@
 package io.goodforgod.dummymapper.scanner.impl;
 
-
 import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 
 import com.intellij.lang.jvm.JvmClassKind;
@@ -26,7 +25,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations
@@ -210,7 +208,6 @@ public class PsiJavaFileScanner implements IFileScanner {
                         final TypedMarker marker = scanSimpleMarker(source, root, parentType);
                         structure.put(fieldName, marker);
                     }
-
                 } else if (!isTypeForbidden(type)) { // COMPLEX CLASS SCAN IF NOT FORBIDDEN ONE
                     final Optional<Marker> marker = scanJavaFileClass(targetClass, type);
                     if (marker.isPresent()) {

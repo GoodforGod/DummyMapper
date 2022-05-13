@@ -1,9 +1,7 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.function.Predicate;
-
 
 /**
  * @author GoodforGod
