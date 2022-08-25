@@ -1,5 +1,6 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -36,5 +37,9 @@ abstract class AbstractJsonJacksonMapper {
         this.mapper.registerModule(new ParameterNamesModule())
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());
+        this.mapper.setConfig(mapper.getSerializationConfig()
+                .with(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+                .with(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
+                .without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS));
     }
 }
