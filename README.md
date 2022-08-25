@@ -18,7 +18,6 @@ for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[Gra
   - [Avro Schema](#avro-schema)
   - [GraphQL](#graphql)
 - [Limitations](#limitations)
-- [Version History](#version-history)
 
 ## Installation
 
