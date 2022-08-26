@@ -3,9 +3,9 @@ plugins {
     id "java-library"
     id "maven-publish"
 
-    id "org.jetbrains.intellij" version "1.3.0"
+    id "org.jetbrains.intellij" version "1.8.1"
     id "org.sonarqube" version "3.3"
-    id "com.diffplug.spotless" version "5.14.3"
+    id "com.diffplug.spotless" version "6.1.0"
 }
 
 repositories {
@@ -21,7 +21,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 intellij {
     plugins = ["java"]
-    version = "2021.3"
+    version = "2022.2"
     downloadSources = false
 }
 
@@ -38,7 +38,7 @@ spotless {
         encoding("UTF-8")
         importOrder()
         removeUnusedImports()
-        eclipse().configFile("${projectDir}/config/codestyle.xml")
+        eclipse("4.21.0").configFile("${rootDir}/config/codestyle.xml")
     }
 }
 
@@ -66,11 +66,11 @@ configurations {
 }
 
 dependencies {
-    implementation "com.github.goodforgod:dummymaker:3.1.0"
-    implementation "org.javassist:javassist:3.28.0-GA"
+    implementation "com.github.goodforgod:dummymaker:3.2.0"
+    implementation "org.javassist:javassist:3.29.0-GA"
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:$jacksonVersion"
-    implementation "com.github.victools:jsonschema-generator:4.21.0"
+    implementation "com.github.victools:jsonschema-generator:4.25.0"
     implementation "org.apache.avro:avro-compiler:1.9.2"
     implementation "io.leangen.graphql:spqr:0.11.2"
 }

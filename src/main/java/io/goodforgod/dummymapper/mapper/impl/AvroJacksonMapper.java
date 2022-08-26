@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Maps instance of {@link PsiJavaFile} to Jackson {@link AvroSchema} AVRO format
- *
- * {@link com.fasterxml.jackson.annotation.JsonProperty with required true) results in field being mandatory in AVRO, when its absent make type optional
+ * {@link com.fasterxml.jackson.annotation.JsonProperty with required true) results in field being
+ * mandatory in AVRO, when its absent make type optional
  *
  * @author Anton Kurako (GoodforGod)
  * @since 29.4.2020
@@ -45,7 +45,9 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             final RawMarker filtered = Optional.of(marker)
                     .map(avroFilter::filter)
                     .map(annotationFilter::filter)
-                    .map(r -> config.isRequiredByDefault() ? requiredFieldFilter.filter(r) : r)
+                    .map(r -> config.isRequiredByDefault()
+                            ? requiredFieldFilter.filter(r)
+                            : r)
                     .map(emptyFilter::filter)
                     .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
 

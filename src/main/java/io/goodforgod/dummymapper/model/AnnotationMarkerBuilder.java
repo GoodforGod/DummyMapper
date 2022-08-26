@@ -64,7 +64,9 @@ public final class AnnotationMarkerBuilder {
     }
 
     public AnnotationMarkerBuilder withAttributes(@NotNull Map<String, Object> attributes) {
-        this.attributes = attributes.isEmpty() ? Collections.emptyMap() : attributes;
+        this.attributes = attributes.isEmpty()
+                ? Collections.emptyMap()
+                : attributes;
         return this;
     }
 

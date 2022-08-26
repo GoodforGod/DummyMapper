@@ -10,7 +10,8 @@ import java.util.stream.Stream;
 import org.apache.avro.reflect.*;
 
 /**
- * Filters all unsupported {@link AnnotationMarker} from {@link io.goodforgod.dummymapper.marker.Marker}
+ * Filters all unsupported {@link AnnotationMarker} from
+ * {@link io.goodforgod.dummymapper.marker.Marker}
  * All supported annotations are {@link RetentionPolicy#RUNTIME} only
  *
  * @author Anton Kurako (GoodforGod)

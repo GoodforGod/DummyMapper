@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * {@link PsiFile} scanner interface that scans class file and build tree structure of such class file
+ * {@link PsiFile} scanner interface that scans class file and build tree structure of such class
+ * file
  *
  * @author Anton Kurako (GoodforGod)
  * @since 15.8.2020
@@ -15,5 +16,4 @@ public interface IFileScanner {
 
     @NotNull
     RawMarker scan(@Nullable PsiFile file);
-
 }

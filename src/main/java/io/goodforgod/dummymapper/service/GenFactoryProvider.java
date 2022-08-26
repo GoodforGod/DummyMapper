@@ -19,7 +19,8 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * GenFactory Provider that builds GenFactory with special generators for ENUM or other complex values
+ * GenFactory Provider that builds GenFactory with special generators for ENUM or other complex
+ * values
  *
  * @author Anton Kurako (GoodforGod)
  * @since 19.4.2020

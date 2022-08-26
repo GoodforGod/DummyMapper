@@ -45,7 +45,9 @@ public class JsonArrayMapper extends AbstractJsonJacksonMapper implements IMappe
             final Class<?> target = ClassFactory.build(filtered);
             final GenFactory factory = GenFactoryProvider.get(filtered);
 
-            final int amount = (config == null) ? 1 : config.getAmount();
+            final int amount = (config == null)
+                    ? 1
+                    : config.getAmount();
             final List<?> list = factory.build(target, amount);
 
             return mapper.writeValueAsString(list);

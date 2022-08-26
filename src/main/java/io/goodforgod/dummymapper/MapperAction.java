@@ -79,6 +79,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
 
     /**
      * Performs mapping action for override mapper
+     * 
      * @param event from IDE
      */
     @Override

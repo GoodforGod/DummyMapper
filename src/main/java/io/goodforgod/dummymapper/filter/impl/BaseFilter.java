@@ -12,7 +12,8 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Allow recursion filter for all {@link RawMarker} or {@link CollectionMarker} with such raw markers
+ * Allow recursion filter for all {@link RawMarker} or {@link CollectionMarker} with such raw
+ * markers
  *
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020

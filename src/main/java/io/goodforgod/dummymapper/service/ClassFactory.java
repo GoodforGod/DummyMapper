@@ -124,7 +124,8 @@ public class ClassFactory {
         // originClassName, prevClassName, structureHash);
         // return CLASS_POOL.get(prevClassName);
         // }
-        // logger.debug("CACHING class with name '{}' and structure hash '{}'", originClassName, structureHash);
+        // logger.debug("CACHING class with name '{}' and structure hash '{}'", originClassName,
+        // structureHash);
         // CLASS_CACHE.put(originClassName, structureHash);
 
         final CtClass ownClass = getOrCreateCtClass(className);
