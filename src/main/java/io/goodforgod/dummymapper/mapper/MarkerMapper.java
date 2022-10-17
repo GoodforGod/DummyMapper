@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
  */
-public interface IMapper<T extends IConfig> {
+public interface MarkerMapper<T extends IConfig> {
 
     @NotNull
     default String map(@NotNull RawMarker marker) {

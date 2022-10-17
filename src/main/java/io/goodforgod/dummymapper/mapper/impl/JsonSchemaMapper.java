@@ -4,15 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.*;
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ExternalException;
-import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.MarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.JsonSchemaConfig;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Maps instance of {@link PsiJavaFile} to {@link JsonNode} JSON Schema format
@@ -21,13 +20,13 @@ import org.jetbrains.annotations.Nullable;
  * @since 29.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
-public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
+public class JsonSchemaMapper implements MarkerMapper<JsonSchemaConfig> {
 
-    private final IFilter emptyFilter = new EmptyMarkerFilter();
+    private final MarkerFilter emptyFilter = new EmptyMarkerFilter();
 
     @NotNull
     @Override
-    public String map(@NotNull RawMarker marker, @Nullable JsonSchemaConfig config) {
+    public String map(@NotNull RawMarker marker, JsonSchemaConfig config) {
         try {
             final RawMarker filtered = Optional.of(marker)
                     .map(emptyFilter::filter)
@@ -38,9 +37,7 @@ public class JsonSchemaMapper implements IMapper<JsonSchemaConfig> {
 
             final Class<?> target = ClassFactory.build(filtered);
 
-            final SchemaVersion version = (config == null)
-                    ? SchemaVersion.DRAFT_2019_09
-                    : config.getSchemaVersion();
+            final SchemaVersion version = config.getSchemaVersion();
             final SchemaGeneratorConfig generatorConfig = new SchemaGeneratorConfigBuilder(version, OptionPreset.PLAIN_JSON)
                     .build();
 

@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.MarkerMapper;
 import io.goodforgod.dummymapper.mapper.impl.JsonArrayMapper;
 import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class JsonArrayAction extends MapperAction<JsonArrayConfig> {
 
     @NotNull
     @Override
-    public IMapper<JsonArrayConfig> getMapper() {
+    public MarkerMapper<JsonArrayConfig> getMapper() {
         return mapper;
     }
 

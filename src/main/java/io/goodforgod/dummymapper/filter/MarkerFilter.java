@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
  */
-public interface IFilter {
+public interface MarkerFilter {
 
     /**
      * @param marker to filter

@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.scanner.impl;
+package io.goodforgod.dummymapper.scanner;
 
 import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 
@@ -13,30 +13,31 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.error.JavaKindException;
+import io.goodforgod.dummymapper.error.PsiKindException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import io.goodforgod.dummymapper.scanner.IFileScanner;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.idea.KotlinLanguage;
 
 /**
  * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations
  * for such fields)
  * <p>
  * https://intellij-support.jetbrains.com/hc/en-us/community/posts/360002746839-How-to-add-an-annotation-and-import-to-a-Java-class
+ * Scans class {@link PsiFile} and build tree structure of such class file
  *
  * @author GoodforGod
  * @since 27.11.2019
  */
 @SuppressWarnings("UnstableApiUsage")
-public class PsiJavaFileScanner implements IFileScanner {
+public class PsiClassScanner {
 
     private static class Target {
 
@@ -74,19 +75,6 @@ public class PsiJavaFileScanner implements IFileScanner {
 
     private final Map<Target, Map<String, Marker>> scanned = new HashMap<>();
 
-    public @NotNull RawMarker scan(@Nullable PsiFile file) {
-        if (!(file instanceof PsiJavaFile)) {
-            return RawMarker.EMPTY;
-        }
-
-        final PsiJavaFile javaFile = (PsiJavaFile) file;
-        if (javaFile.getClasses().length == 0)
-            return RawMarker.EMPTY;
-
-        final PsiClass target = javaFile.getClasses()[0];
-        return scan(target);
-    }
-
     public @NotNull RawMarker scan(@Nullable PsiClass target) {
         if (target == null)
             return RawMarker.EMPTY;
@@ -94,9 +82,9 @@ public class PsiJavaFileScanner implements IFileScanner {
         if (JvmClassKind.ENUM.equals(target.getClassKind())
                 || JvmClassKind.ANNOTATION.equals(target.getClassKind())
                 || JvmClassKind.INTERFACE.equals(target.getClassKind()))
-            throw new JavaKindException(target.getClassKind());
+            throw new PsiKindException(target.getClassKind());
 
-        final Map<String, Marker> scannedFile = scanJavaClass(target);
+        final Map<String, Marker> scannedFile = scanPsiClass(target);
         if (scannedFile.isEmpty())
             return RawMarker.EMPTY;
 
@@ -105,20 +93,20 @@ public class PsiJavaFileScanner implements IFileScanner {
         return new RawMarker(root, source, scannedFile);
     }
 
-    private @NotNull Map<String, Marker> scanJavaClass(@Nullable PsiClass target) {
+    private @NotNull Map<String, Marker> scanPsiClass(@Nullable PsiClass target) {
         try {
             if (target == null || isTypeSimple(getFileFullName(target)) || isTypeEnum(getFileFullName(target)))
                 return Collections.emptyMap();
 
-            return scanJavaClass(target, target, Collections.emptyMap());
+            return scanPsiClass(target, target, Collections.emptyMap());
         } catch (Exception e) {
             throw new ScanException(e);
         }
     }
 
-    private Map<String, Marker> scanJavaClass(@NotNull PsiClass rootClass,
-                                              @NotNull PsiClass targetClass,
-                                              @NotNull Map<String, PsiType> parentTypes) {
+    private Map<String, Marker> scanPsiClass(@NotNull PsiClass rootClass,
+                                             @NotNull PsiClass targetClass,
+                                             @NotNull Map<String, PsiType> parentTypes) {
         if (isTypeSimple(getFileFullName(targetClass)) || isTypeEnum(getFileFullName(targetClass)))
             return Collections.emptyMap();
 
@@ -162,7 +150,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                 valueCounter++;
             }
 
-            final Map<String, Marker> superScan = scanJavaClass(rootClass, superTarget, types);
+            final Map<String, Marker> superScan = scanPsiClass(rootClass, superTarget, types);
             structure.putAll(superScan);
         }
 
@@ -262,7 +250,7 @@ public class PsiJavaFileScanner implements IFileScanner {
                             final String source = getFileFullName(sourceClass);
                             final Map<String, Marker> cached = scanned.get(new Target(root, source));
                             final Map<String, Marker> structure = (cached == null)
-                                    ? scanJavaClass(sourceClass, sourceClass, new HashMap<>())
+                                    ? scanPsiClass(sourceClass, sourceClass, new HashMap<>())
                                     : cached;
 
                             final Marker marker = structure.get(type.getPresentableText());
@@ -281,7 +269,7 @@ public class PsiJavaFileScanner implements IFileScanner {
             final String source = getFileFullName(psiClass);
             final Map<String, Marker> cached = scanned.get(new Target(source, source));
             final Map<String, Marker> structure = (cached == null)
-                    ? scanJavaClass(psiClass)
+                    ? scanPsiClass(psiClass)
                     : cached;
 
             final Marker marker = structure.get(type.getPresentableText());
@@ -466,10 +454,19 @@ public class PsiJavaFileScanner implements IFileScanner {
     }
 
     private String getFileFullName(@NotNull PsiClass psiClass) {
-        return psiClass.getQualifiedName() + ".java";
+        return (psiClass.getLanguage() instanceof KotlinLanguage)
+                ? psiClass.getQualifiedName() + ".kt"
+                : psiClass.getQualifiedName() + ".java";
     }
 
     private String getFileFullName(@NotNull PsiType type) {
+        if (type instanceof PsiClassReferenceType) {
+            final PsiClass resolve = ((PsiClassReferenceType) type).resolve();
+            if (resolve != null && resolve.getLanguage() instanceof KotlinLanguage) {
+                return getClassFullName(type) + ".kt";
+            }
+        }
+
         return getClassFullName(type) + ".java";
     }
 

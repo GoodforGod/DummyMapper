@@ -7,7 +7,7 @@ import io.goodforgod.dummymapper.error.ClassEmptyException;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.model.AnnotationMarker;
 import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.scanner.PsiClassScanner;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.*;
 import java.util.function.Predicate;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * Class factory that creates Java Class from recreated java class map
  *
  * @author Anton Kurako (GoodforGod)
- * @see PsiJavaFileScanner
+ * @see PsiClassScanner
  * @since 5.4.2020
  */
 public class ClassFactory {
@@ -381,10 +381,6 @@ public class ClassFactory {
 
     private static String getSourceClassName(@NotNull RawMarker marker) {
         return getClassNameFromPackage(marker.getSource());
-    }
-
-    private static String getRootClassName(@NotNull RawMarker marker) {
-        return getClassNameFromPackage(marker.getRoot());
     }
 
     private static String getClassName(@NotNull Marker marker) {

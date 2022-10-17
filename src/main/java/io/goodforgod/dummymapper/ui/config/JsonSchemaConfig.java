@@ -22,7 +22,7 @@ public class JsonSchemaConfig extends AbstractConfig {
     public Collection<JComponent> getComponents() {
         return Collections.singletonList(
                 new ComboBoxComponent(DRAFT_OPTION,
-                        SchemaVersion.DRAFT_2019_09.name(),
+                        SchemaVersion.DRAFT_2020_12.name(),
                         Arrays.stream(SchemaVersion.values())
                                 .map(Enum::name)
                                 .collect(Collectors.toSet()))
@@ -30,6 +30,6 @@ public class JsonSchemaConfig extends AbstractConfig {
     }
 
     public SchemaVersion getSchemaVersion() {
-        return SchemaVersion.valueOf(config.getOrDefault(DRAFT_OPTION, SchemaVersion.DRAFT_2019_09.name()));
+        return SchemaVersion.valueOf(config.getOrDefault(DRAFT_OPTION, SchemaVersion.DRAFT_2020_12.name()));
     }
 }

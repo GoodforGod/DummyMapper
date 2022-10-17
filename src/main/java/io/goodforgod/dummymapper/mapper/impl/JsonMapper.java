@@ -1,10 +1,15 @@
 package io.goodforgod.dummymapper.mapper.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.filter.MarkerFilter;
+import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
+import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
+import io.goodforgod.dummymapper.filter.impl.GenEnumAnnotationFilter;
+import io.goodforgod.dummymapper.mapper.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
@@ -20,7 +25,13 @@ import org.jetbrains.annotations.Nullable;
  * @since 28.4.2020
  */
 @SuppressWarnings({ "DuplicatedCode", "rawtypes" })
-public class JsonMapper extends AbstractJsonJacksonMapper implements IMapper {
+public class JsonMapper implements MarkerMapper {
+
+    private final MarkerFilter emptyFilter = new GenEnumAnnotationFilter();
+    private final MarkerFilter annotationFilter = new ExcludeSetterAnnotationFilter();
+    private final MarkerFilter annotationEnumFilter = new EmptyMarkerFilter();
+
+    private final ObjectMapper mapper = AbstractJsonJacksonMapper.getConfigured();
 
     @NotNull
     @Override

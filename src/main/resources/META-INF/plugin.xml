@@ -6,7 +6,7 @@
     <version>1.0.0</version>
 
     <description><![CDATA[
-        <b><a href="https://goodforgod.github.io/DummyMapper/">DummyMapper</a></b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
+        <b><a href="https://goodforgod.github.io/DummyMapper/">DummyMapper</a></b> is a plugin for mapping Java/Kotlin Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
         Plugin supports mapping to formats:
@@ -24,9 +24,7 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release:</i>
         <ul>
-            <li>GraphQL correct type name set fixed</li>
-            <li>Complex cases for mapping classes with inheritance caused recursion errors fixed</li>
-            <li>Default value of 10 for mapping to JSON array fixed</li>
+            <li>Kotlin support</li>
         </ul>
     ]]></change-notes>
 
@@ -38,6 +36,7 @@
 
     <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
 
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"

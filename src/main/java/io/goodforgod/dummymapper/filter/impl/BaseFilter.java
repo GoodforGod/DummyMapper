@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper.filter.impl;
 
-import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.MarkerFilter;
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 1.5.2020
  */
-public abstract class BaseFilter implements IFilter {
+public abstract class BaseFilter implements MarkerFilter {
 
     private final String visited = "_filter_" + getClass().getSimpleName().toLowerCase() + "_visited";
     private final Predicate<RawMarker> isVisited = m -> m.getAnnotations().stream()

@@ -8,7 +8,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.scanner.PsiClassScanner;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Class utils for {@link PsiJavaFileScanner}
+ * Class utils for {@link PsiClassScanner}
  *
  * @author GoodforGod
  * @since 1.12.2019

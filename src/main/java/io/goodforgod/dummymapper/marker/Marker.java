@@ -94,11 +94,13 @@ public abstract class Marker {
     }
 
     private String getCleanRoot() {
-        return root.replaceFirst("\\.java$", "");
+        return root.replaceFirst("\\.java$", "")
+                .replaceFirst("\\.kt$", "");
     }
 
     private String getCleanSource() {
-        return source.replaceFirst("\\.java$", "");
+        return source.replaceFirst("\\.java$", "")
+                .replaceFirst("\\.kt$", "");
     }
 
     public @NotNull Collection<AnnotationMarker> getAnnotations() {

@@ -8,12 +8,12 @@ import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
 import com.intellij.psi.PsiJavaFile;
 import io.goodforgod.dummymapper.error.ExternalException;
 import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.filter.IFilter;
+import io.goodforgod.dummymapper.filter.MarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.AvroFilter;
 import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
 import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
 import io.goodforgod.dummymapper.filter.impl.JacksonPropertyFilter;
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.service.ClassFactory;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
@@ -30,13 +30,13 @@ import org.jetbrains.annotations.NotNull;
  * @since 29.4.2020
  */
 @SuppressWarnings("DuplicatedCode")
-public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
+public class AvroJacksonMapper implements MarkerMapper<AvroJacksonConfig> {
 
-    private final IFilter emptyFilter = new EmptyMarkerFilter();
-    private final IFilter avroFilter = new AvroFilter();
-    private final IFilter requiredFieldFilter = new JacksonPropertyFilter();
-    private final IFilter annotationFilter = new ExcludeSetterAnnotationFilter();
-    private final ObjectMapper mapper = new ObjectMapper(new AvroFactory());
+    private final MarkerFilter emptyFilter = new EmptyMarkerFilter();
+    private final MarkerFilter avroFilter = new AvroFilter();
+    private final MarkerFilter requiredFieldFilter = new JacksonPropertyFilter();
+    private final MarkerFilter annotationFilter = new ExcludeSetterAnnotationFilter();
+    private final ObjectMapper avroMapper = AbstractJsonJacksonMapper.configure(new ObjectMapper(new AvroFactory()));
 
     @NotNull
     @Override
@@ -57,7 +57,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
             final Class<?> target = ClassFactory.build(filtered);
 
             final AvroSchemaGenerator generator = new AvroSchemaGenerator();
-            mapper.acceptJsonFormatVisitor(target, generator);
+            avroMapper.acceptJsonFormatVisitor(target, generator);
             final AvroSchema generatedSchema = generator.getGeneratedSchema();
             final Schema schema = generatedSchema.getAvroSchema();
             final String schemaAsJson = schema.toString(true);
@@ -67,7 +67,7 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
         } catch (JsonMappingException e) {
             if (e.getMessage().startsWith("\"Any\" type (usually for `java.lang.Object`)"))
                 throw new MapperException(
-                        "Java Class field with type 'java.lang.Object' can not be mapped to AVRO Schema (Jackson) by this mapper");
+                        "Class field with type 'java.lang.Object' can not be mapped to AVRO Schema (Jackson) by this mapper");
 
             throw new ExternalException(e.getMessage());
         }
@@ -76,6 +76,6 @@ public class AvroJacksonMapper implements IMapper<AvroJacksonConfig> {
     @NotNull
     @Override
     public String map(@NotNull RawMarker marker) {
-        return map(marker, null);
+        return map(marker, new AvroJacksonConfig());
     }
 }

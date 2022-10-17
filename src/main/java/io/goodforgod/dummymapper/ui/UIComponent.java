@@ -7,7 +7,7 @@ import javax.swing.*;
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020
  */
-public interface IComponent {
+public interface UIComponent {
 
     JComponent build(IConfig config);
 }

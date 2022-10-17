@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.mapper.MarkerMapper;
 import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AvroSchemaApacheAction extends MapperAction {
 
-    private final IMapper mapper = new AvroApacheMapper();
+    private final MarkerMapper mapper = new AvroApacheMapper();
 
     @NotNull
     @Override
-    public IMapper getMapper() {
+    public MarkerMapper getMapper() {
         return mapper;
     }
 

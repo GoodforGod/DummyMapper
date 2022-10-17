@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper.ui.component;
 
-import io.goodforgod.dummymapper.ui.IComponent;
+import io.goodforgod.dummymapper.ui.UIComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import javax.swing.*;
 
@@ -10,7 +10,7 @@ import javax.swing.*;
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020
  */
-public class TextBoxComponent implements IComponent {
+public class TextBoxComponent implements UIComponent {
 
     private final String name;
     private final String defaultValue;
