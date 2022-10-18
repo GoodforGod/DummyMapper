@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.mapper.impl;
+package io.goodforgod.dummymapper.marker.mapper;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
  * @author Anton Kurako (GoodforGod)
  * @since 28.4.2020
  */
-final class AbstractJsonJacksonMapper {
+final class ObjectMapperUtils {
 
     static ObjectMapper getConfigured() {
         return configure(new ObjectMapper());
@@ -27,7 +27,6 @@ final class AbstractJsonJacksonMapper {
     static ObjectMapper configure(ObjectMapper mapper) {
         final JavaTimeModule javaTimeModule = JavaTimeModuleConfiguration.ofISO().getModule();
 
-        mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat(DateTimeFormatters.ISO_DATE));
         mapper.registerModule(new ParameterNamesModule())
                 .registerModule(new Jdk8Module())

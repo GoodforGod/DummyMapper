@@ -5,9 +5,7 @@ import io.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.ClassEmptyException;
 import io.goodforgod.dummymapper.marker.*;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import io.goodforgod.dummymapper.scanner.PsiClassScanner;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.*;
 import java.util.function.Predicate;
@@ -26,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @see PsiClassScanner
  * @since 5.4.2020
  */
-public class ClassFactory {
+public class AssistClassFactory {
 
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
 
@@ -38,7 +36,7 @@ public class ClassFactory {
             .filter(AnnotationMarker::isInternal)
             .anyMatch(a -> a.getName().equals(MAPPED_VISITED));
 
-    private ClassFactory() {}
+    private AssistClassFactory() {}
 
     // /**
     // * Contains class cache via className and its hash for structure
@@ -49,14 +47,14 @@ public class ClassFactory {
         if (IS_VISITED.test(marker))
             return Collections.emptyMap();
 
-        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(MAPPED_VISITED).build());
+        marker.addAnnotation(AnnotationMarker.builder().ofInternal().withName(MAPPED_VISITED).build());
 
         final Map<String, String> mapped = new HashMap<>();
         final Map<String, Marker> structure = marker.getStructure();
 
         MarkerUtils.streamRawMarkers(structure)
                 .filter(m -> !m.isEmpty())
-                .map(ClassFactory::getMappedClasses)
+                .map(AssistClassFactory::getMappedClasses)
                 .forEach(mapped::putAll);
 
         MarkerUtils.streamArrayRawMarkers(structure)

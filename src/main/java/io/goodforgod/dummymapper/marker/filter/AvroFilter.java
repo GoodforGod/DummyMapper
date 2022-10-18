@@ -1,9 +1,8 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class AvroFilter extends MarkerAnnotationFilter {
                 final Map<String, Object> attrs = new HashMap<>(annotationAttrs);
                 attrs.put(REQUIRED_PROPERTY, false);
 
-                v.addAnnotation(AnnotationMarkerBuilder.get()
+                v.addAnnotation(AnnotationMarker.builder()
                         .ofField()
                         .withName(JsonProperty.class)
                         .withAttributes(attrs)

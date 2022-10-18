@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
-import io.goodforgod.dummymapper.mapper.impl.GraphQLMapper;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
+import io.goodforgod.dummymapper.marker.mapper.GraphQLMapper;
 import io.goodforgod.dummymapper.ui.config.GraphQLConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

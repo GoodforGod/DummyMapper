@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.scanner;
+package io.goodforgod.dummymapper.service;
 
 import static io.goodforgod.dummymapper.util.PsiClassUtils.*;
 
@@ -16,8 +16,7 @@ import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.PsiKindException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -219,8 +218,7 @@ public class PsiClassScanner {
                                                                @NotNull PsiField field) {
         final String fieldName = field.getName();
         final List<AnnotationMarker> annotations = scanAnnotations(field.getAnnotations())
-                .map(AnnotationMarkerBuilder::ofField)
-                .map(AnnotationMarkerBuilder::build)
+                .map(f -> f.ofField().build())
                 .collect(Collectors.toList());
 
         final List<AnnotationMarker> methodAnnotations = Arrays.stream(targetClass.getAllMethods())
@@ -231,7 +229,7 @@ public class PsiClassScanner {
                         .map(b -> m.getName().startsWith("set")
                                 ? b.ofSetter()
                                 : b.ofGetter())
-                        .map(AnnotationMarkerBuilder::build))
+                        .map(AnnotationMarker.Builder::build))
                 .collect(Collectors.toList());
 
         return Stream.of(annotations, methodAnnotations)
@@ -359,7 +357,7 @@ public class PsiClassScanner {
         return new TypedMarker(rootName, source, getSimpleTypeByName(type.getCanonicalText()));
     }
 
-    private Stream<AnnotationMarkerBuilder> scanAnnotations(PsiAnnotation[] psiAnnotations) {
+    private Stream<AnnotationMarker.Builder> scanAnnotations(PsiAnnotation[] psiAnnotations) {
         return Arrays.stream(psiAnnotations)
                 .filter(a -> StringUtils.isNotBlank(a.getQualifiedName()))
                 .map(a -> {
@@ -370,7 +368,7 @@ public class PsiClassScanner {
                             attrs.put(attr.getAttributeName(), value);
                     });
 
-                    return AnnotationMarkerBuilder.get()
+                    return AnnotationMarker.builder()
                             .withName(a.getQualifiedName())
                             .withAttributes(attrs);
                 });

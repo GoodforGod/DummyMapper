@@ -1,8 +1,8 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.marker.Marker;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;

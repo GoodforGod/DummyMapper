@@ -8,7 +8,7 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.scanner.PsiClassScanner;
+import io.goodforgod.dummymapper.service.PsiClassScanner;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;

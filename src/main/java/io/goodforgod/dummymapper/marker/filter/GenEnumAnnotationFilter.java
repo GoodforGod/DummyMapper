@@ -1,7 +1,7 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
 import io.dummymaker.annotation.complex.GenEnum;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import java.util.function.Predicate;
 
 /**

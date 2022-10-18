@@ -1,6 +1,5 @@
-package io.goodforgod.dummymapper.external;
+package io.goodforgod.dummymapper.marker.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.goodforgod.dummymapper.error.ExternalException;
 import io.leangen.graphql.execution.GlobalEnvironment;
 import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapper;
@@ -13,14 +12,14 @@ import java.util.Map;
  * @author Anton Kurako (GoodforGod)
  * @since 13.6.2020
  */
-public class JacksonValueMapperCustomFactory extends JacksonValueMapperFactory {
+final class JacksonValueMapperCustomFactory extends JacksonValueMapperFactory {
 
     @Override
     public JacksonValueMapper getValueMapper(Map<Class, List<Class<?>>> concreteSubTypes, GlobalEnvironment environment) {
         try {
             final Constructor<?> constructor = JacksonValueMapper.class.getDeclaredConstructors()[0];
             constructor.setAccessible(true);
-            return (JacksonValueMapper) constructor.newInstance(new ObjectMapper());
+            return (JacksonValueMapper) constructor.newInstance(ObjectMapperUtils.getConfigured());
         } catch (Exception e) {
             throw new ExternalException(e);
         }

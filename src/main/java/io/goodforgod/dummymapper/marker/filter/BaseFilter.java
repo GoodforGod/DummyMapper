@@ -1,11 +1,10 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
-import io.goodforgod.dummymapper.filter.MarkerFilter;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.Marker;
+import io.goodforgod.dummymapper.marker.MarkerFilter;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -30,7 +29,7 @@ public abstract class BaseFilter implements MarkerFilter {
         if (isVisited.test(marker))
             return marker;
 
-        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(visited).build());
+        marker.addAnnotation(AnnotationMarker.builder().ofInternal().withName(visited).build());
         final Map<String, Marker> structure = marker.getStructure();
 
         MarkerUtils.streamRawMarkers(structure)

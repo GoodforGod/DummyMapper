@@ -1,4 +1,4 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
 import io.goodforgod.dummymapper.marker.CollectionMarker;
 import io.goodforgod.dummymapper.marker.MapMarker;

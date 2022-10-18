@@ -2,7 +2,6 @@ package io.goodforgod.dummymapper.marker;
 
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +29,7 @@ public abstract class Marker {
      */
     private Set<AnnotationMarker> annotations = Collections.emptySet();
 
-    public Marker(@NotNull String root, @NotNull String source) {
+    Marker(@NotNull String root, @NotNull String source) {
         this.root = root;
         this.source = source;
     }

@@ -1,6 +1,5 @@
-package io.goodforgod.dummymapper.filter;
+package io.goodforgod.dummymapper.marker;
 
-import io.goodforgod.dummymapper.marker.RawMarker;
 import org.jetbrains.annotations.NotNull;
 
 /**

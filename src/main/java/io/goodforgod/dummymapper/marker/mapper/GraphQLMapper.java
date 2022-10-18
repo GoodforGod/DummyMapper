@@ -1,15 +1,14 @@
-package io.goodforgod.dummymapper.mapper.impl;
+package io.goodforgod.dummymapper.marker.mapper;
 
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaPrinter;
-import io.goodforgod.dummymapper.external.JacksonValueMapperCustomFactory;
-import io.goodforgod.dummymapper.filter.MarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.GraphQLNonNullFilter;
-import io.goodforgod.dummymapper.filter.impl.GraphQLQueryFilter;
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
+import io.goodforgod.dummymapper.marker.MarkerFilter;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.service.ClassFactory;
+import io.goodforgod.dummymapper.marker.filter.EmptyMarkerFilter;
+import io.goodforgod.dummymapper.marker.filter.GraphQLNonNullFilter;
+import io.goodforgod.dummymapper.marker.filter.GraphQLQueryFilter;
+import io.goodforgod.dummymapper.service.AssistClassFactory;
 import io.goodforgod.dummymapper.ui.config.GraphQLConfig;
 import io.leangen.graphql.GraphQLSchemaGenerator;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class GraphQLMapper implements MarkerMapper<GraphQLConfig> {
         if (filtered.isEmpty())
             return "";
 
-        final Class<?> target = ClassFactory.build(filtered);
+        final Class<?> target = AssistClassFactory.build(filtered);
 
         final GraphQLSchema schema = new GraphQLSchemaGenerator()
                 .withValueMapperFactory(new JacksonValueMapperCustomFactory())

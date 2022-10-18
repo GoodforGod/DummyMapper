@@ -1,7 +1,6 @@
-package io.goodforgod.dummymapper.mapper;
+package io.goodforgod.dummymapper.marker;
 
 import com.intellij.psi.PsiJavaFile;
-import io.goodforgod.dummymapper.marker.RawMarker;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import org.jetbrains.annotations.NotNull;
 

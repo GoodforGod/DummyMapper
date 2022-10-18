@@ -1,17 +1,17 @@
-package io.goodforgod.dummymapper.mapper.impl;
+package io.goodforgod.dummymapper.marker.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.psi.PsiJavaFile;
 import io.dummymaker.factory.impl.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
-import io.goodforgod.dummymapper.filter.MarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
-import io.goodforgod.dummymapper.filter.impl.GenEnumAnnotationFilter;
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
+import io.goodforgod.dummymapper.marker.MarkerFilter;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.service.ClassFactory;
+import io.goodforgod.dummymapper.marker.filter.EmptyMarkerFilter;
+import io.goodforgod.dummymapper.marker.filter.ExcludeSetterAnnotationFilter;
+import io.goodforgod.dummymapper.marker.filter.GenEnumAnnotationFilter;
+import io.goodforgod.dummymapper.service.AssistClassFactory;
 import io.goodforgod.dummymapper.service.GenFactoryProvider;
 import io.goodforgod.dummymapper.ui.config.JsonArrayConfig;
 import java.util.List;
@@ -31,7 +31,7 @@ public class JsonArrayMapper implements MarkerMapper<JsonArrayConfig> {
     private final MarkerFilter annotationFilter = new ExcludeSetterAnnotationFilter();
     private final MarkerFilter annotationEnumFilter = new EmptyMarkerFilter();
 
-    private final ObjectMapper mapper = AbstractJsonJacksonMapper.getConfigured();
+    private final ObjectMapper mapper = ObjectMapperUtils.getConfigured();
 
     @NotNull
     @Override
@@ -52,7 +52,7 @@ public class JsonArrayMapper implements MarkerMapper<JsonArrayConfig> {
             if (filtered.isEmpty())
                 return "";
 
-            final Class<?> target = ClassFactory.build(filtered);
+            final Class<?> target = AssistClassFactory.build(filtered);
             final GenFactory factory = GenFactoryProvider.get(filtered);
 
             final int amount = config.getAmount();

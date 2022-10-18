@@ -7,9 +7,7 @@ import io.dummymaker.model.GenRules;
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.marker.*;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
-import io.goodforgod.dummymapper.model.AnnotationMarkerBuilder;
-import io.goodforgod.dummymapper.scanner.PsiClassScanner;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.*;
 import java.util.function.Predicate;
@@ -39,10 +37,10 @@ public class GenFactoryProvider {
      * @param rawMarker data from JavaFileScanner
      * @return builds GenFactory based on scanned data from java file scanner
      * @see PsiClassScanner
-     * @see ClassFactory
+     * @see AssistClassFactory
      */
     public static GenFactory get(@NotNull RawMarker rawMarker) {
-        final Map<String, String> mappedClasses = ClassFactory.getMappedClasses(rawMarker);
+        final Map<String, String> mappedClasses = AssistClassFactory.getMappedClasses(rawMarker);
         final List<GenRule> rules = getRules(rawMarker, mappedClasses);
         return new GenFactory(GenRules.of(rules));
     }
@@ -55,7 +53,7 @@ public class GenFactoryProvider {
         if (IS_VISITED.test(marker))
             return Collections.emptyList();
 
-        marker.addAnnotation(AnnotationMarkerBuilder.get().ofInternal().withName(VISITED).build());
+        marker.addAnnotation(AnnotationMarker.builder().ofInternal().withName(VISITED).build());
 
         final Map<String, Marker> structure = marker.getStructure();
         final Optional<String> mapped = structure.values().stream()

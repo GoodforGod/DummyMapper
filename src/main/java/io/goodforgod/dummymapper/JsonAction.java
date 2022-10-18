@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
-import io.goodforgod.dummymapper.mapper.impl.JsonMapper;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
+import io.goodforgod.dummymapper.marker.mapper.JsonMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -1,7 +1,7 @@
-package io.goodforgod.dummymapper.filter.impl;
+package io.goodforgod.dummymapper.marker.filter;
 
 import com.fasterxml.jackson.annotation.*;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
+import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 import java.util.function.Predicate;

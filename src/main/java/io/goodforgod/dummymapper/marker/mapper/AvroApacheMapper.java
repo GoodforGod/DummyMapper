@@ -1,13 +1,13 @@
-package io.goodforgod.dummymapper.mapper.impl;
+package io.goodforgod.dummymapper.marker.mapper;
 
 import com.intellij.psi.PsiJavaFile;
-import io.goodforgod.dummymapper.filter.MarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.AvroFilter;
-import io.goodforgod.dummymapper.filter.impl.EmptyMarkerFilter;
-import io.goodforgod.dummymapper.filter.impl.ExcludeSetterAnnotationFilter;
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
+import io.goodforgod.dummymapper.marker.MarkerFilter;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.service.ClassFactory;
+import io.goodforgod.dummymapper.marker.filter.AvroFilter;
+import io.goodforgod.dummymapper.marker.filter.EmptyMarkerFilter;
+import io.goodforgod.dummymapper.marker.filter.ExcludeSetterAnnotationFilter;
+import io.goodforgod.dummymapper.service.AssistClassFactory;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import java.util.Optional;
 import org.apache.avro.Schema;
@@ -46,7 +46,7 @@ public class AvroApacheMapper implements MarkerMapper {
         if (filtered.isEmpty())
             return "";
 
-        final Class<?> target = ClassFactory.build(filtered);
+        final Class<?> target = AssistClassFactory.build(filtered);
         final Schema schema = ReflectData.get().getSchema(target);
 
         final String schemaAsJson = schema.toString(true);

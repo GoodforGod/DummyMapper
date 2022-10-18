@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.MarkerMapper;
-import io.goodforgod.dummymapper.mapper.impl.AvroApacheMapper;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
+import io.goodforgod.dummymapper.marker.mapper.AvroApacheMapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
