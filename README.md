@@ -52,6 +52,21 @@ public class User {
 }
 ```
 
+Supports also Kotlin classes:
+```kotlin
+data class ExampleData(val surname: String, val number: Int, val simple: ExampleSimple)
+
+class ExampleSimple {
+
+    var en: ExampleEnum? = null
+    var name: String? = null
+    var data: ExampleData? = null
+    var surnames: List<String>? = null
+    var numbers: Map<String, Int>? = null
+    var names: Set<String>? = null
+}
+```
+
 ### Json
 
 Plugin uses [DummyMaker library](https://github.com/GoodforGod/dummymaker) for generating classes and then converting to JSON format.
