@@ -49,7 +49,7 @@ public class AvroJacksonMapper implements MarkerMapper<AvroJacksonConfig> {
                             ? requiredFieldFilter.filter(r)
                             : r)
                     .map(emptyFilter::filter)
-                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                    .orElseThrow(() -> new IllegalArgumentException("Marker was fully filtered!"));
 
             if (filtered.isEmpty())
                 return "";

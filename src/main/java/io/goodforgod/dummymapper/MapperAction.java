@@ -97,8 +97,9 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                 final Collection<JComponent> components = config.getComponents();
                 final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
                 dialog.show();
-                if (dialog.getExitCode() == 1)
+                if (dialog.getExitCode() == 1) {
                     return;
+                }
 
                 dialog.disposeIfNeeded();
             }
@@ -113,8 +114,9 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveFrame(successMessage(), MessageType.INFO);
         } catch (MapperException | UnsupportedPsiFileException | PsiKindException e) {
-            if (StringUtils.isEmpty(e.getMessage()))
+            if (StringUtils.isEmpty(e.getMessage())) {
                 throw new IllegalArgumentException("Unknown error occurred", e);
+            }
 
             PopupUtil.showBalloonForActiveFrame(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {

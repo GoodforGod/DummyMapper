@@ -38,30 +38,38 @@ public class PsiClassUtils {
     static {
         Stream.of(Enum.class,
                 Object.class,
-                Boolean.class,
                 String.class,
+                Boolean.class,
                 Character.class,
-                Float.class,
-                Double.class,
                 Byte.class,
                 Short.class,
                 Integer.class,
                 Long.class,
+                Float.class,
+                Double.class,
+                boolean.class,
+                char.class,
                 byte.class,
                 short.class,
                 int.class,
                 long.class,
                 float.class,
                 double.class,
-                boolean.class,
-                char.class,
                 BigInteger.class,
                 BigDecimal.class,
+                Instant.class,
                 LocalTime.class,
                 LocalDate.class,
                 LocalDateTime.class,
                 OffsetTime.class,
                 OffsetDateTime.class,
+                ZonedDateTime.class,
+                ZoneOffset.class,
+                Month.class,
+                MonthDay.class,
+                Year.class,
+                YearMonth.class,
+                DayOfWeek.class,
                 Date.class,
                 java.sql.Date.class,
                 Time.class,
@@ -99,8 +107,7 @@ public class PsiClassUtils {
                     MAP_FIELD_TYPES.put(c.getSimpleName(), c);
                 });
 
-        Stream.of(
-                Class.class,
+        Stream.of(Class.class,
                 ObjectMapper.class).forEach(c -> {
                     FORBIDDEN_TYPES.add(c.getName());
                     FORBIDDEN_TYPES.add(c.getSimpleName());

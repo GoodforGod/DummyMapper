@@ -34,7 +34,7 @@ public class GraphQLMapper implements MarkerMapper<GraphQLConfig> {
                         ? nonNullFilter.filter(m)
                         : m)
                 .map(emptyFilter::filter)
-                .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                .orElseThrow(() -> new IllegalArgumentException("Marker was fully filtered!"));
 
         if (filtered.isEmpty())
             return "";
@@ -53,6 +53,6 @@ public class GraphQLMapper implements MarkerMapper<GraphQLConfig> {
                 .includeSchemaDefinition(false);
 
         final String result = new SchemaPrinter(options).print(schema);
-        return result.replace("type Query", "type " + marker.getSourceSimpleName());
+        return result.replace("type Query", "type " + marker.getSourceWithoutExtension());
     }
 }

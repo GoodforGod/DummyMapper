@@ -378,11 +378,11 @@ public class AssistClassFactory {
     }
 
     private static String getSourceClassName(@NotNull RawMarker marker) {
-        return getClassNameFromPackage(marker.getSource());
+        return marker.getSourceClassName();
     }
 
     private static String getClassName(@NotNull Marker marker) {
-        final String name = getClassNameFromPackage(marker.getSource());
+        final String name = marker.getSourceClassName();
         return getClassNameWithSuffix(name);
     }
 

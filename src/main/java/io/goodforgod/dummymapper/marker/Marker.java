@@ -56,50 +56,55 @@ public abstract class Marker {
         return root;
     }
 
+    public @NotNull String getRootClassName() {
+        if (StringUtils.isEmpty(root))
+            return "";
+
+        final String rootWithoutExtension = getRootWithoutExtension();
+        return rootWithoutExtension.substring(rootWithoutExtension.lastIndexOf('.') + 1);
+    }
+
     public @NotNull String getRootPackage() {
         if (StringUtils.isEmpty(root))
             return "";
 
-        final String cleanRoot = getCleanRoot();
+        final String cleanRoot = getRootWithoutExtension();
         return cleanRoot.substring(0, cleanRoot.lastIndexOf('.'));
     }
 
-    public @NotNull String getRootSimpleName() {
-        if (StringUtils.isEmpty(source))
-            return "";
-
-        final String cleanRoot = getCleanRoot();
-        return cleanRoot.substring(cleanRoot.lastIndexOf('.') + 1);
+    public @NotNull String getRootWithoutExtension() {
+        return StringUtils.isEmpty(root)
+                ? ""
+                : root.substring(0, root.lastIndexOf('.'));
     }
 
     public @NotNull String getSource() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
         return source;
+    }
+
+    public @NotNull String getSourceClassName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String sourceWithoutExtension = getSourceWithoutExtension();
+        return sourceWithoutExtension.substring(sourceWithoutExtension.lastIndexOf('.') + 1);
     }
 
     public @NotNull String getSourcePackage() {
         if (StringUtils.isEmpty(source))
             return "";
 
-        final String cleanSource = getCleanSource();
+        final String cleanSource = getSourceWithoutExtension();
         return cleanSource.substring(0, cleanSource.lastIndexOf('.'));
     }
 
-    public @NotNull String getSourceSimpleName() {
-        if (StringUtils.isEmpty(source))
-            return "";
-
-        final String cleanSource = getCleanSource();
-        return cleanSource.substring(cleanSource.lastIndexOf('.') + 1);
-    }
-
-    private String getCleanRoot() {
-        return root.replaceFirst("\\.java$", "")
-                .replaceFirst("\\.kt$", "");
-    }
-
-    private String getCleanSource() {
-        return source.replaceFirst("\\.java$", "")
-                .replaceFirst("\\.kt$", "");
+    public @NotNull String getSourceWithoutExtension() {
+        return StringUtils.isEmpty(source)
+                ? ""
+                : source.substring(0, source.lastIndexOf('.'));
     }
 
     public @NotNull Collection<AnnotationMarker> getAnnotations() {

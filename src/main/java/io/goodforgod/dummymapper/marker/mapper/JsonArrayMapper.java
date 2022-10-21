@@ -47,7 +47,7 @@ public class JsonArrayMapper implements MarkerMapper<JsonArrayConfig> {
                     .map(annotationFilter::filter)
                     .map(emptyFilter::filter)
                     .map(annotationEnumFilter::filter)
-                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                    .orElseThrow(() -> new IllegalArgumentException("Marker was fully filtered!"));
 
             if (filtered.isEmpty())
                 return "";

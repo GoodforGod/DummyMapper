@@ -41,7 +41,7 @@ public class AvroApacheMapper implements MarkerMapper {
                 .map(avroFilter::filter)
                 .map(annotationFilter::filter)
                 .map(emptyFilter::filter)
-                .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                .orElseThrow(() -> new IllegalArgumentException("Marker was fully filtered!"));
 
         if (filtered.isEmpty())
             return "";

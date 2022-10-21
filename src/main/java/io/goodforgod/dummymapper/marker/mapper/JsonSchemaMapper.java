@@ -30,7 +30,7 @@ public class JsonSchemaMapper implements MarkerMapper<JsonSchemaConfig> {
         try {
             final RawMarker filtered = Optional.of(marker)
                     .map(emptyFilter::filter)
-                    .orElseThrow(() -> new IllegalArgumentException("Not filter present!"));
+                    .orElseThrow(() -> new IllegalArgumentException("Marker was fully filtered!"));
 
             if (filtered.isEmpty())
                 return "";
