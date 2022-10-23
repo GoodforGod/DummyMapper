@@ -11,9 +11,10 @@
         <br/>
         Plugin supports mapping to formats:
         <ul>
-            <li>JSON (Example representation in JSON)</li>
-            <li>JSON Array (Array examples representation in JSON)</li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/release-notes.html">(Draft 2019)</a>,
+            <li>JSON (Class with field values)</li>
+            <li>JSON Array (Array of classes with field values)</li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2020-12/release-notes.html">(Draft 2020_12)</a>,
+            <a href="https://json-schema.org/draft/2019-09/release-notes.html">(Draft 2019_09)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
