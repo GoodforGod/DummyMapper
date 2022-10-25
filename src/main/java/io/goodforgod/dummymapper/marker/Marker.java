@@ -3,6 +3,7 @@ package io.goodforgod.dummymapper.marker;
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,6 +112,13 @@ public abstract class Marker {
         return annotations;
     }
 
+    private List<AnnotationMarker> getOriginAnnotationMarkers() {
+        return annotations.stream()
+                .filter(a -> !a.isInternal())
+                .sorted(Comparator.comparing(AnnotationMarker::getName))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -118,13 +126,17 @@ public abstract class Marker {
         if (o == null || getClass() != o.getClass())
             return false;
         Marker marker = (Marker) o;
+
+        final List<AnnotationMarker> annotationMarkers = getOriginAnnotationMarkers();
+        final List<AnnotationMarker> otherAnnotationMarkers = marker.getOriginAnnotationMarkers();
         return Objects.equals(root, marker.root) &&
                 Objects.equals(source, marker.source) &&
-                Objects.equals(annotations, marker.annotations);
+                Objects.equals(annotationMarkers, otherAnnotationMarkers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(root, source, annotations);
+        final List<AnnotationMarker> annotationMarkers = getOriginAnnotationMarkers();
+        return Objects.hash(root, source, annotationMarkers);
     }
 }

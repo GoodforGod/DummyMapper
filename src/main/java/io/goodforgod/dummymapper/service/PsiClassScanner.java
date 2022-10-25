@@ -300,11 +300,18 @@ public class PsiClassScanner {
                                         @NotNull String rootName,
                                         @NotNull PsiClass rootClass,
                                         @NotNull PsiType type) {
-        final Marker marker = Optional.of(((PsiArrayType) type).getComponentType())
+        final Marker marker = Optional.of(getArrayPsiType((PsiArrayType) type))
                 .map(p -> getMarkerFromPsiType(source, rootName, rootClass, p))
                 .orElseGet(() -> new TypedMarker(rootName, source, String.class));
 
-        return new ArrayMarker(rootName, source, marker);
+        return new ArrayMarker(rootName, source, marker, type.getArrayDimensions());
+    }
+
+    private PsiType getArrayPsiType(PsiArrayType psiArrayType) {
+        final PsiType componentType = psiArrayType.getComponentType();
+        return (componentType instanceof PsiArrayType)
+                ? getArrayPsiType(((PsiArrayType) componentType))
+                : componentType;
     }
 
     private CollectionMarker scanCollectionMarker(@NotNull String source,

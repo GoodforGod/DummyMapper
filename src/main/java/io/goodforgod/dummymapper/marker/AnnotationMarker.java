@@ -139,14 +139,16 @@ public class AnnotationMarker {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof AnnotationMarker))
             return false;
         AnnotationMarker that = (AnnotationMarker) o;
-        return Objects.equals(name, that.name);
+        return isInternal == that.isInternal && isFieldMarked == that.isFieldMarked && isGetterMarked == that.isGetterMarked
+                && isSetterMarked == that.isSetterMarked && Objects.equals(name, that.name)
+                && Objects.equals(attributes, that.attributes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, isInternal, isFieldMarked, isGetterMarked, isSetterMarked, attributes);
     }
 }

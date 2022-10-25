@@ -9,6 +9,8 @@ import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ConstPool;
@@ -18,7 +20,7 @@ import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Class factory that creates Java Class from recreated java class map
+ * Class factory that creates Java Class from {@link RawMarker}
  *
  * @author Anton Kurako (GoodforGod)
  * @see PsiClassScanner
@@ -38,10 +40,21 @@ public class AssistClassFactory {
 
     private AssistClassFactory() {}
 
-    // /**
-    // * Contains class cache via className and its hash for structure
-    // */
-    // private static final Map<String, Integer> CLASS_CACHE = new HashMap<>();
+    /**
+     * Contains class cache via canonicalName and its value with marker and class
+     */
+    private static final Map<String, ClassCache> CLASS_CACHE = new HashMap<>();
+
+    private static class ClassCache {
+
+        final RawMarker marker;
+        final Class<?> clazz;
+
+        ClassCache(RawMarker marker, Class<?> clazz) {
+            this.marker = marker;
+            this.clazz = clazz;
+        }
+    }
 
     public static Map<String, String> getMappedClasses(@NotNull RawMarker marker) {
         if (IS_VISITED.test(marker))
@@ -91,6 +104,8 @@ public class AssistClassFactory {
                     mapped.put(m.getRoot(), currentClassName);
                 });
 
+        final String currentClassName = getPrevClassName(marker);
+        mapped.put(marker.getRoot(), currentClassName);
         return mapped;
     }
 
@@ -99,8 +114,15 @@ public class AssistClassFactory {
             throw new ClassEmptyException();
 
         try {
+            final ClassCache classCache = CLASS_CACHE.get(rawMarker.getSource());
+            if (classCache != null && classCache.marker.equals(rawMarker)) {
+                return classCache.clazz;
+            }
+
             final CtClass ctClass = buildInternal(rawMarker, new HashMap<>());
-            return Class.forName(ctClass.getName());
+            final Class<?> clazz = Class.forName(ctClass.getName());
+            CLASS_CACHE.put(rawMarker.getSource(), new ClassCache(rawMarker, clazz));
+            return clazz;
         } catch (ClassBuildException e) {
             throw e;
         } catch (Exception e) {
@@ -113,19 +135,6 @@ public class AssistClassFactory {
         final Map<String, Marker> structure = classMarker.getStructure();
         final String className = getClassName(classMarker);
         final String originClassName = getSourceClassName(classMarker);
-
-        // final int structureHash = structure.hashCode();
-        // final Integer hash = CLASS_CACHE.computeIfAbsent(originClassName, k -> -1);
-        // if (hash.equals(structureHash)) {
-        // final String prevClassName = getPrevClassName(structure);
-        // logger.debug("Retrieving CACHED class '{}' with generated name '{}' and structure hash '{}'",
-        // originClassName, prevClassName, structureHash);
-        // return CLASS_POOL.get(prevClassName);
-        // }
-        // logger.debug("CACHING class with name '{}' and structure hash '{}'", originClassName,
-        // structureHash);
-        // CLASS_CACHE.put(originClassName, structureHash);
-
         final CtClass ownClass = getOrCreateCtClass(className);
         scanned.put(originClassName, ownClass);
 
@@ -239,7 +248,11 @@ public class AssistClassFactory {
                                          @NotNull Class<?> erasure,
                                          @NotNull CtClass owner) {
         try {
-            final String src = String.format("public %s[] %s;", erasure.getName(), fieldName);
+            final String dimensions = IntStream.range(0, marker.getDimensions())
+                    .mapToObj(i -> "[]")
+                    .collect(Collectors.joining());
+
+            final String src = String.format("public %s%s %s;", erasure.getName(), dimensions, fieldName);
             final CtField field = CtField.make(src, owner);
             return addAnnotationInfo(field, marker);
         } catch (CannotCompileException e) {
@@ -392,14 +405,9 @@ public class AssistClassFactory {
     }
 
     private static String getPrevClassName(@NotNull Marker marker) {
-        final String originClassName = getClassNameFromPackage(marker.getRoot());
+        final String originClassName = marker.getRootClassName();
         final int num = CLASS_SUFFIX_COUNTER.computeIfAbsent(originClassName, k -> 1) - 1;
         return getClassPackage(num) + "." + originClassName;
-    }
-
-    private static String getClassNameFromPackage(@NotNull String source) {
-        final int lastIndexOf = source.lastIndexOf('.', source.length() - 6);
-        return source.substring(lastIndexOf + 1, source.length() - 5);
     }
 
     private static String getClassPackage(int num) {

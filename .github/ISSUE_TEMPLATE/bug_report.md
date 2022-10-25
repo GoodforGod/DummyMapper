@@ -18,8 +18,8 @@ Stack-trace from IDEA Event Log.
 A clear and concise description of what the bug is.
 
 
-**Java Class examples \ Screenshots**
-Java Class example (fields, annotations, method, type or what is applicable in a situation).
+**Class examples \ Screenshots**
+Class example (fields, annotations, method, type or what is applicable in a situation).
 
 
 **Expected Behavior**

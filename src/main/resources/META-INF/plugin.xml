@@ -42,7 +42,7 @@
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"
                text="Mapping Options.."
-               description="Map Java Class to other format.."
+               description="Convert to other format.."
                popup="true"
                icon="/icon/map.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="before"
@@ -51,32 +51,32 @@
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
-                    description="Map Class as JSON and copy to clipboard">
+                    description="Convert to JSON and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonArrayExample"
                     class="io.goodforgod.dummymapper.JsonArrayAction"
                     text="Map as JSON Array"
-                    description="Map Class as JSON Array and copy to clipboard">
+                    description="Convert to JSON Array and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
-                    description="Map Class as JSON Schema and copy to clipboard">
+                    description="Convert to JSON Schema and copy to clipboard">
             </action>
             <action id="DummyMapper.GraphQLSchema"
                     class="io.goodforgod.dummymapper.GraphQLAction"
                     text="Map as GraphQL Schema"
-                    description="Map Class as GraphQL and copy to clipboard">
+                    description="Convert to GraphQL and copy to clipboard">
             </action>
             <action id="DummyMapper.AvroSchemaApache"
                     class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
-                    description="Map Class as AVRO Schema and copy to clipboard (uses Apache Schema)">
+                    description="Convert to AVRO Schema and copy to clipboard (Apache Schema)">
             </action>
             <action id="DummyMapper.AvroSchemaJackson"
                     class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
                     text="Map as AVRO Schema (Jackson)"
-                    description="Map Class as AVRO Schema and copy to clipboard (uses Jackson Avro Mapper)">
+                    description="Convert to AVRO Schema and copy to clipboard (Jackson Avro Mapper)">
             </action>
         </group>
     </actions>
