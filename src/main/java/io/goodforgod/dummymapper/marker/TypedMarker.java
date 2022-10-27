@@ -36,11 +36,11 @@ public class TypedMarker extends Marker {
         if (!super.equals(o))
             return false;
         TypedMarker that = (TypedMarker) o;
-        return Objects.equals(type, that.type);
+        return Objects.equals(type.getCanonicalName(), that.type.getCanonicalName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), type);
+        return Objects.hash(super.hashCode(), type.getCanonicalName());
     }
 }

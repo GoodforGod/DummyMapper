@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper;
 
-import io.goodforgod.dummymapper.mapper.IMapper;
-import io.goodforgod.dummymapper.mapper.impl.AvroJacksonMapper;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
+import io.goodforgod.dummymapper.marker.mapper.AvroJacksonMapper;
 import io.goodforgod.dummymapper.ui.config.AvroJacksonConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +19,7 @@ public class AvroSchemaJacksonAction extends MapperAction<AvroJacksonConfig> {
 
     @NotNull
     @Override
-    public IMapper<AvroJacksonConfig> getMapper() {
+    public MarkerMapper<AvroJacksonConfig> getMapper() {
         return mapper;
     }
 

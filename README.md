@@ -6,7 +6,7 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
 
 [Intellij IDEA plugin](https://plugins.jetbrains.com/plugin/14911-dummymapper-json-avro-graphql-/) 
-for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
+for mapping Java or Kotlin Classes to format like [JSON](#json)/[AVRO](#avro-schema)/[GraphQL](#graphql)/etc.
 
 ![](https://media.giphy.com/media/VelLohLlWETYZBNWlt/giphy.gif)
 
@@ -31,7 +31,7 @@ for mapping Java Classes to formats like [JSON](#json)/[AVRO](#avro-schema)/[Gra
 
 ## Format Support
 
-Plugin allow mapping Java Classes to different formats, 
+Plugin allow mapping Java or Kotlin Classes to different formats, 
 this section describes information about supported formats and their options.
 
 All format examples will be showed according to this class as example.
@@ -52,11 +52,26 @@ public class User {
 }
 ```
 
+Supports also Kotlin classes:
+```kotlin
+data class ExampleData(val surname: String, val number: Int, val simple: ExampleSimple)
+
+class ExampleSimple {
+
+    var en: ExampleEnum? = null
+    var name: String? = null
+    var data: ExampleData? = null
+    var surnames: List<String>? = null
+    var numbers: Map<String, Int>? = null
+    var names: Set<String>? = null
+}
+```
+
 ### Json
 
-Plugin uses [DummyMaker library](https://github.com/GoodforGod/dummymaker) for producing Java Classes and then converting them in JSON format.
+Plugin uses [DummyMaker library](https://github.com/GoodforGod/dummymaker) for generating classes and then converting to JSON format.
 
-Allow mapping Java class as JSON example with fields filled with
+Allow mapping class as JSON example with fields filled with
 random values as if class example was serialized to JSON format.
 - <kbd>Mapping options..</kbd> > <kbd>Map as JSON</kbd>
 
@@ -130,8 +145,9 @@ and their parameters are supported):
 
 ### Json Schema
 
-Allow mapping Java class as JSON Schema, 3 different drafts are available:
-- [Draft 2019](https://json-schema.org/draft/2019-09/schema)
+Allow mapping class as JSON Schema, 3 different drafts are available:
+- [Draft 2020-12](https://json-schema.org/draft/2020-12/release-notes.html)
+- [Draft 2019-09](https://json-schema.org/draft/2019-09/release-notes.html)
 - [Draft 7](https://json-schema.org/draft-07/json-schema-release-notes.html)
 - [Draft 6](https://json-schema.org/draft-06/json-schema-release-notes.html)
 
@@ -174,7 +190,7 @@ Mapping is under:
 
 ### Avro Schema
 
-Allow mapping Java class as AVRO Schema for [version 1.9.2](https://avro.apache.org/docs/1.9.2/)
+Allow mapping class as AVRO Schema for [version 1.9.2](https://avro.apache.org/docs/1.9.2/)
 
 There is option for two different AVRO Schema builders like:
 - [Jackson](https://github.com/FasterXML/jackson-dataformats-binary/tree/master/avro)
@@ -248,7 +264,7 @@ Annotations from [Apache Avro](https://github.com/apache/avro/tree/master/lang/j
 
 ### GraphQL
 
-Allow mapping Java class as GraphQL query with [version v14](https://www.graphql-java.com/documentation/v14)
+Allow mapping class as GraphQL query with [version v14](https://www.graphql-java.com/documentation/v14)
 
 Mapping is under:
 - <kbd>Mapping options..</kbd> > <kbd>Map as GraphQL</kbd>

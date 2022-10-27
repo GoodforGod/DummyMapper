@@ -8,10 +8,6 @@ package io.goodforgod.dummymapper.error;
  */
 public class ClassBuildException extends RuntimeException {
 
-    public ClassBuildException(String message) {
-        super(message);
-    }
-
     public ClassBuildException(Throwable cause) {
         super(cause.getMessage());
     }

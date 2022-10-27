@@ -1,7 +1,7 @@
 package io.goodforgod.dummymapper.ui.component;
 
 import com.intellij.openapi.ui.ComboBox;
-import io.goodforgod.dummymapper.ui.IComponent;
+import io.goodforgod.dummymapper.ui.UIComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import java.util.Collection;
 import javax.swing.*;
@@ -12,7 +12,7 @@ import javax.swing.*;
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020
  */
-public class ComboBoxComponent implements IComponent {
+public class ComboBoxComponent implements UIComponent {
 
     private final String name;
     private final String defaultValue;

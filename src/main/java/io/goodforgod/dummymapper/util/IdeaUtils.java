@@ -8,7 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import java.awt.datatransfer.StringSelection;
+import java.util.Arrays;
 import java.util.Optional;
+import org.jetbrains.kotlin.psi.KtClass;
+import org.jetbrains.kotlin.psi.KtFile;
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -27,9 +30,18 @@ public class IdeaUtils {
 
     public static Optional<PsiClass> getPsiClassFromAction(AnActionEvent event) {
         final PsiElement psiClass = event.getData(CommonDataKeys.PSI_ELEMENT);
-        return (psiClass instanceof PsiClass)
-                ? Optional.of(((PsiClass) psiClass))
-                : Optional.empty();
+        if (psiClass instanceof PsiClass) {
+            return Optional.of(((PsiClass) psiClass));
+        }
+
+        if (psiClass instanceof KtClass) {
+            final PsiFile psiFile = ((KtClass) psiClass).getContainingFile();
+            if (psiFile instanceof KtFile) {
+                return Arrays.stream((((KtFile) psiFile).getClasses())).findFirst();
+            }
+        }
+
+        return Optional.empty();
     }
 
     public static void copyToClipboard(String content) {

@@ -10,12 +10,12 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiClass;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.error.JavaFileException;
-import io.goodforgod.dummymapper.error.JavaKindException;
 import io.goodforgod.dummymapper.error.MapperException;
-import io.goodforgod.dummymapper.mapper.IMapper;
+import io.goodforgod.dummymapper.error.PsiKindException;
+import io.goodforgod.dummymapper.error.UnsupportedPsiFileException;
+import io.goodforgod.dummymapper.marker.MarkerMapper;
 import io.goodforgod.dummymapper.marker.RawMarker;
-import io.goodforgod.dummymapper.scanner.impl.PsiJavaFileScanner;
+import io.goodforgod.dummymapper.service.PsiClassScanner;
 import io.goodforgod.dummymapper.ui.ConfigDialog;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import io.goodforgod.dummymapper.util.IdeaUtils;
@@ -47,7 +47,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
     }
 
     @NotNull
-    public abstract IMapper<T> getMapper();
+    public abstract MarkerMapper<T> getMapper();
 
     /**
      * @return format as string in which mapper is converting (like JSON)
@@ -89,7 +89,7 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                     .orElseGet(() -> IdeaUtils.getFileFromAction(event)
                             .filter(file -> file.getClasses().length != 0)
                             .map(file -> file.getClasses()[0])
-                            .orElseThrow(JavaFileException::new));
+                            .orElseThrow(UnsupportedPsiFileException::new));
 
             final T config = getConfig();
             if (config != null) {
@@ -97,13 +97,14 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
                 final Collection<JComponent> components = config.getComponents();
                 final ConfigDialog dialog = new ConfigDialog(project, configDialogTitle(), components);
                 dialog.show();
-                if (dialog.getExitCode() == 1)
+                if (dialog.getExitCode() == 1) {
                     return;
+                }
 
                 dialog.disposeIfNeeded();
             }
 
-            final RawMarker marker = new PsiJavaFileScanner().scan(psiClass);
+            final RawMarker marker = new PsiClassScanner().scan(psiClass);
             final String json = getMapper().map(marker, config);
             if (StringUtils.isEmpty(json)) {
                 PopupUtil.showBalloonForActiveFrame(emptyResultMessage(), MessageType.WARNING);
@@ -112,9 +113,10 @@ public abstract class MapperAction<T extends IConfig> extends AnAction {
 
             IdeaUtils.copyToClipboard(json);
             PopupUtil.showBalloonForActiveFrame(successMessage(), MessageType.INFO);
-        } catch (MapperException | JavaFileException | JavaKindException e) {
-            if (StringUtils.isEmpty(e.getMessage()))
+        } catch (MapperException | UnsupportedPsiFileException | PsiKindException e) {
+            if (StringUtils.isEmpty(e.getMessage())) {
                 throw new IllegalArgumentException("Unknown error occurred", e);
+            }
 
             PopupUtil.showBalloonForActiveFrame(e.getMessage(), MessageType.WARNING);
         } catch (Exception e) {

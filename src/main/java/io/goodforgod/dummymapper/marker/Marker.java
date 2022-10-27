@@ -2,8 +2,8 @@ package io.goodforgod.dummymapper.marker;
 
 import io.dummymaker.util.CollectionUtils;
 import io.dummymaker.util.StringUtils;
-import io.goodforgod.dummymapper.model.AnnotationMarker;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public abstract class Marker {
      */
     private Set<AnnotationMarker> annotations = Collections.emptySet();
 
-    public Marker(@NotNull String root, @NotNull String source) {
+    Marker(@NotNull String root, @NotNull String source) {
         this.root = root;
         this.source = source;
     }
@@ -57,52 +57,66 @@ public abstract class Marker {
         return root;
     }
 
+    public @NotNull String getRootClassName() {
+        if (StringUtils.isEmpty(root))
+            return "";
+
+        final String rootWithoutExtension = getRootWithoutExtension();
+        return rootWithoutExtension.substring(rootWithoutExtension.lastIndexOf('.') + 1);
+    }
+
     public @NotNull String getRootPackage() {
         if (StringUtils.isEmpty(root))
             return "";
 
-        final String cleanRoot = getCleanRoot();
+        final String cleanRoot = getRootWithoutExtension();
         return cleanRoot.substring(0, cleanRoot.lastIndexOf('.'));
     }
 
-    public @NotNull String getRootSimpleName() {
-        if (StringUtils.isEmpty(source))
-            return "";
-
-        final String cleanRoot = getCleanRoot();
-        return cleanRoot.substring(cleanRoot.lastIndexOf('.') + 1);
+    public @NotNull String getRootWithoutExtension() {
+        return StringUtils.isEmpty(root)
+                ? ""
+                : root.substring(0, root.lastIndexOf('.'));
     }
 
     public @NotNull String getSource() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
         return source;
+    }
+
+    public @NotNull String getSourceClassName() {
+        if (StringUtils.isEmpty(source))
+            return "";
+
+        final String sourceWithoutExtension = getSourceWithoutExtension();
+        return sourceWithoutExtension.substring(sourceWithoutExtension.lastIndexOf('.') + 1);
     }
 
     public @NotNull String getSourcePackage() {
         if (StringUtils.isEmpty(source))
             return "";
 
-        final String cleanSource = getCleanSource();
+        final String cleanSource = getSourceWithoutExtension();
         return cleanSource.substring(0, cleanSource.lastIndexOf('.'));
     }
 
-    public @NotNull String getSourceSimpleName() {
-        if (StringUtils.isEmpty(source))
-            return "";
-
-        final String cleanSource = getCleanSource();
-        return cleanSource.substring(cleanSource.lastIndexOf('.') + 1);
-    }
-
-    private String getCleanRoot() {
-        return root.replaceFirst("\\.java$", "");
-    }
-
-    private String getCleanSource() {
-        return source.replaceFirst("\\.java$", "");
+    public @NotNull String getSourceWithoutExtension() {
+        return StringUtils.isEmpty(source)
+                ? ""
+                : source.substring(0, source.lastIndexOf('.'));
     }
 
     public @NotNull Collection<AnnotationMarker> getAnnotations() {
         return annotations;
+    }
+
+    private List<AnnotationMarker> getOriginAnnotationMarkers() {
+        return annotations.stream()
+                .filter(a -> !a.isInternal())
+                .sorted(Comparator.comparing(AnnotationMarker::getName))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -112,13 +126,17 @@ public abstract class Marker {
         if (o == null || getClass() != o.getClass())
             return false;
         Marker marker = (Marker) o;
+
+        final List<AnnotationMarker> annotationMarkers = getOriginAnnotationMarkers();
+        final List<AnnotationMarker> otherAnnotationMarkers = marker.getOriginAnnotationMarkers();
         return Objects.equals(root, marker.root) &&
                 Objects.equals(source, marker.source) &&
-                Objects.equals(annotations, marker.annotations);
+                Objects.equals(annotationMarkers, otherAnnotationMarkers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(root, source, annotations);
+        final List<AnnotationMarker> annotationMarkers = getOriginAnnotationMarkers();
+        return Objects.hash(root, source, annotationMarkers);
     }
 }

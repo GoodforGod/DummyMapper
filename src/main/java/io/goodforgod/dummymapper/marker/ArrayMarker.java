@@ -12,10 +12,12 @@ import org.jetbrains.annotations.NotNull;
 public class ArrayMarker extends Marker {
 
     private final Marker erasure;
+    private final int dimensions;
 
-    public ArrayMarker(@NotNull String root, @NotNull String source, @NotNull Marker erasure) {
+    public ArrayMarker(@NotNull String root, @NotNull String source, @NotNull Marker erasure, int dimensions) {
         super(root, source);
         this.erasure = erasure;
+        this.dimensions = dimensions;
     }
 
     @Override
@@ -27,6 +29,10 @@ public class ArrayMarker extends Marker {
         return erasure instanceof RawMarker;
     }
 
+    public int getDimensions() {
+        return dimensions;
+    }
+
     public @NotNull Marker getErasure() {
         return erasure;
     }
@@ -35,16 +41,16 @@ public class ArrayMarker extends Marker {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof ArrayMarker))
             return false;
         if (!super.equals(o))
             return false;
         ArrayMarker that = (ArrayMarker) o;
-        return Objects.equals(erasure, that.erasure);
+        return dimensions == that.dimensions && Objects.equals(erasure, that.erasure);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), erasure);
+        return Objects.hash(super.hashCode(), erasure, dimensions);
     }
 }

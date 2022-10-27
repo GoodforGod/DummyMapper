@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper.ui.component;
 
-import io.goodforgod.dummymapper.ui.IComponent;
+import io.goodforgod.dummymapper.ui.UIComponent;
 import io.goodforgod.dummymapper.ui.config.IConfig;
 import javax.swing.*;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 12.6.2020
  */
-public class CheckBoxComponent implements IComponent {
+public class CheckBoxComponent implements UIComponent {
 
     private final String text;
     private final boolean isSelected;

@@ -6,14 +6,15 @@
     <version>1.0.0</version>
 
     <description><![CDATA[
-        <b><a href="https://goodforgod.github.io/DummyMapper/">DummyMapper</a></b> is a plugin for mapping Java Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
+        <b><a href="https://goodforgod.github.io/DummyMapper/">DummyMapper</a></b> is a plugin for mapping Java/Kotlin Classes to formats like JSON, GraphQL, JSON Schema, AVRO Schema.
         <br/>
         <br/>
         Plugin supports mapping to formats:
         <ul>
-            <li>JSON (Example representation in JSON)</li>
-            <li>JSON Array (Array examples representation in JSON)</li>
-            <li>JSON Schema <a href="https://json-schema.org/draft/2019-09/release-notes.html">(Draft 2019)</a>,
+            <li>JSON (Class with field values)</li>
+            <li>JSON Array (Array of classes with field values)</li>
+            <li>JSON Schema <a href="https://json-schema.org/draft/2020-12/release-notes.html">(Draft 2020_12)</a>,
+            <a href="https://json-schema.org/draft/2019-09/release-notes.html">(Draft 2019_09)</a>,
             <a href="https://json-schema.org/draft-07/json-schema-release-notes.html">(Draft-07)</a>,
             <a href="https://json-schema.org/draft-06/json-schema-release-notes.html">(Draft-06)</a></li>
             <li><a href="https://www.graphql-java.com/documentation/v14">GraphQL (v14)</a></li>
@@ -24,9 +25,7 @@
     <change-notes><![CDATA[
         <i>Features or changes in this release:</i>
         <ul>
-            <li>GraphQL correct type name set fixed</li>
-            <li>Complex cases for mapping classes with inheritance caused recursion errors fixed</li>
-            <li>Default value of 10 for mapping to JSON array fixed</li>
+            <li>Kotlin support</li>
         </ul>
     ]]></change-notes>
 
@@ -38,11 +37,12 @@
 
     <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
 
     <actions>
         <group id="org.intellij.sdk.action.GroupedActions"
                text="Mapping Options.."
-               description="Map Java Class to other format.."
+               description="Convert to other format.."
                popup="true"
                icon="/icon/map.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="before"
@@ -51,32 +51,32 @@
             <action id="DummyMapper.JsonExample"
                     class="io.goodforgod.dummymapper.JsonAction"
                     text="Map as JSON"
-                    description="Map Class as JSON and copy to clipboard">
+                    description="Convert to JSON and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonArrayExample"
                     class="io.goodforgod.dummymapper.JsonArrayAction"
                     text="Map as JSON Array"
-                    description="Map Class as JSON Array and copy to clipboard">
+                    description="Convert to JSON Array and copy to clipboard">
             </action>
             <action id="DummyMapper.JsonSchema"
                     class="io.goodforgod.dummymapper.JsonSchemaAction"
                     text="Map as JSON Schema"
-                    description="Map Class as JSON Schema and copy to clipboard">
+                    description="Convert to JSON Schema and copy to clipboard">
             </action>
             <action id="DummyMapper.GraphQLSchema"
                     class="io.goodforgod.dummymapper.GraphQLAction"
                     text="Map as GraphQL Schema"
-                    description="Map Class as GraphQL and copy to clipboard">
+                    description="Convert to GraphQL and copy to clipboard">
             </action>
             <action id="DummyMapper.AvroSchemaApache"
                     class="io.goodforgod.dummymapper.AvroSchemaApacheAction"
                     text="Map as AVRO Schema (Apache)"
-                    description="Map Class as AVRO Schema and copy to clipboard (uses Apache Schema)">
+                    description="Convert to AVRO Schema and copy to clipboard (Apache Schema)">
             </action>
             <action id="DummyMapper.AvroSchemaJackson"
                     class="io.goodforgod.dummymapper.AvroSchemaJacksonAction"
                     text="Map as AVRO Schema (Jackson)"
-                    description="Map Class as AVRO Schema and copy to clipboard (uses Jackson Avro Mapper)">
+                    description="Convert to AVRO Schema and copy to clipboard (Jackson Avro Mapper)">
             </action>
         </group>
     </actions>
