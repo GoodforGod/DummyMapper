@@ -30,7 +30,6 @@ public class AssistClassFactory {
 
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
 
-    // TODO create own classloader that could be GC so old classes can be unloaded from memory
     private static final Map<String, Integer> CLASS_SUFFIX_COUNTER = new HashMap<>();
 
     private static final String MAPPED_VISITED = "_class_mapped_visited";

@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
  */
 final class ObjectMapperUtils {
 
+    private ObjectMapperUtils() {}
+
     static ObjectMapper getConfigured() {
         return configure(new ObjectMapper());
     }

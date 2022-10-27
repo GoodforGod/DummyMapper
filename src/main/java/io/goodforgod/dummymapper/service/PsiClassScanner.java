@@ -153,18 +153,6 @@ public class PsiClassScanner {
             structure.putAll(superScan);
         }
 
-        // TODO restructure code so that it will be more obvious to use cache for structure if possible
-
-        // Get cached structure if file was not changed since last scan
-        // final long modificationStamp = target.getContainingFile().getModificationStamp();
-        // if (scannedModified.getOrDefault(source, -1L).equals(modificationStamp)) {
-        // logger.debug("Retrieving CACHED structure for '{}' with modifyStamp '{}'", source,
-        // modificationStamp);
-        // final Map<String, Marker> cached = scanned.get(source);
-        // cached.putAll(structure); // put all parent scanned fields in case they changed
-        // return cached;
-        // }
-
         scanned.put(new Target(root, source), structure);
         final PsiField[] fields = targetClass.getFields();
 
