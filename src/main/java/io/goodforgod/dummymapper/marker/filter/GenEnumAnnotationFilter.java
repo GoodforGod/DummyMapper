@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper.marker.filter;
 
-import io.dummymaker.annotation.complex.GenEnum;
+import io.goodforgod.dummymaker.annotation.parameterized.GenEnum;
 import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import java.util.function.Predicate;
 

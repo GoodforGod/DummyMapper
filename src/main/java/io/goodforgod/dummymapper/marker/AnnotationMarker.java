@@ -1,9 +1,6 @@
 package io.goodforgod.dummymapper.marker;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -118,7 +115,7 @@ public class AnnotationMarker {
 
         public Builder withAttribute(@NotNull String name, Object value) {
             if (this.attributes.isEmpty())
-                this.attributes = new HashMap<>(2);
+                this.attributes = new LinkedHashMap<>(2);
             this.attributes.put(name, value);
             return this;
         }

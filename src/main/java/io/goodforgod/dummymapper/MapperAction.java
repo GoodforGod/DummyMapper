@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.psi.PsiClass;
-import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.MapperException;
 import io.goodforgod.dummymapper.error.PsiKindException;
 import io.goodforgod.dummymapper.error.UnsupportedPsiFileException;

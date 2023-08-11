@@ -1,6 +1,6 @@
 package io.goodforgod.dummymapper.marker;
 
-import io.dummymaker.util.CollectionUtils;
+import io.goodforgod.dummymaker.util.CollectionUtils;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

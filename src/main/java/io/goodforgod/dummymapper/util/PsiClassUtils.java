@@ -7,7 +7,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.impl.source.PsiImmediateClassType;
-import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.service.PsiClassScanner;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -180,8 +180,9 @@ public class PsiClassUtils {
     }
 
     public static @Nullable Class<?> getSimpleTypeByName(@Nullable String name) {
-        if (StringUtils.isEmpty(name))
+        if (StringUtils.isEmpty(name)) {
             return null;
+        }
 
         return "?".equals(name)
                 ? String.class
