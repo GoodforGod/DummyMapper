@@ -1,9 +1,9 @@
 package io.goodforgod.dummymapper.marker;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +25,7 @@ public class RawMarker extends Marker {
         super(root, source);
         this.structure = (structure == null || structure.isEmpty())
                 ? Collections.emptyMap()
-                : new ConcurrentHashMap<>(structure);
+                : new LinkedHashMap<>(structure);
     }
 
     @Override

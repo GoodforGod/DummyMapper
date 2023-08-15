@@ -12,7 +12,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
-import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.error.PsiKindException;
 import io.goodforgod.dummymapper.error.ScanException;
 import io.goodforgod.dummymapper.marker.*;
@@ -29,7 +29,8 @@ import org.jetbrains.kotlin.idea.KotlinLanguage;
  * Scan PsiJavaFile structure of fields and their annotations (also getters and setters annotations
  * for such fields)
  * <p>
- * https://intellij-support.jetbrains.com/hc/en-us/community/posts/360002746839-How-to-add-an-annotation-and-import-to-a-Java-class
+ * <a href=
+ * "https://intellij-support.jetbrains.com/hc/en-us/community/posts/360002746839-How-to-add-an-annotation-and-import-to-a-Java-class">JetBrains</a>
  * Scans class {@link PsiFile} and build tree structure of such class file
  *
  * @author GoodforGod
@@ -38,41 +39,9 @@ import org.jetbrains.kotlin.idea.KotlinLanguage;
 @SuppressWarnings("UnstableApiUsage")
 public class PsiClassScanner {
 
-    private static class Target {
+    private record Target(String root, String source) {}
 
-        private final String root;
-        private final String source;
-
-        public Target(String root, String source) {
-            this.root = root;
-            this.source = source;
-        }
-
-        public String getRoot() {
-            return root;
-        }
-
-        public String getSource() {
-            return source;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            Target target = (Target) o;
-            return Objects.equals(root, target.root) && Objects.equals(source, target.source);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(root, source);
-        }
-    }
-
-    private final Map<Target, Map<String, Marker>> scanned = new HashMap<>();
+    private final Map<Target, Map<String, Marker>> scanned = new LinkedHashMap<>();
 
     public @NotNull RawMarker scan(@Nullable PsiClass target) {
         if (target == null)
@@ -84,8 +53,9 @@ public class PsiClassScanner {
             throw new PsiKindException(target.getClassKind());
 
         final Map<String, Marker> scannedFile = scanPsiClass(target);
-        if (scannedFile.isEmpty())
+        if (scannedFile.isEmpty()) {
             return RawMarker.EMPTY;
+        }
 
         final String source = getFileFullName(target);
         final String root = getFileFullName(target);
@@ -236,7 +206,7 @@ public class PsiClassScanner {
                             final String source = getFileFullName(sourceClass);
                             final Map<String, Marker> cached = scanned.get(new Target(root, source));
                             final Map<String, Marker> structure = (cached == null)
-                                    ? scanPsiClass(sourceClass, sourceClass, new HashMap<>())
+                                    ? scanPsiClass(sourceClass, sourceClass, new LinkedHashMap<>())
                                     : cached;
 
                             final Marker marker = structure.get(type.getPresentableText());
@@ -356,7 +326,7 @@ public class PsiClassScanner {
         return Arrays.stream(psiAnnotations)
                 .filter(a -> StringUtils.isNotBlank(a.getQualifiedName()))
                 .map(a -> {
-                    final Map<String, Object> attrs = new HashMap<>(a.getAttributes().size());
+                    final Map<String, Object> attrs = new LinkedHashMap<>(a.getAttributes().size());
                     a.getAttributes().forEach(attr -> {
                         final Object value = getAttributeValue(attr.getAttributeValue());
                         if (value != null)

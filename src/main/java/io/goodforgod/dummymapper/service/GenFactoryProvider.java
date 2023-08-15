@@ -1,11 +1,11 @@
 package io.goodforgod.dummymapper.service;
 
-import io.dummymaker.factory.impl.GenFactory;
-import io.dummymaker.generator.IGenerator;
-import io.dummymaker.model.GenRule;
-import io.dummymaker.model.GenRules;
-import io.dummymaker.util.CollectionUtils;
-import io.dummymaker.util.StringUtils;
+import io.goodforgod.dummymaker.GenFactory;
+import io.goodforgod.dummymaker.GenRule;
+import io.goodforgod.dummymaker.generator.Generator;
+import io.goodforgod.dummymaker.util.CollectionUtils;
+import io.goodforgod.dummymaker.util.RandomUtils;
+import io.goodforgod.dummymaker.util.StringUtils;
 import io.goodforgod.dummymapper.marker.*;
 import io.goodforgod.dummymapper.marker.AnnotationMarker;
 import io.goodforgod.dummymapper.util.MarkerUtils;
@@ -42,7 +42,9 @@ public class GenFactoryProvider {
     public static GenFactory get(@NotNull RawMarker rawMarker) {
         final Map<String, String> mappedClasses = AssistClassFactory.getMappedClasses(rawMarker);
         final List<GenRule> rules = getRules(rawMarker, mappedClasses);
-        return new GenFactory(GenRules.of(rules));
+        GenFactory.Builder builder = GenFactory.builder();
+        rules.forEach(builder::addRule);
+        return builder.build();
     }
 
     private static List<GenRule> getRules(@NotNull RawMarker marker,
@@ -61,31 +63,32 @@ public class GenFactoryProvider {
                 .filter(StringUtils::isNotEmpty)
                 .findFirst();
 
-        if (!mapped.isPresent())
+        if (mapped.isEmpty()) {
             return Collections.emptyList();
+        }
 
         try {
-            final GenRule rule = GenRule.auto(Class.forName(mapped.get()), FACTORY_DEPTH);
+            final GenRule rule = GenRule.ofClass(Class.forName(mapped.get()), true, FACTORY_DEPTH);
             structure.forEach((k, v) -> {
                 if (v instanceof EnumMarker) {
-                    final IGenerator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
-                    rule.add(generator, k);
+                    final Generator<String> generator = () -> CollectionUtils.random(((EnumMarker) v).getValues());
+                    rule.generateForNames(k, () -> generator);
                 } else if (v instanceof CollectionMarker && ((CollectionMarker) v).getErasure() instanceof EnumMarker) {
                     final EnumMarker erasure = (EnumMarker) ((CollectionMarker) v).getErasure();
-                    final int total = CollectionUtils.random(1, erasure.getValues().size());
-                    final IGenerator<Collection<String>> generator = () -> IntStream.range(0, total)
+                    final int total = RandomUtils.random(1, erasure.getValues().size());
+                    final Generator<Collection<String>> generator = () -> IntStream.range(0, total)
                             .mapToObj(i -> erasure.getValues().get(i))
                             .collect(Collectors.toCollection(() -> Set.class.isAssignableFrom(((CollectionMarker) v).getType())
                                     ? new HashSet<>()
                                     : new ArrayList<>()));
-                    rule.add(generator, k);
+                    rule.generateForNames(k, () -> generator);
                 } else if (v instanceof ArrayMarker && ((ArrayMarker) v).getErasure() instanceof EnumMarker) {
                     final EnumMarker erasure = (EnumMarker) ((ArrayMarker) v).getErasure();
-                    final int total = CollectionUtils.random(1, erasure.getValues().size());
-                    final IGenerator<String[]> generator = () -> IntStream.range(0, total)
+                    final int total = RandomUtils.random(1, erasure.getValues().size());
+                    final Generator<String[]> generator = () -> IntStream.range(0, total)
                             .mapToObj(i -> erasure.getValues().get(i))
                             .toArray(String[]::new);
-                    rule.add(generator, k);
+                    rule.generateForNames(k, () -> generator);
                 }
             });
 

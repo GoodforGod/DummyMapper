@@ -1,7 +1,8 @@
 package io.goodforgod.dummymapper.service;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dummymaker.util.CollectionUtils;
+import io.goodforgod.dummymaker.util.CollectionUtils;
 import io.goodforgod.dummymapper.error.ClassBuildException;
 import io.goodforgod.dummymapper.error.ClassEmptyException;
 import io.goodforgod.dummymapper.marker.*;
@@ -12,10 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javassist.*;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.ConstPool;
-import javassist.bytecode.FieldInfo;
-import javassist.bytecode.SignatureAttribute;
+import javassist.bytecode.*;
 import javassist.bytecode.annotation.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +28,7 @@ public class AssistClassFactory {
 
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
 
-    private static final Map<String, Integer> CLASS_SUFFIX_COUNTER = new HashMap<>();
+    private static final Map<String, Integer> CLASS_SUFFIX_COUNTER = new LinkedHashMap<>();
 
     private static final String MAPPED_VISITED = "_class_mapped_visited";
     private static final Predicate<RawMarker> IS_VISITED = m -> m.getAnnotations().stream()
@@ -42,18 +40,9 @@ public class AssistClassFactory {
     /**
      * Contains class cache via canonicalName and its value with marker and class
      */
-    private static final Map<String, ClassCache> CLASS_CACHE = new HashMap<>();
+    private static final Map<String, ClassCache> CLASS_CACHE = new LinkedHashMap<>();
 
-    private static class ClassCache {
-
-        final RawMarker marker;
-        final Class<?> clazz;
-
-        ClassCache(RawMarker marker, Class<?> clazz) {
-            this.marker = marker;
-            this.clazz = clazz;
-        }
-    }
+    private record ClassCache(RawMarker marker, Class<?> clazz) {}
 
     public static Map<String, String> getMappedClasses(@NotNull RawMarker marker) {
         if (IS_VISITED.test(marker))
@@ -61,7 +50,7 @@ public class AssistClassFactory {
 
         marker.addAnnotation(AnnotationMarker.builder().ofInternal().withName(MAPPED_VISITED).build());
 
-        final Map<String, String> mapped = new HashMap<>();
+        final Map<String, String> mapped = new LinkedHashMap<>();
         final Map<String, Marker> structure = marker.getStructure();
 
         MarkerUtils.streamRawMarkers(structure)
@@ -84,7 +73,7 @@ public class AssistClassFactory {
                 .map(m -> {
                     final Map<String, String> mapped1 = m.getKeyErasure() instanceof RawMarker
                             ? getMappedClasses(((RawMarker) m.getKeyErasure()))
-                            : new HashMap<>(1);
+                            : new LinkedHashMap<>(1);
 
                     final Map<String, String> mapped2 = m.getKeyErasure() instanceof RawMarker
                             ? getMappedClasses(((RawMarker) m.getKeyErasure()))
@@ -118,7 +107,7 @@ public class AssistClassFactory {
                 return classCache.clazz;
             }
 
-            final CtClass ctClass = buildInternal(rawMarker, new HashMap<>());
+            final CtClass ctClass = buildInternal(rawMarker, new LinkedHashMap<>());
             final Class<?> clazz = Class.forName(ctClass.getName());
             CLASS_CACHE.put(rawMarker.getSource(), new ClassCache(rawMarker, clazz));
             return clazz;
@@ -183,6 +172,7 @@ public class AssistClassFactory {
                 CLASS_SUFFIX_COUNTER.computeIfPresent(originClassName, (k, v) -> v + 1);
                 return ownClass;
             } catch (Exception e) {
+                addJsonPropertyOrder(ownClass, structure);
                 ownClass.toClass(ObjectMapper.class.getClassLoader(), null);
                 CLASS_SUFFIX_COUNTER.computeIfPresent(originClassName, (k, v) -> v + 1);
                 return ownClass;
@@ -347,10 +337,38 @@ public class AssistClassFactory {
             }
         }
 
-        if (CollectionUtils.isNotEmpty(attribute.getAnnotations()))
+        if (CollectionUtils.isNotEmpty(attribute.getAnnotations())) {
             fieldInfo.addAttribute(attribute);
+        }
 
         return field;
+    }
+
+    private static CtClass addJsonPropertyOrder(@NotNull CtClass clazz, @NotNull Map<String, Marker> structure) {
+        final ClassFile classFile = clazz.getClassFile();
+        final ConstPool constPool = classFile.getConstPool();
+
+        final Annotation a = new Annotation(JsonPropertyOrder.class.getCanonicalName(), constPool);
+        final ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
+
+        final StringMemberValue[] members = structure.keySet().stream()
+                .map(f -> new StringMemberValue(f, constPool))
+                .toArray(StringMemberValue[]::new);
+        arrayMemberValue.setValue(members);
+        a.addMemberValue("value", arrayMemberValue);
+
+        final AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+        try {
+            attribute.addAnnotation(a);
+        } catch (Exception e) {
+            // nothing we can do if javaassist fail
+        }
+
+        if (CollectionUtils.isNotEmpty(attribute.getAnnotations())) {
+            classFile.addAttribute(attribute);
+        }
+
+        return clazz;
     }
 
     private static Optional<MemberValue> getMember(Object v, ConstPool constPool) {

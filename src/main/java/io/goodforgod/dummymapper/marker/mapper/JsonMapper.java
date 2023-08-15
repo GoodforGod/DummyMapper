@@ -3,7 +3,7 @@ package io.goodforgod.dummymapper.marker.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.psi.PsiJavaFile;
-import io.dummymaker.factory.impl.GenFactory;
+import io.goodforgod.dummymaker.GenFactory;
 import io.goodforgod.dummymapper.error.ParseException;
 import io.goodforgod.dummymapper.marker.MarkerFilter;
 import io.goodforgod.dummymapper.marker.MarkerMapper;

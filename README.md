@@ -1,6 +1,6 @@
 # DummyMapper 🗎
 
-![Java CI](https://github.com/GoodforGod/DummyMapper/workflows/Java%20CI/badge.svg)
+![Java CI](https://github.com/GoodforGod/DummyMapper/workflows/CI%20Master/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_DummyMapper&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_DummyMapper)
