@@ -53,7 +53,7 @@ sonarqube {
 }
 
 configurations {
-    all {
+    configureEach {
         exclude module: "slf4j-api"
         resolutionStrategy {
             force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
