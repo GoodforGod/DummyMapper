@@ -3,7 +3,7 @@ plugins {
     id "java-library"
     id "maven-publish"
 
-    id "org.jetbrains.intellij" version "1.15.0"
+    id "org.jetbrains.intellij" version "1.17.3"
     id "org.sonarqube" version "4.2.0.3129"
     id "com.diffplug.spotless" version "6.19.0"
 }
@@ -23,7 +23,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 intellij {
     plugins = ["java", "Kotlin"]
-    version = "2023.3"
+    version = "2024.1"
     downloadSources = false
 }
 
